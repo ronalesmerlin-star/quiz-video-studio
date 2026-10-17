@@ -4,191 +4,546 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0A8CFF">
-<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif;-webkit-tap-highlight-color:transparent}img{max-width:100%}[hidden]{display:none!important}</style>
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}input,textarea{-webkit-user-select:text;user-select:text}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>Quiz Video Studio</title>
 <link rel="stylesheet" href="fonts.css">
 <script src="mp4-muxer.js"></script>
 <script src="native.js"></script>
 <style>
-/* Layout: vista previa vertical fija a la izquierda, panel con pestañas a la derecha; se apilan en móvil */
-:root{--bg:#F3F4FA;--pn:#fff;--ink:#0A1840;--mut:#5A6488;--ln:#0A0A14;--pk:#FF1E8A;--gr:#16A34A;--yl:#FFD600;--soft:#E9ECF8}
-@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0B1226;--pn:#16203F;--ink:#EAF0FF;--mut:#9AA7CF;--ln:#5B6B9A;--soft:#1E2A50;color-scheme:dark}}
-:root[data-theme=dark]{--bg:#0B1226;--pn:#16203F;--ink:#EAF0FF;--mut:#9AA7CF;--ln:#5B6B9A;--soft:#1E2A50;color-scheme:dark}
-body{background:var(--bg);color:var(--ink);font:500 15px Fredoka,ui-rounded,system-ui,sans-serif;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-.app{display:flex;flex-wrap:wrap;gap:22px;padding-block:16px;max-width:1080px;margin:auto;align-items:flex-start}
-.stage{flex:0 0 min(100%,360px);position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px)}
-@media(max-width:760px){.stage{position:static}}
-h1{font:400 26px "Lilita One",Fredoka,system-ui,sans-serif;margin:0 0 10px;letter-spacing:.3px}h1 span{color:var(--pk)}
-canvas#cv{width:100%;max-width:100%;aspect-ratio:9/16;border:3px solid var(--ln);border-radius:20px;display:block;background:#0A8CFF;box-shadow:6px 6px 0 var(--ln)}
-.bar{display:flex;gap:8px;align-items:center;margin-top:14px}.bar input{flex:1;min-width:0;accent-color:var(--pk)}
-#tm{font-variant-numeric:tabular-nums;font-size:13px;color:var(--mut)}
-.hint{font-size:12.5px;color:var(--mut);margin:6px 0 0;line-height:1.4}
-.panel{flex:1 1 340px;min-width:0;display:grid;gap:14px;align-content:start}
-.tabs{display:flex;gap:6px;flex-wrap:wrap}
-.tabs button{flex:1 1 auto}
-.card{background:var(--pn);border:3px solid var(--ln);border-radius:18px;padding:14px;box-shadow:4px 4px 0 var(--ln);min-width:0}
-.card h2{font:600 16px Fredoka,system-ui,sans-serif;margin:0 0 8px}
+/* Layout: app de una pantalla con dos vistas que se deslizan (inicio y editor), menú lateral en la esquina y hojas de ajustes que suben desde abajo (o entran por la derecha en pantallas grandes) */
+:root{--bg:#F3F4FA;--pn:#fff;--ink:#0A1840;--mut:#5A6488;--ln:#0A0A14;--pk:#FF1E8A;--bl:#0A8CFF;--gr:#16A34A;--yl:#FFD600;--soft:#E9ECF8;--glass:rgba(243,244,250,.88);
+ --fd:"Lilita One",Fredoka,ui-rounded,system-ui,sans-serif;--fb:Fredoka,ui-rounded,system-ui,sans-serif;--ease:cubic-bezier(.2,.8,.2,1);--spring:cubic-bezier(.3,1.45,.5,1)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0B1226;--pn:#16203F;--ink:#EAF0FF;--mut:#9AA7CF;--ln:#5B6B9A;--soft:#1E2A50;--glass:rgba(11,18,38,.88);color-scheme:dark}}
+:root[data-theme=dark]{--bg:#0B1226;--pn:#16203F;--ink:#EAF0FF;--mut:#9AA7CF;--ln:#5B6B9A;--soft:#1E2A50;--glass:rgba(11,18,38,.88);color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:500 15px/1.45 var(--fb);overflow-x:hidden;-webkit-tap-highlight-color:transparent}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--bg)}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:16px 48px}
 button,select,input,textarea{font:inherit;color:inherit}
-button{background:var(--pn);border:2.5px solid var(--ln);border-radius:999px;padding:6px 14px;cursor:pointer;font-weight:600;transition:transform .1s}
-button:active{transform:translateY(1px)}
+button{background:var(--pn);border:2.5px solid var(--ln);border-radius:999px;padding:7px 14px;cursor:pointer;font-weight:600;transition:transform .14s var(--ease),box-shadow .14s var(--ease),background .15s}
+button:active{transform:scale(.95)}
+button:disabled{opacity:.5;cursor:default}
 :focus-visible{outline:3px solid var(--pk);outline-offset:2px}
-button.on{background:var(--pk);color:#fff}button.go{background:var(--gr);color:#fff;width:100%;padding:11px;font-size:16px}
-button.sm{padding:4px 10px;font-size:13px}button.warn{border-color:#DC2626;color:#DC2626}
-button:disabled{opacity:.5;cursor:wait}
-.chips,.row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
-.chips button{min-width:44px;padding:5px 10px}
-input[type=text],textarea,select{width:100%;box-sizing:border-box;border:2.5px solid var(--ln);border-radius:12px;padding:7px 10px;background:var(--bg)}
+button.on{background:var(--pk);color:#fff}
+button.go{background:var(--gr);color:#fff;width:100%;padding:12px;font-size:16px;box-shadow:3px 3px 0 var(--ln)}
+button.sm{padding:4px 11px;font-size:13px}
+button.warn{border-color:#DC2626;color:#DC2626}
+.ib{width:42px;height:42px;padding:0;border-radius:14px;display:inline-grid;place-items:center;font-size:19px;flex:none;line-height:1}
+.ib.pri{width:auto;display:inline-flex;align-items:center;gap:6px;padding:0 15px;background:var(--pk);color:#fff;box-shadow:3px 3px 0 var(--ln);font-size:15px}
+.ib.pri i{font-style:normal;font-size:18px}
+@media(max-width:560px){.ib.pri span{display:none}.ib.pri{width:42px;padding:0;justify-content:center}}
+input[type=text],input[type=password],textarea,select{width:100%;border:2.5px solid var(--ln);border-radius:12px;padding:8px 11px;background:var(--bg)}
 textarea{resize:vertical}
-label{display:block;font-weight:600;margin-top:10px}
+label{display:block;font-weight:600;margin-top:12px}
 input[type=range]{width:100%;accent-color:var(--pk)}
-.opt{display:flex;gap:8px;align-items:center;margin-top:6px}.opt input[type=text]{flex:1;min-width:0}
-.opt input[type=radio]{accent-color:var(--gr);width:20px;height:20px;flex:none}
-.opt b{width:18px;text-align:center;color:var(--pk)}
+.hint{font-size:12.5px;color:var(--mut);margin:6px 0 0;line-height:1.45;font-weight:500}
+.row{display:flex;flex-wrap:wrap;gap:6px}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-progress{width:100%;margin-top:8px}#msg,#msg2{min-height:1.3em;font-size:13px;margin:6px 0 0}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.sw{display:flex;align-items:center;gap:10px;margin-top:8px;font-weight:600;cursor:pointer}
+.sw input{width:20px;height:20px;accent-color:var(--pk);flex:none}
+details{margin-top:14px;border-top:2px dashed var(--soft);padding-top:12px}
+summary{cursor:pointer;font-weight:600}
+code{background:var(--soft);padding:1px 5px;border-radius:6px;font-size:13px}
+progress{width:100%;margin-top:10px;accent-color:var(--pk)}
+#msg{min-height:1.3em;font-size:13px;margin:8px 0 0}
+
+/* ---------- barra superior y marca ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--glass);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:2.5px solid var(--ln)}
+.top .in{max-width:1120px;margin:auto;display:flex;align-items:center;gap:8px;padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.top .gap{flex:1}
+.brand{display:flex;align-items:center;gap:11px;min-width:0}
+.logo{width:38px;height:38px;flex:none;border:2.5px solid #000;border-radius:11px;background:#fff;box-shadow:3px 3px 0 #000;display:grid;place-items:center;position:relative}
+.logo b{font:400 27px/1 var(--fd);color:var(--pk);transform:translateY(1px)}
+.logo i{position:absolute;right:-7px;bottom:-7px;width:19px;height:19px;border-radius:50%;background:var(--yl);border:2.5px solid #000}
+.logo i::after{content:"";position:absolute;left:5px;top:3.5px;border-left:6px solid #000;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.bt{font:400 21px var(--fd);white-space:nowrap;letter-spacing:.2px}.bt em{font-style:normal;color:var(--pk)}
+.beta{font:700 10.5px var(--fb);background:var(--yl);color:#000;border:2px solid #000;border-radius:999px;padding:1px 7px;letter-spacing:.6px}
+@media(max-width:400px){.bt{font-size:18px}}
+.pname{flex:1;min-width:0;border:2.5px solid transparent!important;background:transparent!important;font:600 17px var(--fb)!important;padding:7px 10px!important;border-radius:12px;text-overflow:ellipsis}
+.pname:hover,.pname:focus{border-color:var(--ln)!important;background:var(--pn)!important}
+
+/* ---------- vistas ---------- */
+.view.in-r{animation:inR .42s var(--ease) both}
+.view.in-l{animation:inL .42s var(--ease) both}
+@keyframes inR{from{opacity:0;transform:translateX(56px)}}
+@keyframes inL{from{opacity:0;transform:translateX(-56px)}}
+
+/* ---------- inicio ---------- */
+.hero{position:relative;overflow:hidden;isolation:isolate;background:var(--bl);color:#fff;border:3px solid var(--ln);border-radius:30px;box-shadow:6px 6px 0 var(--ln);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:center;padding:28px 24px;margin-top:8px}
+.hero::before{content:"";position:absolute;inset:-70%;background:repeating-conic-gradient(from 0deg,rgba(255,255,255,.15) 0 7.5deg,transparent 7.5deg 15deg);animation:spin 50s linear infinite;z-index:-1}
+.hero::after{content:"";position:absolute;width:420px;height:420px;left:-120px;top:-160px;border-radius:50%;background:radial-gradient(rgba(255,255,255,.35),transparent 65%);z-index:-1}
+.eyebrow{font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:13px;margin:0}
+.hero h1{font:400 clamp(31px,6vw,54px)/1.02 var(--fd);margin:6px 0 12px;text-shadow:3px 3px 0 #000;text-wrap:balance}
+.hero h1 em{font-style:normal;color:var(--yl)}
+.hero p.lead{margin:0;font-size:17px;max-width:36ch}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.tags span{background:rgba(0,0,0,.22);border:2px solid rgba(255,255,255,.55);border-radius:999px;padding:3px 11px;font-size:13px;font-weight:600}
+.phone{width:clamp(112px,22vw,206px);aspect-ratio:9/16;border:3.5px solid #000;border-radius:24px;overflow:hidden;box-shadow:6px 6px 0 #000;transform:rotate(4deg);animation:floaty 5s ease-in-out infinite;background:#000;max-width:100%}
+.phone canvas{width:100%;height:100%;display:block}
+@keyframes floaty{50%{transform:rotate(1.5deg) translateY(-9px)}}
+@media(max-width:520px){.hero{padding:22px 18px;gap:12px}.hero p.lead{font-size:15px}.tags{display:none}}
+.sec{font:400 25px var(--fd);margin:30px 0 12px;display:flex;align-items:baseline;gap:8px}
+.sec small{font:600 14px var(--fb);color:var(--mut)}
+.modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:14px}
+button.mode{display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 14px;align-items:center;text-align:left;border-radius:22px;padding:16px;box-shadow:4px 4px 0 var(--ln);background:var(--pn);border-width:3px}
+button.mode:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ln)}
+button.mode:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ln)}
+.mode .me{grid-row:span 2;width:60px;height:60px;border-radius:18px;border:2.5px solid #000;display:grid;place-items:center;font-size:31px;background:var(--mc);transition:transform .3s var(--spring)}
+.mode:hover .me{transform:rotate(-8deg) scale(1.08)}
+.mode b{font:400 20px var(--fd)}.mode span{color:var(--mut);font-weight:500;font-size:14px;line-height:1.35}
+.idea{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:16px;background:var(--soft);border:2.5px dashed var(--ln);border-radius:18px;padding:12px 14px}
+.idea .bulb{font-size:26px;animation:wob 3s ease-in-out infinite}
+.idea div{flex:1;min-width:180px}.idea small{display:block;color:var(--mut);font-weight:600;font-size:12.5px;text-transform:uppercase;letter-spacing:.06em}
+@keyframes wob{50%{transform:rotate(12deg) scale(1.1)}}
+.projs{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.proj{background:var(--pn);border:2.5px solid var(--ln);border-radius:18px;box-shadow:4px 4px 0 var(--ln);overflow:hidden;display:flex;flex-direction:column;min-width:0;transition:transform .2s var(--ease)}
+.proj:hover{transform:translateY(-3px)}
+.pth{padding:0;border:0;border-bottom:2.5px solid var(--ln);border-radius:0;aspect-ratio:4/5;overflow:hidden;background:var(--bl);display:grid;place-items:center;width:100%;font-size:40px}
+.pth:active{transform:none}
+.pth img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+.pin{padding:10px 12px 12px;display:grid;gap:3px;min-width:0}
+.pnm{border:0;padding:0;background:none;text-align:left;font:600 15px var(--fb);border-radius:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pin .hint{margin:0}
+.pact{display:flex;gap:6px;margin-top:6px}
+.empty{grid-column:1/-1;display:flex;gap:14px;align-items:center;border:2.5px dashed var(--ln);border-radius:18px;padding:18px;color:var(--mut)}
+.empty span{font-size:40px}.empty p{margin:0}.empty b{color:var(--ink)}
+.home.go .hero{animation:rise .6s var(--ease) both}
+.home.go .mode{animation:rise .55s var(--spring) calc(.15s + var(--i)*.07s) both}
+.home.go .idea{animation:rise .5s var(--ease) .45s both}
+.home.go .proj{animation:rise .5s var(--ease) calc(.5s + var(--i)*.05s) both}
+@keyframes rise{from{opacity:0;transform:translateY(22px) scale(.97)}}
+
+/* ---------- editor ---------- */
+.ed{display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:24px;align-items:start}
+.stage{position:sticky;top:calc(env(safe-area-inset-top,0px) + 78px)}
+.cvbox{display:flex;justify-content:center}
+.cvwrap{position:relative;display:inline-block;max-width:100%}
+canvas#cv{width:100%;max-width:100%;aspect-ratio:9/16;height:auto;border:3px solid var(--ln);border-radius:22px;display:block;background:#0A8CFF;box-shadow:6px 6px 0 var(--ln);cursor:pointer}
+.stage.drop canvas#cv{outline:4px dashed var(--pk);outline-offset:4px}
+.fsb{position:absolute;right:10px;bottom:10px;width:42px;height:42px;padding:0;border-radius:13px;background:rgba(5,10,30,.6);color:#fff;border:2px solid rgba(255,255,255,.75);font-size:19px;display:grid;place-items:center;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.fsb:hover{background:rgba(5,10,30,.8)}
+.bar{display:flex;gap:8px;align-items:center;margin-top:14px}
+.bar input{flex:1;min-width:0}
+#tm{font-variant-numeric:tabular-nums;font-size:13px;color:var(--mut);white-space:nowrap}
+.stage>.hint{text-align:center}
+@media(max-width:860px){
+ .ed{grid-template-columns:minmax(0,1fr);gap:14px}
+ .stage{top:calc(env(safe-area-inset-top,0px) + 64px);z-index:10;background:var(--bg);margin-left:calc(-1*max(16px,env(safe-area-inset-left,0px)));margin-right:calc(-1*max(16px,env(safe-area-inset-right,0px)));padding:8px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));box-shadow:0 10px 14px -12px rgba(0,0,0,.45)}
+ .cvwrap{width:auto}
+ canvas#cv{width:auto;height:min(38vh,460px);box-shadow:4px 4px 0 var(--ln)}
+ .bar{margin-top:8px}
+ .stage>.hint{display:none}
+}
+.card{background:var(--pn);border:3px solid var(--ln);border-radius:22px;padding:16px;box-shadow:4px 4px 0 var(--ln);min-width:0}
+.phead{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:8px}
+.phead h2{font:400 22px var(--fd);margin:0}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:3px 3px 10px;margin:0 -3px 4px;scrollbar-width:thin}
+.chips button{flex:none;min-width:46px;padding:6px 12px}
+.chips button.on{animation:pop .3s var(--spring)}
+.acts{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding-bottom:12px;border-bottom:2px dashed var(--soft)}
+.acts .gap{flex:1}
+.acts .ib{width:38px;height:38px;font-size:16px;border-radius:12px}
+#form.swap>*{animation:fadeUp .32s var(--ease) both}
+.opt{display:flex;gap:8px;align-items:center;margin-top:7px}.opt input[type=text]{flex:1;min-width:0}
+.opt input[type=radio]{accent-color:var(--gr);width:22px;height:22px;flex:none}
+.opt b{width:18px;text-align:center;color:var(--pk)}
+.imgrow{display:flex;gap:12px;align-items:center;margin-top:6px}
+.thumb{width:96px;height:64px;flex:none;border:2.5px solid var(--ln);border-radius:12px;overflow:hidden;display:grid;place-items:center;background:var(--soft);font-size:30px}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.imgbtns{display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-width:0}.imgbtns .hint{margin:0;flex-basis:100%}
+.how{margin:8px 0;padding-left:20px;font-size:13.5px;line-height:1.5}
+@media(max-width:480px){.three{grid-template-columns:1fr 1fr}.cols{grid-template-columns:1fr 1fr}}
+
+/* ---------- menú lateral ---------- */
+.scrim{position:fixed;inset:0;background:rgba(5,10,30,.5);z-index:70;opacity:0;transition:opacity .28s}
+.scrim.open{opacity:1}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(340px,88vw);z-index:80;background:var(--pn);border-left:3px solid var(--ln);box-shadow:-6px 0 0 var(--ln);transform:translateX(110%);transition:transform .32s var(--ease);display:flex;flex-direction:column;padding:calc(env(safe-area-inset-top,0px) + 14px) max(14px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 14px) 14px;overflow-y:auto}
+.drawer.open{transform:none}
+.dhead{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.dhead .gap{flex:1}
+.dl{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--mut);font-weight:700;margin:16px 12px 4px}
+button.di{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:0;border-radius:14px;padding:11px 12px;background:none;font-weight:600;font-size:15.5px}
+button.di:hover{background:var(--soft)}
+button.di i{font-style:normal;width:28px;text-align:center;font-size:20px;flex:none}
+button.di b{margin-left:auto;font-weight:600;color:var(--mut);font-size:13.5px}
+.drawer.open button.di{animation:slideIn .4s var(--ease) calc(.05s + var(--i,0)*.03s) both}
+@keyframes slideIn{from{opacity:0;transform:translateX(30px)}}
+.dfoot{margin-top:auto;padding:14px 12px 0;color:var(--mut);font-size:12.5px}
+
+/* ---------- hojas de ajustes ---------- */
+.sheet{position:fixed;z-index:80;background:var(--bg);display:flex;flex-direction:column;left:0;right:0;bottom:0;max-height:92vh;border-top:3px solid var(--ln);border-radius:26px 26px 0 0;transform:translateY(105%);transition:transform .36s var(--ease);box-shadow:0 -6px 0 var(--ln)}
+.sheet.open{transform:none}
+@media(min-width:861px){.sheet{left:auto;top:0;width:min(470px,100vw);max-height:none;border-top:0;border-left:3px solid var(--ln);border-radius:0;transform:translateX(105%);box-shadow:-6px 0 0 var(--ln)}}
+.shead{display:flex;align-items:center;gap:10px;padding:18px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));position:relative}
+.shead h2{flex:1;margin:0;font:400 23px var(--fd)}
+.grab{position:absolute;top:7px;left:50%;width:46px;height:5px;margin-left:-23px;border-radius:9px;background:var(--ln);opacity:.45}
+@media(min-width:861px){.grab{display:none}.shead{padding-top:calc(env(safe-area-inset-top,0px) + 16px)}}
+.sbody{overflow-y:auto;padding:2px max(16px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 28px) max(16px,env(safe-area-inset-left,0px));overscroll-behavior:contain}
+.sbody>div{animation:fadeUp .32s var(--ease) both}
+.sbody h3{font:600 16px var(--fb);margin:20px 0 4px}
+.sbody h3:first-child{margin-top:4px}
 .bgs{display:grid;grid-template-columns:repeat(auto-fill,minmax(82px,1fr));gap:10px;margin-top:10px}
 .bgs button{padding:0;border-radius:14px;overflow:hidden;display:flex;flex-direction:column;position:relative;background:var(--pn)}
 .bgs canvas{width:100%;aspect-ratio:9/16;display:block;max-width:100%}
 .bgs span{font-size:12.5px;padding:4px 2px;display:block}
 .bgs button.on{outline:3px solid var(--pk);outline-offset:2px;color:#fff}
-.bgs button .ck{position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;background:var(--pk);color:#fff;border:2px solid #fff;font-size:13px;line-height:18px;display:none}
-.bgs button.on .ck{display:block}
-.pals{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
+.bgs button .ck{position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;background:var(--pk);color:#fff;border:2px solid #fff;font-size:13px;line-height:18px;display:none;font-style:normal}
+.bgs button.on .ck{display:block;animation:pop .3s var(--spring)}
+.pals{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;margin-top:8px}
 .pals button{border-radius:14px;padding:6px;display:grid;gap:5px;text-align:left;font-size:13px}
 .pals i{display:flex;height:22px;border-radius:8px;overflow:hidden;border:2px solid var(--ln)}.pals i b{flex:1}
-.cols{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px}
+.cols{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px}
 .cols label{margin:0;font-size:12px;font-weight:500;display:grid;gap:4px}
 .cols input{width:100%;height:36px;border:2.5px solid var(--ln);border-radius:10px;padding:0;background:none}
-.sw{display:flex;align-items:center;gap:10px;margin-top:4px;font-weight:600;cursor:pointer}
-.sw input{width:20px;height:20px;accent-color:var(--pk)}
-details{margin-top:12px;border-top:2px dashed var(--soft);padding-top:10px}
-summary{cursor:pointer;font-weight:600}
-code{background:var(--soft);padding:1px 5px;border-radius:6px;font-size:13px}
-.conn{background:var(--soft);border:2.5px solid var(--ln);border-radius:14px;padding:10px 12px;margin:10px 0 4px}.conn summary{font-weight:600}.conn[open]{padding-bottom:12px}
-@media(max-width:480px){.three{grid-template-columns:1fr 1fr}.cols{grid-template-columns:1fr 1fr}}
-.tpl{margin-bottom:10px}.tpl label{margin-top:0}
-.how{margin:8px 0;padding-left:20px;font-size:13.5px;line-height:1.5}
-.imgrow{display:flex;gap:12px;align-items:center;margin-top:6px}
-.thumb{width:96px;height:64px;flex:none;border:2.5px solid var(--ln);border-radius:12px;overflow:hidden;display:grid;place-items:center;background:var(--soft);font-size:30px}
-.thumb img{width:100%;height:100%;object-fit:cover}
-.imgbtns{display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-width:0}.imgbtns .hint{margin:0;flex-basis:100%}
 .mus{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px;margin-top:10px}
 .mus button{border-radius:14px;display:grid;gap:2px;padding:10px 6px;font-size:13px}.mus button i{font-style:normal;font-size:24px}
-.stage.drop canvas#cv{outline:4px dashed var(--pk);outline-offset:4px}
-.three{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.aicard{background:linear-gradient(160deg,var(--pn) 60%,color-mix(in srgb,var(--pk) 12%,var(--pn)))}
-.sugs{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.sugs button{font-size:12.5px;padding:3px 10px;font-weight:500;background:var(--soft);border-width:2px}
-.steps{list-style:none;padding:0;margin:12px 0 0;display:grid;gap:6px}
-.steps li{display:flex;gap:10px;align-items:center;padding:8px 10px;border:2px solid var(--soft);border-radius:12px;font-size:14px}
-.steps li i{font-style:normal;width:20px;text-align:center}
-.steps li.run{border-color:var(--pk)}.steps li.run i{animation:spin 1s linear infinite}
-.steps li.ok{border-color:var(--gr)}.steps li.bad{border-color:#DC2626}
+.tlist{display:grid;gap:12px;margin-top:4px}
+button.tcard{display:flex;align-items:center;gap:14px;text-align:left;width:100%;border-radius:20px;padding:12px;background:var(--pn);box-shadow:4px 4px 0 var(--ln);animation:rise .45s var(--spring) calc(var(--i)*.06s) both}
+button.tcard:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ln)}
+.tem{width:66px;height:66px;flex:none;border-radius:17px;border:2.5px solid #000;display:grid;place-items:center;font-size:33px;background:linear-gradient(150deg,var(--c1),var(--c2))}
+.ttx{flex:1;min-width:0;display:grid;gap:2px}.ttx b{font:400 18px var(--fd)}.ttx span{color:var(--mut);font-size:14px;font-weight:500}.ttx small{font-size:12.5px;color:var(--mut);font-weight:600}
+.tgo{font-weight:700;color:var(--pk);white-space:nowrap}
+.help{list-style:none;padding:0;margin:4px 0 0;display:grid;gap:10px}
+.help li{display:flex;gap:12px;align-items:flex-start;background:var(--pn);border:2.5px solid var(--ln);border-radius:16px;padding:12px}
+.help li>i{flex:none;width:32px;height:32px;border-radius:50%;background:var(--pk);color:#fff;font-style:normal;font-weight:700;display:grid;place-items:center;border:2.5px solid #000}
+.help b{display:block}.help span{color:var(--mut);font-size:14px}
+.tips{padding-left:20px;margin:6px 0 0;display:grid;gap:6px;font-size:14px}
+.about{text-align:center;padding:20px 0}.about .logo{margin:0 auto 14px;width:76px;height:76px;border-radius:22px;border-width:3.5px;box-shadow:5px 5px 0 #000}.about .logo b{font-size:56px}.about .logo i{width:32px;height:32px;right:-12px;bottom:-12px;border-width:3.5px}.about .logo i::after{left:9px;top:6px;border-left-width:10px;border-top-width:7px;border-bottom-width:7px}
+.about h3{font:400 26px var(--fd);margin:0}.about p{margin:6px auto;max-width:34ch;color:var(--mut)}
+
+/* ---------- pantalla completa ---------- */
+.fs{position:fixed;inset:0;z-index:90;background:#05070F;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:calc(env(safe-area-inset-top,0px) + 12px) max(12px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 12px) max(12px,env(safe-area-inset-left,0px));animation:fadeIn .25s both}
+.fs canvas{width:min(calc(100vw - 24px),calc((100vh - 110px)*.5625));max-width:100%;height:auto;border-radius:18px;display:block;cursor:pointer;box-shadow:0 20px 70px rgba(0,0,0,.7);animation:zoomIn .4s var(--spring) both}
+.fsbar{display:flex;align-items:center;gap:10px;width:min(560px,100%);color:#fff;transition:opacity .35s}
+.fs.idle .fsbar{opacity:0}
+.fsbar .ib{background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.55)}
+.fsbar input{flex:1;min-width:0}
+#fsTm{color:#cfd6f0;font-variant-numeric:tabular-nums;font-size:13px;white-space:nowrap}
+.fsEnd{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;gap:12px;background:rgba(5,7,15,.74);text-align:center;color:#fff;padding:16px;animation:fadeIn .3s both}
+.fsEnd p{font:400 30px var(--fd);margin:0 0 6px;text-shadow:3px 3px 0 #000}
+.fsEnd button{min-width:220px;font-size:16px;padding:11px 18px}
+.fsEnd .go{width:auto}
+@keyframes zoomIn{from{opacity:0;transform:scale(.88)}}
+
+/* ---------- modo jugar ---------- */
+.player{position:fixed;inset:0;z-index:95;color:#fff;background:linear-gradient(160deg,var(--b1,#0A8CFF),var(--b2,#0057D9));display:flex;flex-direction:column;overflow:hidden;padding:calc(env(safe-area-inset-top,0px) + 12px) max(16px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 16px) max(16px,env(safe-area-inset-left,0px));animation:fadeIn .3s both}
+.player::before{content:"";position:absolute;inset:-60%;background:repeating-conic-gradient(rgba(255,255,255,.12) 0 7.5deg,transparent 7.5deg 15deg);animation:spin 60s linear infinite}
+.player>*{position:relative}
+.ptop{display:flex;align-items:center;gap:8px;max-width:760px;width:100%;margin:0 auto}
+.ptop .gap{flex:1}
+.pill{background:#fff;color:#000;border:2.5px solid #000;border-radius:999px;padding:5px 14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.pill.bump{animation:pop .45s var(--spring)}
+.ptop .ib{background:rgba(0,0,0,.25);color:#fff;border-color:rgba(255,255,255,.65)}
+.ptimer{height:16px;border:3px solid #000;border-radius:10px;background:#fff;overflow:hidden;margin:12px auto 0;max-width:760px;width:100%}
+.ptimer i{display:block;height:100%;background:linear-gradient(90deg,#EF4444,#F59E0B,#22C55E);transform-origin:left}
+.ptimer.hurry i{background:#EF4444}
+#pgMain{flex:1;display:flex;flex-direction:column;justify-content:center;max-width:760px;width:100%;margin:0 auto;gap:14px;min-height:0;overflow-y:auto;padding:14px 4px 6px}
+.pcard{background:#fff;color:#0A1840;border:4px solid var(--ac,#FF1E8A);border-radius:28px;box-shadow:8px 8px 0 #000;padding:18px;animation:dropIn .6s var(--spring) both}
+.pcard h2{font:400 clamp(24px,4.6vw,40px)/1.1 var(--fd);margin:0 0 12px;text-wrap:balance}
+.pintro,.pend{text-align:center}
+.pintro p{margin:6px 0 0;font-size:18px;font-weight:600}.pmeta{color:#5A6488}
+.pimg{position:relative;height:clamp(130px,30vh,320px);border:4px solid var(--ac,#FF1E8A);border-radius:20px;overflow:hidden;background:linear-gradient(135deg,#CFE9FF,#FFD6E8);display:grid;place-items:center}
+.pimg img{width:100%;height:100%;object-fit:cover;transition:filter .8s,transform .8s,opacity .5s}
+.pem{font-size:clamp(80px,17vh,150px);line-height:1;transition:filter .8s,transform .8s,opacity .5s;display:inline-block}
+.pem.big{font-size:clamp(70px,14vh,120px);animation:pop .6s var(--spring) .2s both}
+.fx-silueta :is(img,.pem){filter:brightness(0)}
+.fx-blur :is(img,.pem){filter:blur(16px)}
+.fx-pixel :is(img,.pem){filter:blur(9px) saturate(1.6)}
+.fx-zoom :is(img,.pem){transform:scale(2.8)}
+.fx-hide :is(img,.pem){opacity:0}
+.qm{position:absolute;inset:0;display:grid;place-items:center;font:400 clamp(90px,20vh,150px) var(--fd);color:#0A1840;transition:opacity .4s,transform .5s var(--spring)}
+.pimg.rev :is(img,.pem){filter:none;transform:none;opacity:1}
+.pimg.rev .qm{opacity:0;transform:scale(1.8)}
+.popts{display:grid;gap:10px}
+@media(min-width:720px){.popts{grid-template-columns:1fr 1fr}}
+.popt{display:flex;align-items:center;gap:12px;text-align:left;background:#fff;color:#0A1840;border:3.5px solid #000;border-radius:999px;padding:9px 18px 9px 9px;box-shadow:5px 5px 0 #000;font:600 clamp(17px,2.6vw,22px) var(--fb);animation:slideR .55s var(--spring) calc(.25s + var(--i)*.08s) both}
+.popt b{width:42px;height:42px;flex:none;border-radius:50%;border:3px solid #000;display:grid;place-items:center;background:color-mix(in srgb,var(--ac,#FF1E8A) 20%,#fff);color:var(--ac,#FF1E8A);font-weight:700}
+.popt:hover:not(:disabled){transform:translate(-2px,-2px);box-shadow:7px 7px 0 #000}
+.popt:disabled{opacity:1;cursor:default}
+.popt.ok{background:#22C55E;color:#fff;animation:pulse .55s var(--spring)}
+.popt.ok b{background:#fff;color:#16A34A}
+.popt.bad{background:#EF4444;color:#fff;animation:shake .45s}
+.popt.bad b{background:#fff;color:#DC2626}
+.popt.dim{opacity:.45}
+#pgFoot{display:grid;gap:12px}
+.pfeed{font:400 clamp(26px,5vw,36px) var(--fd);text-shadow:3px 3px 0 #000;text-align:center;margin:0;animation:pop .45s var(--spring) both}
+.pfact{background:var(--hi,#FFD600);color:#000;border:3.5px solid #000;border-radius:20px;padding:12px 16px;box-shadow:5px 5px 0 #000;animation:dropIn .55s var(--spring) .1s both;display:grid;gap:2px;font-size:17px}
+.prow{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.pnext{align-self:center;justify-self:center;background:var(--yl);color:#000;font-size:19px;padding:12px 28px;box-shadow:5px 5px 0 #000;border:3px solid #000;animation:pop .45s var(--spring) .15s both}
+.pexit{background:rgba(0,0,0,.25);color:#fff;border:3px solid #fff;font-size:17px;padding:11px 22px}
+.ptog{display:flex;align-items:center;justify-content:center;gap:10px;font-size:17px;margin:0}
+.ptog input{width:22px;height:22px;accent-color:var(--yl)}
+.pbig{font:400 clamp(64px,14vh,110px)/1 var(--fd);margin:8px 0;color:var(--ac,#FF1E8A)}
+.pbig small{font-size:.45em;color:#5A6488}
+#pgFx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:99}
+
+/* ---------- diálogo, aviso y animaciones ---------- */
+.dlg{position:fixed;inset:0;z-index:150;display:grid;place-items:center;background:rgba(5,10,30,.55);padding:16px;animation:fadeIn .2s both}
+.dbox{background:var(--pn);border:3px solid var(--ln);border-radius:22px;box-shadow:6px 6px 0 var(--ln);padding:20px;max-width:360px;width:100%;animation:pop .35s var(--spring) both}
+.dbox p{margin:0 0 16px;font-size:16px;font-weight:600}
+.dbox .row{justify-content:flex-end}
+button.danger{background:#DC2626;color:#fff}
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);z-index:300;transform:translate(-50%,180%);background:var(--ink);color:var(--bg);border-radius:999px;padding:10px 20px;font-weight:600;transition:transform .4s var(--spring);max-width:calc(100vw - 32px);text-align:center;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.toast.show{transform:translate(-50%,0)}
 @keyframes spin{to{transform:rotate(360deg)}}
-#aiStop{margin-top:8px;width:100%}
-.beta{font:600 11px Fredoka,system-ui,sans-serif;background:var(--yl);color:#000;border:2px solid var(--ln);border-radius:999px;padding:2px 8px;vertical-align:middle;letter-spacing:.5px}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
-@media(max-width:760px){.stage{flex-basis:100%;position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:6px 4px;box-shadow:0 6px 10px -8px rgba(0,0,0,.35)}
- canvas#cv{width:auto;max-width:100%;height:min(44vh,520px);margin:0 auto;box-shadow:4px 4px 0 var(--ln)}
- h1{font-size:20px;margin-bottom:6px}.stage>.hint{display:none}.bar{margin-top:8px}}
-@media(prefers-reduced-motion:reduce){button{transition:none}.steps li.run i{animation:none}}
+@keyframes pop{from{opacity:0;transform:scale(.6)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}}
+@keyframes fadeIn{from{opacity:0}}
+@keyframes dropIn{from{opacity:0;transform:translateY(-46px) scale(.9)}}
+@keyframes slideR{from{opacity:0;transform:translateX(70px)}}
+@keyframes shake{20%,60%{transform:translateX(-9px)}40%,80%{transform:translateX(9px)}}
+@keyframes pulse{50%{transform:scale(1.06)}}
+
+/* ---------- entrada ---------- */
+.splash{position:fixed;inset:0;z-index:400;background:#0A8CFF;display:grid;place-items:center;overflow:hidden;color:#fff;transition:opacity .55s,transform .65s cubic-bezier(.6,0,.4,1);cursor:pointer}
+.splash.bye{opacity:0;transform:scale(1.18);pointer-events:none}
+.splash .rays{position:absolute;inset:-70%;background:repeating-conic-gradient(rgba(255,255,255,.17) 0 7.5deg,transparent 7.5deg 15deg);animation:spin 16s linear infinite}
+.splash .glow{position:absolute;width:80vmin;height:80vmin;border-radius:50%;background:radial-gradient(rgba(255,255,255,.5),transparent 62%);animation:breathe 2.4s ease-in-out infinite}
+@keyframes breathe{50%{transform:scale(1.12)}}
+.sp-in{position:relative;text-align:center;display:grid;justify-items:center;gap:10px;padding:16px}
+.sp-logo{width:136px;height:136px;background:#fff;border:5px solid #000;border-radius:36px;box-shadow:9px 9px 0 #000;display:grid;place-items:center;position:relative;animation:spDrop 1s var(--spring) .1s both}
+.sp-logo b{font:400 104px/1 "Lilita One",Fredoka,system-ui,sans-serif;color:#FF1E8A;animation:spQ .7s cubic-bezier(.3,1.8,.5,1) .75s both;display:inline-block}
+.sp-logo i{position:absolute;right:-20px;bottom:-20px;width:60px;height:60px;border-radius:50%;background:#FFD600;border:5px solid #000;animation:spQ .6s cubic-bezier(.3,1.8,.5,1) 1s both}
+.sp-logo i::after{content:"";position:absolute;left:19px;top:13px;border-left:18px solid #000;border-top:12px solid transparent;border-bottom:12px solid transparent}
+.sp-t{font:400 clamp(36px,10vw,62px)/1 "Lilita One",Fredoka,system-ui,sans-serif;margin:26px 0 0;text-shadow:4px 4px 0 #000;display:flex;gap:.24em;flex-wrap:wrap;justify-content:center}
+.sp-t span{display:inline-block;animation:spWord .65s var(--spring) both}
+.sp-t span:nth-child(1){animation-delay:1.1s}.sp-t span:nth-child(2){animation-delay:1.22s}.sp-t span:nth-child(3){animation-delay:1.34s;color:#FFD600}
+.sp-s{font-weight:700;letter-spacing:.22em;text-transform:uppercase;font-size:14px;margin:4px 0 8px;animation:fadeUp .5s ease 1.55s both}
+.sp-load{width:170px;height:12px;border:3px solid #000;border-radius:9px;background:rgba(255,255,255,.3);overflow:hidden;animation:fadeIn .3s ease 1.5s both}
+.sp-load i{display:block;height:100%;background:#FFD600;animation:load .9s ease-in-out 1.55s both}
+.fl{position:absolute;top:100%;font-size:42px;animation:floatUp 7s linear infinite;filter:drop-shadow(3px 3px 0 rgba(0,0,0,.35))}
+@keyframes load{from{width:0}to{width:100%}}
+@keyframes spDrop{from{transform:translateY(-110vh) rotate(-25deg)}}
+@keyframes spQ{from{transform:scale(0) rotate(-45deg)}}
+@keyframes spWord{from{opacity:0;transform:translateY(34px) scale(.6)}}
+@keyframes floatUp{to{transform:translateY(-130vh) rotate(50deg)}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 </style>
 </head>
 <body>
 
-<div class="app">
-<section class="stage">
-<h1>Quiz Video <span>Studio</span> <small class="beta">BETA</small></h1>
-<canvas id="cv" width="540" height="960" aria-label="Vista previa del video"></canvas>
-<div class="bar"><button id="play" aria-label="Reproducir">▶</button><button id="undo" class="sm" aria-label="Deshacer" title="Deshacer (Ctrl+Z)" disabled>↶</button><button id="redo" class="sm" aria-label="Rehacer" title="Rehacer (Ctrl+Y)" disabled>↷</button><input id="scrub" type="range" min="0" max="1000" value="0" aria-label="Posición"><span id="tm"></span></div>
-<p class="hint">Barra espaciadora: reproducir o pausar. Arrastra una imagen aquí o pégala con Ctrl+V para ponerla en la diapositiva elegida. Lo que ves es exactamente lo que se exporta.</p>
+<div id="splash" class="splash" aria-hidden="true">
+ <div class="rays"></div><div class="glow"></div>
+ <span class="fl" style="left:8%;animation-delay:.2s">🌍</span><span class="fl" style="left:24%;animation-delay:1.6s;font-size:34px">🎓</span><span class="fl" style="left:46%;animation-delay:.9s;font-size:30px">⭐</span><span class="fl" style="left:68%;animation-delay:2.3s">🧠</span><span class="fl" style="left:86%;animation-delay:.5s;font-size:36px">🎬</span>
+ <div class="sp-in">
+  <div class="sp-logo"><b>?</b><i></i></div>
+  <h1 class="sp-t"><span>Quiz</span><span>Video</span><span>Studio</span></h1>
+  <p class="sp-s">Crea · Juega · Enseña</p>
+  <div class="sp-load"><i></i></div>
+ </div>
+</div>
+
+<section id="home" class="view home">
+ <header class="top"><div class="in">
+  <div class="brand"><span class="logo" aria-hidden="true"><b>?</b><i></i></span><span class="bt">Quiz Video <em>Studio</em></span><span class="beta">BETA</span></div>
+  <span class="gap"></span>
+  <button class="ib" id="menuH" aria-label="Abrir menú">☰</button>
+ </div></header>
+ <div class="wrap">
+  <div class="hero">
+   <div>
+    <p class="eyebrow">Hola 👋</p>
+    <h1>¿Qué vas a <em>crear</em> hoy?</h1>
+    <p class="lead">Videos de quiz para redes, repasos para tu clase y juegos para aprender inglés.</p>
+    <div class="tags"><span>🎬 TikTok · Reels · Shorts</span><span>🎓 Escuelas</span><span>🇬🇧 Inglés</span><span>📴 Sin internet</span></div>
+   </div>
+   <div class="phone" aria-hidden="true"><canvas id="heroCv" width="270" height="480"></canvas></div>
+  </div>
+
+  <h2 class="sec">Crear nuevo</h2>
+  <div class="modes">
+   <button class="mode" data-mode="redes" style="--i:0;--mc:#FFD6E8"><span class="me">🎬</span><b>Videos para redes</b><span>Cuenta atrás, música y efectos para TikTok, Reels y Shorts.</span></button>
+   <button class="mode" data-mode="clase" style="--i:1;--mc:#C9F2D6"><span class="me">🎓</span><b>Para clase</b><span>Repasa temas con tus alumnos y juega en el aula.</span></button>
+   <button class="mode" data-mode="ingles" style="--i:2;--mc:#CFE6FF"><span class="me">🇬🇧</span><b>Inglés con imágenes</b><span>Vocabulario con imágenes y la traducción al revelar.</span></button>
+   <button class="mode" data-mode="blank" style="--i:3;--mc:#FFF1A8"><span class="me">✍️</span><b>Desde cero</b><span>Una hoja en blanco para tu propia idea.</span></button>
+  </div>
+  <div class="idea"><span class="bulb" aria-hidden="true">💡</span><div><small>Idea del día</small><b id="ideaTx"></b></div><button id="ideaGo">Crear con esta idea</button></div>
+
+  <h2 class="sec">Mis proyectos <small id="pCount"></small></h2>
+  <div id="projects" class="projs"></div>
+ </div>
 </section>
 
-<aside class="panel">
-<nav class="tabs" role="tablist">
-<button data-tab="q" class="on" role="tab" id="t-q">✏️ Preguntas</button><button data-tab="bg" role="tab" id="t-bg">🌈 Fondos</button><button data-tab="mu" role="tab" id="t-mu">🎵 Música</button><button data-tab="st" role="tab" id="t-st">🎨 Estilo</button><button data-tab="ex" role="tab" id="t-ex">🎬 Exportar</button>
+<section id="editor" class="view" hidden>
+ <header class="top"><div class="in">
+  <button class="ib" id="back" aria-label="Volver al inicio">←</button>
+  <input type="text" id="pname" class="pname" aria-label="Nombre del proyecto" maxlength="60">
+  <button class="ib" id="undo" aria-label="Deshacer" title="Deshacer (Ctrl+Z)" disabled>↶</button>
+  <button class="ib" id="redo" aria-label="Rehacer" title="Rehacer (Ctrl+Y)" disabled>↷</button>
+  <button class="ib pri" id="expBtn"><i>🎬</i><span>Exportar</span></button>
+  <button class="ib" id="menuE" aria-label="Abrir menú">☰</button>
+ </div></header>
+ <div class="wrap ed">
+  <section class="stage">
+   <div class="cvbox"><div class="cvwrap">
+    <canvas id="cv" width="540" height="960" aria-label="Vista previa del video. Toca para reproducir o pausar"></canvas>
+    <button class="fsb" id="fsBtn" aria-label="Ver en pantalla completa" title="Pantalla completa">⛶</button>
+   </div></div>
+   <div class="bar"><button class="ib" id="play" aria-label="Reproducir">▶</button><input id="scrub" type="range" min="0" max="1000" value="0" aria-label="Posición"><span id="tm"></span><button class="ib" id="playBtn" aria-label="Jugar o presentar" title="Jugar o presentar en clase">🎮</button></div>
+   <p class="hint">Toca el video para reproducirlo. Arrastra una imagen aquí o pégala con Ctrl+V.</p>
+  </section>
+  <aside class="panel">
+   <div class="card">
+    <div class="phead"><h2>Diapositivas</h2><span class="hint" id="slideInfo"></span></div>
+    <div class="chips" id="chips"></div>
+    <div class="acts">
+     <button class="sm" id="add">+ Pregunta</button><button class="sm" id="addvf">+ Verdadero / Falso</button>
+     <span class="gap"></span>
+     <button class="ib" id="dup" aria-label="Duplicar pregunta" title="Duplicar">⧉</button><button class="ib" id="up" aria-label="Mover antes" title="Mover antes">↑</button><button class="ib" id="down" aria-label="Mover después" title="Mover después">↓</button><button class="ib" id="mixq" aria-label="Mezclar el orden" title="Mezclar el orden de las preguntas">🔀</button><button class="ib warn" id="del" aria-label="Eliminar pregunta" title="Eliminar">🗑</button>
+    </div>
+    <div id="form"></div>
+    <details id="bulk"><summary>⚡ Crear muchas preguntas rápido, gratis con cualquier chat de IA</summary>
+     <ol class="how"><li>Escribe el tema y toca «Copiar instrucción».</li><li>Pégala en ChatGPT, Gemini o Claude. Sus versiones gratis sirven.</li><li>Copia lo que te responda y pégalo en el cuadro de abajo.</li></ol>
+     <div class="opt"><input type="text" id="topic" placeholder="Tema, ej.: animales del océano"><select id="topicN" aria-label="Cantidad" style="width:auto"><option>5</option><option>8</option><option selected>10</option><option>15</option></select><button class="sm" id="bulkAI">Copiar instrucción</button></div>
+     <textarea id="bulkTx" rows="7" style="margin-top:8px" placeholder="¿Cuál es el planeta más grande? | Saturno | *Júpiter | Neptuno | 🪐&#10;dato: Cabrían más de 1.300 Tierras dentro de Júpiter."></textarea>
+     <div class="row" style="margin-top:8px"><button id="bulkAdd">Agregar al final</button><button id="bulkRep">Reemplazar todas</button></div>
+     <p class="hint">También puedes escribirlas tú: <code>Pregunta | Opción | *Correcta | Opción | emoji</code> y debajo <code>dato: …</code></p>
+     <p class="hint" id="bulkMsg" role="status"></p>
+    </details>
+   </div>
+  </aside>
+ </div>
+</section>
+
+<div class="scrim" id="scrim" hidden></div>
+<nav id="drawer" class="drawer" aria-label="Menú" hidden>
+ <div class="dhead"><div class="brand"><span class="logo" aria-hidden="true"><b>?</b><i></i></span><span class="bt">Menú</span></div><span class="gap"></span><button class="ib" id="dClose" aria-label="Cerrar menú">✕</button></div>
+ <div id="dEd">
+  <p class="dl">Este proyecto</p>
+  <button class="di" data-sheet="bg" style="--i:0"><i>🌈</i>Fondos animados</button>
+  <button class="di" data-sheet="mu" style="--i:1"><i>🎵</i>Música y sonidos</button>
+  <button class="di" data-sheet="st" style="--i:2"><i>🎨</i>Estilo, textos e idioma</button>
+  <button class="di" data-sheet="ex" style="--i:3"><i>🎬</i>Exportar video</button>
+  <button class="di" data-act="play" style="--i:4"><i>🎮</i>Jugar o presentar en clase</button>
+  <button class="di" data-act="fs" style="--i:5"><i>⛶</i>Ver en pantalla completa</button>
+  <button class="di" data-act="saveFile" style="--i:6"><i>💾</i>Guardar como archivo</button>
+ </div>
+ <p class="dl">App</p>
+ <button class="di" data-act="home" style="--i:7"><i>🏠</i>Inicio</button>
+ <button class="di" data-act="openFile" style="--i:8"><i>📂</i>Abrir archivo de proyecto</button>
+ <button class="di" data-sheet="help" style="--i:9"><i>❓</i>Cómo se usa</button>
+ <button class="di" data-act="theme" style="--i:10"><i>🌓</i>Apariencia<b id="themeV">Automática</b></button>
+ <button class="di" data-sheet="about" style="--i:11"><i>ℹ️</i>Acerca de</button>
+ <p class="dfoot">Quiz Video Studio · Beta 0.2</p>
+ <input type="file" id="openF" accept=".json,application/json" hidden>
 </nav>
 
-<div class="card" id="tab-q">
-<div class="tpl"><label for="tpl">Empezar desde una plantilla</label><div class="opt"><select id="tpl"></select><button class="sm" id="tplGo">Usar</button></div></div>
-<div class="chips" id="chips"></div>
-<div class="row"><button id="add">+ Pregunta</button><button id="addvf">+ Verdadero/Falso</button><button id="dup">Duplicar</button><button id="up" aria-label="Mover antes">↑</button><button id="down" aria-label="Mover después">↓</button><button id="mixq" title="Mezclar el orden de las preguntas">🔀 Mezclar</button><button id="del" class="warn">Eliminar</button></div>
-<div id="form"></div>
-<details id="bulk"><summary>⚡ Crear muchas preguntas rápido, gratis con cualquier chat de IA</summary>
-<ol class="how"><li>Escribe el tema y toca «Copiar instrucción».</li><li>Pégala en ChatGPT, Gemini o Claude. Sus versiones gratis sirven.</li><li>Copia lo que te responda y pégalo en el cuadro de abajo.</li></ol>
-<div class="opt"><input type="text" id="topic" placeholder="Tema, ej.: animales del océano"><select id="topicN" aria-label="Cantidad" style="width:auto"><option>5</option><option>8</option><option selected>10</option><option>15</option></select><button class="sm" id="bulkAI">Copiar instrucción</button></div>
-<textarea id="bulkTx" rows="7" style="margin-top:8px" placeholder="¿Cuál es el planeta más grande? | Saturno | *Júpiter | Neptuno | 🪐&#10;dato: Cabrían más de 1.300 Tierras dentro de Júpiter."></textarea>
-<div class="row" style="margin-top:8px"><button id="bulkAdd">Agregar al final</button><button id="bulkRep">Reemplazar todas</button></div>
-<p class="hint">También puedes escribirlas tú: <code>Pregunta | Opción | *Correcta | Opción | emoji</code> y debajo <code>dato: …</code></p>
-<p class="hint" id="bulkMsg" role="status"></p>
-</details>
+<section id="sheet" class="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="shTitle">
+ <div class="shead"><span class="grab" aria-hidden="true"></span><h2 id="shTitle"></h2><button class="ib" id="shClose" aria-label="Cerrar">✕</button></div>
+ <div class="sbody">
+  <div id="tab-tpl" hidden><div class="tlist" id="tplList"></div></div>
+
+  <div id="tab-bg" hidden>
+   <label class="sw" style="margin-top:0"><input type="checkbox" id="rot"> Cambiar de fondo en cada pregunta</label>
+   <p class="hint" id="bgHint"></p>
+   <div class="bgs" id="bgs"></div>
+   <div id="bgImgBox" hidden>
+    <label>Tu imagen de fondo<input type="file" id="bgFile" accept="image/*"></label>
+    <label>Oscurecer imagen: <b id="dimV"></b><input type="range" id="dim" min="0" max="0.8" step="0.05"></label>
+   </div>
+   <label>Velocidad de la animación: <b id="spdV"></b><input type="range" id="spd" min="0" max="2" step="0.1"></label>
+   <p class="hint">Cada diapositiva también puede tener su propio fondo desde el editor.</p>
+  </div>
+
+  <div id="tab-mu" hidden>
+   <h3>Música de fondo</h3>
+   <p class="hint">La música se crea aquí mismo y es libre de derechos de autor. También puedes subir tu propia canción.</p>
+   <div class="mus" id="mus"></div>
+   <div id="custBox" hidden><label>Tu canción (MP3, WAV, M4A…)<input type="file" id="musFile" accept="audio/*"></label><p class="hint" id="custMsg">Usa música con permiso o libre de derechos: TikTok e Instagram pueden silenciar canciones con copyright.</p></div>
+   <label>Volumen de la música: <b id="mvV"></b><input type="range" id="mv" min="0" max="1" step="0.05"></label>
+   <div class="row" style="margin-top:10px"><button class="sm" id="musPrev">▶ Escuchar 10 segundos</button></div>
+   <h3>Efectos de sonido</h3>
+   <div class="two"><label>Cuenta atrás<select id="tick"></select></label><label>Al revelar la respuesta<select id="ding"></select></label></div>
+   <label class="sw" style="margin-top:12px"><input type="checkbox" id="whoosh"> Whoosh al cambiar de diapositiva</label>
+   <label>Volumen de los efectos: <b id="svV"></b><input type="range" id="sv" min="0" max="1.5" step="0.05"></label>
+   <div class="row" style="margin-top:10px"><button class="sm" id="sfxPrev">▶ Probar efectos</button></div>
+  </div>
+
+  <div id="tab-st" hidden>
+   <h3>Idioma</h3>
+   <div class="two">
+    <label style="margin-top:4px">Textos del video<select id="lang"><option value="es">Español</option><option value="en">English</option><option value="pt">Português</option><option value="fr">Français</option></select></label>
+    <label style="margin-top:4px">Título del dato curioso<input type="text" id="factLbl" maxlength="30"></label>
+   </div>
+   <p class="hint">Cambia «Pregunta 1 de 10», «¡Respuesta!» y los botones del modo jugar. Para clases de inglés, usa el dato curioso para la traducción.</p>
+   <h3>Paleta de colores</h3>
+   <div class="pals" id="pals"></div>
+   <div class="cols">
+    <label>Fondo 1<input type="color" id="c-b1"></label><label>Fondo 2<input type="color" id="c-b2"></label><label>Acento<input type="color" id="c-ac"></label><label>Destacado<input type="color" id="c-hi"></label>
+   </div>
+   <h3>Animación y tiempos</h3>
+   <div class="two">
+    <label style="margin-top:4px">Letra de títulos<select id="font"></select></label>
+    <label style="margin-top:4px">Entrada de tarjetas<select id="trans"><option value="subir">Subir</option><option value="zoom">Zoom</option><option value="deslizar">Deslizar</option><option value="rebote">Rebote</option><option value="girar">Girar</option></select></label>
+   </div>
+   <label>Segundos mostrando la respuesta: <b id="revV"></b><input type="range" id="rev" min="1" max="5" step="0.5"></label>
+   <label>Cuenta atrás de la portada: <b id="covV"></b><input type="range" id="cov" min="2" max="5" step="1"></label>
+   <label>Tiempo para responder en todas: <b id="allV">8s</b></label>
+   <div class="opt"><input type="range" id="allSecs" min="3" max="20" value="8"><button class="sm" id="allApply">Aplicar</button></div>
+   <h3>Textos</h3>
+   <div class="two">
+    <label style="margin-top:4px">Tu @ (marca de agua)<input type="text" id="handle" placeholder="@tucuenta"></label>
+    <label style="margin-top:4px">Etiqueta de portada<input type="text" id="tag"></label>
+   </div>
+   <label>Niveles del resultado final <span class="hint">(rango | nombre, uno por línea)</span><textarea id="tiers" rows="4"></textarea></label>
+  </div>
+
+  <div id="tab-ex" hidden>
+   <div class="two">
+    <label style="margin-top:4px">Calidad<select id="res"><option value="1080">1080×1920 (TikTok / Reels / Shorts)</option><option value="720">720×1280 (más liviano)</option></select></label>
+    <label style="margin-top:4px">Cuadros por segundo<select id="fps"><option value="30">30 fps</option><option value="60">60 fps (más fluido)</option></select></label>
+   </div>
+   <label class="sw" style="margin-top:14px"><input type="checkbox" id="snd" checked> Incluir música y sonidos</label>
+   <div style="margin-top:14px"><button class="go" id="exp">🎬 Exportar MP4</button></div>
+   <progress id="pg" max="1" value="0" hidden></progress><p id="msg" role="status"></p>
+   <h3>Miniatura</h3>
+   <div class="row"><button class="sm" id="png">🖼️ Descargar portada (PNG)</button></div>
+   <p class="hint">La portada sirve como miniatura del video en TikTok, Reels o YouTube.</p>
+   <h3>¿Antes de exportar?</h3>
+   <div class="row"><button class="sm" id="exFs">⛶ Revisar en pantalla completa</button><button class="sm" id="exPlay">🎮 Probarlo como juego</button></div>
+  </div>
+
+  <div id="tab-help" hidden>
+   <ol class="help">
+    <li><i>1</i><div><b>Elige un modo</b><span>En el inicio toca Videos para redes, Para clase, Inglés o Desde cero, y elige una plantilla.</span></div></li>
+    <li><i>2</i><div><b>Edita las preguntas</b><span>Toca P1, P2… para cambiar la pregunta, las opciones, la imagen y el dato curioso. El círculo verde marca la respuesta correcta.</span></div></li>
+    <li><i>3</i><div><b>Dale estilo</b><span>En el menú ☰ cambias fondos, música, colores, letra e idioma del video.</span></div></li>
+    <li><i>4</i><div><b>Revísalo en grande</b><span>Toca ⛶ para ver el video en pantalla completa antes de guardarlo.</span></div></li>
+    <li><i>5</i><div><b>Exporta o juega</b><span>🎬 crea el MP4 para TikTok, Reels o Shorts. 🎮 lo convierte en un juego para tu clase o tu familia.</span></div></li>
+   </ol>
+   <h3>Trucos</h3>
+   <ul class="tips">
+    <li>Usa el efecto <b>Silueta</b> o <b>Pixelada</b> en la imagen para videos de «adivina».</li>
+    <li>Con <b>Crear muchas preguntas rápido</b> armas 10 preguntas en un minuto con un chat de IA gratis.</li>
+    <li>Para enseñar inglés, pon el idioma del video en English y usa el dato curioso para la traducción.</li>
+    <li>En el modo jugar, el botón 🔊 lee la pregunta en voz alta, si tu dispositivo tiene voz.</li>
+    <li>Tus proyectos se guardan solos en este dispositivo. Para pasarlos a otro, usa ☰ → Guardar como archivo.</li>
+   </ul>
+  </div>
+
+  <div id="tab-about" hidden>
+   <div class="about"><span class="logo" aria-hidden="true"><b>?</b><i></i></span><h3>Quiz Video Studio</h3><p>Versión beta 0.2</p><p>Crea videos de quiz para redes, repasos para clase y juegos para aprender inglés. Gratis y sin internet.</p></div>
+  </div>
+ </div>
+</section>
+
+<div id="fs" class="fs" hidden role="dialog" aria-label="Vista en pantalla completa">
+ <canvas id="fsCv" width="540" height="960"></canvas>
+ <div class="fsbar"><button class="ib" id="fsPlay" aria-label="Reproducir">▶</button><input id="fsScrub" type="range" min="0" max="1000" value="0" aria-label="Posición"><span id="fsTm"></span><button class="ib" id="fsClose" aria-label="Salir de pantalla completa">✕</button></div>
+ <div class="fsEnd" id="fsEnd" hidden><p>¿Quedó como querías?</p><button class="go" id="fsExport">🎬 Exportar MP4</button><button id="fsAgain">↺ Ver otra vez</button><button id="fsEdit">✏️ Seguir editando</button></div>
 </div>
 
-<div class="card" id="tab-bg" hidden>
-<h2>Menú de fondos animados</h2>
-<label class="sw"><input type="checkbox" id="rot"> Cambiar de fondo en cada pregunta</label>
-<p class="hint" id="bgHint"></p>
-<div class="bgs" id="bgs"></div>
-<div id="bgImgBox" hidden>
-<label>Tu imagen de fondo<input type="file" id="bgFile" accept="image/*"></label>
-<label>Oscurecer imagen: <b id="dimV"></b><input type="range" id="dim" min="0" max="0.8" step="0.05"></label>
+<div id="player" class="player" hidden role="dialog" aria-label="Modo jugar">
+ <div class="ptop"><span class="pill" id="pgCount"></span><span class="gap"></span><span class="pill" id="pgScore">⭐ 0</span><button class="ib" id="pgSpeak" aria-label="Leer en voz alta">🔊</button><button class="ib" id="pgClose" aria-label="Salir del juego">✕</button></div>
+ <div class="ptimer" id="pgTimer" hidden><i id="pgTime"></i></div>
+ <main id="pgMain"></main>
 </div>
-<label>Velocidad de la animación: <b id="spdV"></b><input type="range" id="spd" min="0" max="2" step="0.1"></label>
-<p class="hint">Cada diapositiva también puede tener su propio fondo desde la pestaña Preguntas.</p>
-</div>
+<canvas id="pgFx" hidden></canvas>
 
-<div class="card" id="tab-mu" hidden>
-<h2>Música de fondo</h2>
-<p class="hint">La música se crea aquí mismo y es libre de derechos de autor. También puedes subir tu propia canción.</p>
-<div class="mus" id="mus"></div>
-<div id="custBox" hidden><label>Tu canción (MP3, WAV, M4A…)<input type="file" id="musFile" accept="audio/*"></label><p class="hint" id="custMsg">Usa música con permiso o libre de derechos: TikTok e Instagram pueden silenciar canciones con copyright.</p></div>
-<label>Volumen de la música: <b id="mvV"></b><input type="range" id="mv" min="0" max="1" step="0.05"></label>
-<div class="row" style="margin-top:8px"><button class="sm" id="musPrev">▶ Escuchar 10 segundos</button></div>
-<h2 style="margin-top:18px">Efectos de sonido</h2>
-<div class="two"><label>Cuenta atrás<select id="tick"></select></label><label>Al revelar la respuesta<select id="ding"></select></label></div>
-<label class="sw" style="margin-top:10px"><input type="checkbox" id="whoosh"> Whoosh al cambiar de diapositiva</label>
-<label>Volumen de los efectos: <b id="svV"></b><input type="range" id="sv" min="0" max="1.5" step="0.05"></label>
-<div class="row" style="margin-top:8px"><button class="sm" id="sfxPrev">▶ Probar efectos</button></div>
-</div>
-
-<div class="card" id="tab-st" hidden>
-<h2>Paleta de colores</h2>
-<div class="pals" id="pals"></div>
-<div class="cols">
-<label>Fondo 1<input type="color" id="c-b1"></label><label>Fondo 2<input type="color" id="c-b2"></label><label>Acento<input type="color" id="c-ac"></label><label>Destacado<input type="color" id="c-hi"></label>
-</div>
-<div class="two">
-<label>Letra de títulos<select id="font"></select></label>
-<label>Entrada de tarjetas<select id="trans"><option value="subir">Subir</option><option value="zoom">Zoom</option><option value="deslizar">Deslizar</option><option value="rebote">Rebote</option><option value="girar">Girar</option></select></label>
-</div>
-<label>Segundos mostrando la respuesta: <b id="revV"></b><input type="range" id="rev" min="1" max="5" step="0.5"></label>
-<label>Cuenta atrás de la portada: <b id="covV"></b><input type="range" id="cov" min="2" max="5" step="1"></label>
-<label>Tiempo para responder en todas: <b id="allV">8s</b></label>
-<div class="opt"><input type="range" id="allSecs" min="3" max="20" value="8"><button class="sm" id="allApply">Aplicar</button></div>
-<div class="two">
-<label>Tu @ (marca de agua)<input type="text" id="handle" placeholder="@tucuenta"></label>
-<label>Etiqueta de portada<input type="text" id="tag"></label>
-</div>
-<label>Niveles del resultado final <span class="hint">(rango | nombre, uno por línea)</span><textarea id="tiers" rows="4"></textarea></label>
-</div>
-
-<div class="card" id="tab-ex" hidden>
-<h2>Exportar video</h2>
-<div class="two">
-<label>Calidad<select id="res"><option value="1080">1080×1920 (TikTok / Reels / Shorts)</option><option value="720">720×1280 (más liviano)</option></select></label>
-<label>Cuadros por segundo<select id="fps"><option value="30">30 fps</option><option value="60">60 fps (más fluido)</option></select></label>
-</div>
-<label class="sw" style="margin-top:12px"><input type="checkbox" id="snd" checked> Incluir música y sonidos</label>
-<div style="margin-top:12px"><button class="go" id="exp">Exportar MP4</button></div>
-<div class="row" style="margin-top:8px"><button class="sm" id="png">🖼️ Descargar portada (PNG)</button></div>
-<p class="hint">La portada sirve como miniatura del video en TikTok, Reels o YouTube.</p>
-<progress id="pg" max="1" value="0" hidden></progress><p id="msg" role="status"></p>
-<details open><summary>Proyecto</summary>
-<p class="hint">Tu proyecto se guarda solo en este navegador. Para pasarlo a otro equipo, guárdalo como archivo.</p>
-<div class="row" style="margin-top:8px"><button id="saveP">Guardar proyecto</button><label class="sm" style="margin:0"><button id="openP" type="button">Abrir proyecto</button><input type="file" id="openF" accept=".json,application/json" hidden></label><button id="reset" class="warn">Empezar de nuevo</button></div>
-<p id="msg2" role="status"></p>
-</details>
-</div>
-</aside></div>
+<div id="dlg" class="dlg" hidden role="alertdialog" aria-modal="true" aria-labelledby="dlgTx"><div class="dbox"><p id="dlgTx"></p><div class="row"><button id="dlgNo">Cancelar</button><button id="dlgYes" class="danger">Eliminar</button></div></div></div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
 
 <script>
 const $=id=>document.getElementById(id);
@@ -197,6 +552,21 @@ const clamp=(x,a,b)=>Math.min(Math.max(x,a),b);
 const rnd=i=>{const x=Math.sin(i*127.1+311.7)*43758.5453;return x-Math.floor(x)};
 const hexA=(h,a)=>{h=String(h).replace('#','');if(h.length==3)h=[...h].map(x=>x+x).join('');const n=parseInt(h,16)||0;return `rgba(${n>>16},${n>>8&255},${n&255},${a})`};
 const LET='ABCD';
+
+/* ---------- estado de la interfaz e idiomas del video ---------- */
+let VIEW='home',SHEET='',LAYERS=[],FS=false;
+const LBL={
+ es:{q:(a,b)=>`Pregunta ${a} de ${b}`,res:'Resultado',start:'Empieza en',ans:'¡Respuesta!',fact:'💡 DATO CURIOSO',t:'Verdadero',f:'Falso',up:'Sube una imagen',
+  play:'Empezar',next:'Siguiente',seeRes:'Ver resultado',again:'Jugar otra vez',exit:'Salir',ok:'¡Correcto! 🎉',bad:'¡Casi! 😅',timeup:'¡Se acabó el tiempo! ⏰',timed:'Con tiempo',qs:'preguntas',done:'¡Terminaste!'},
+ en:{q:(a,b)=>`Question ${a} of ${b}`,res:'Results',start:'Starts in',ans:'Answer!',fact:'💡 FUN FACT',t:'True',f:'False',up:'Upload an image',
+  play:'Start',next:'Next',seeRes:'See results',again:'Play again',exit:'Exit',ok:'Correct! 🎉',bad:'Not quite! 😅',timeup:"Time's up! ⏰",timed:'With timer',qs:'questions',done:'Well done!'},
+ pt:{q:(a,b)=>`Pergunta ${a} de ${b}`,res:'Resultado',start:'Começa em',ans:'Resposta!',fact:'💡 CURIOSIDADE',t:'Verdadeiro',f:'Falso',up:'Envie uma imagem',
+  play:'Começar',next:'Próxima',seeRes:'Ver resultado',again:'Jogar de novo',exit:'Sair',ok:'Correto! 🎉',bad:'Quase! 😅',timeup:'Acabou o tempo! ⏰',timed:'Com tempo',qs:'perguntas',done:'Muito bem!'},
+ fr:{q:(a,b)=>`Question ${a} sur ${b}`,res:'Résultat',start:'Début dans',ans:'Réponse !',fact:'💡 LE SAVIEZ-VOUS ?',t:'Vrai',f:'Faux',up:'Ajoute une image',
+  play:'Commencer',next:'Suivante',seeRes:'Voir le résultat',again:'Rejouer',exit:'Quitter',ok:'Bravo ! 🎉',bad:'Presque ! 😅',timeup:'Temps écoulé ! ⏰',timed:'Avec chrono',qs:'questions',done:'Bien joué !'}};
+const LB=()=>LBL[P.lang]||LBL.es;
+const LANGN={es:'Español',en:'English',pt:'Português',fr:'Français'};
+
 
 /* ---------- catálogos ---------- */
 const PALS={pop:{n:'Pop azul',b1:'#0A8CFF',b2:'#0057D9',ac:'#FF1E8A',hi:'#FFD600'},
@@ -257,7 +627,7 @@ const BGK=Object.keys(BGS);
 
 /* ---------- proyecto ---------- */
 const mk=(title,o,c,em,fact)=>({t:'q',title,o,c,em,secs:8,fact:fact||'',img:'',bg:'',fx:'none',iz:1,ix:0,iy:0});
-function example(){return{music:'pop',musicVol:.3,sfxVol:1,tick:'clasico',ding:'ding',whoosh:true,musicData:'',musicName:'',colors:{...PALS.pop},pal:'pop',font:'lilita',trans:'rebote',reveal:2,coverSecs:3,handle:'',coverTag:'Quiz de preguntas',
+function example(){return{name:'¿En qué país está?',lang:'es',factLabel:'',music:'pop',musicVol:.3,sfxVol:1,tick:'clasico',ding:'ding',whoosh:true,musicData:'',musicName:'',colors:{...PALS.pop},pal:'pop',font:'lilita',trans:'rebote',reveal:2,coverSecs:3,handle:'',coverTag:'Quiz de preguntas',
  tiers:'0-3 | Turista perdido\n4-6 | Viajero curioso\n7-8 | Trotamundos\n9-10 | Experto',
  bg:'rayos',rotate:true,bgSet:['rayos','burbujas','aurora','confeti','ondas','retro','puntos','galaxia'],bgSpeed:1,dim:.35,bgImg:'',
  slides:[{t:'cover',title:'¿En qué país\nestá este lugar?',sub:'El 95% no acierta las 10. ¿Y tú?',em:'🌍',img:'',bg:''},
@@ -273,8 +643,7 @@ function example(){return{music:'pop',musicVol:.3,sfxVol:1,tick:'clasico',ding:'
  mk('¿Dónde está Petra?',['Jordania','Arabia Saudita','Egipto'],0,'🏜️','Está tallada directamente en roca arenisca.'),
  {t:'final',title:'¿Cuántas\nacertaste?',sub:'Cuéntame tu puntaje en los comentarios',em:'🏆',img:'',bg:''}]}}
 let P=example();
-try{const j=JSON.parse(localStorage.getItem('qvs2')||'null');if(j&&Array.isArray(j.slides)&&j.slides.length>=3)P=Object.assign(example(),j)}catch(e){}
-let sel=1,t=0,playing=false,t0=0,src=null,ac=null,tab='q',THUMB=false;
+let sel=1,t=0,playing=false,t0=0,src=null,ac=null,THUMB=false;
 const S=()=>P.slides;
 const rev=s=>P.reveal+(s.fact?1.5:0);
 const tl=()=>{let a=0;return S().map(s=>{const d=s.t=='cover'?P.coverSecs:s.t=='final'?5:s.secs+rev(s),o={s,a,d};a+=d;return o})};
@@ -302,7 +671,7 @@ function pic(c,s,x,y,w,h,r,col,lw,rv=1){if(h<20)return;
  let z=s.iz||1;if(fx=='zoom')z*=1+3.5*(1-e);
  if(m){const k=Math.max(W2/m.width,H2/m.height)*z,dw=m.width*k,dh=m.height*k;o.drawImage(m,(W2-dw)/2-(s.ix||0)*(dw-W2)/2,(H2-dh)/2-(s.iy||0)*(dh-H2)/2,dw,dh)}
  else if(s.em){const fs=Math.min(120,h*.62)*sc*z;o.font=fs+'px Fredoka, system-ui, sans-serif';o.textAlign='center';o.textBaseline='middle';o.fillText(s.em,W2/2-(s.ix||0)*W2*.3,H2/2+fs*.05-(s.iy||0)*H2*.3)}
- else{o.fillStyle='#0A184099';o.font=bf(600,22*sc);o.textAlign='center';o.textBaseline='middle';o.fillText('Sube una imagen',W2/2,H2/2)}
+ else{o.fillStyle='#0A184099';o.font=bf(600,22*sc);o.textAlign='center';o.textBaseline='middle';o.fillText(LB().up,W2/2,H2/2)}
  if(fx=='silueta'){o.globalCompositeOperation='source-in';o.fillStyle='#0A1840';o.fillRect(0,0,W2,H2);o.globalCompositeOperation='source-over'}
  c.save();rr(c,x,y,w,h,r);c.clip();const g=c.createLinearGradient(x,y,x+w,y+h);g.addColorStop(0,'#CFE9FF');g.addColorStop(1,'#FFD6E8');c.fillStyle=g;c.fillRect(x,y,w,h);
  if(fx=='hide'){const fs=Math.min(160,h*.75),p=1+.06*Math.sin(rv*40);c.fillStyle='#0A1840';c.textAlign='center';c.font=tf(700,fs*p);c.fillText('?',x+w/2,y+h/2+fs*.36)}
@@ -325,7 +694,7 @@ function draw(c,W,tt){
  const cur=bgOf(ix);
  if(ix>0&&lt<.6&&bgOf(ix-1)!=cur){paintBg(c,bgOf(ix-1),bt,C);const e=lt/.6;c.globalAlpha=e*e*(3-2*e);paintBg(c,cur,bt,C);c.globalAlpha=1}else paintBg(c,cur,bt,C);
  const qn=T.slice(0,ix+1).filter(x=>x.s.t=='q').length,qt=S().filter(x=>x.t=='q').length,q=s.t=='q';
- box(c,28,26,220,38,19,'#fff',3.5,'#000',0);c.fillStyle='#000';fit(c,q?`Pregunta ${qn} de ${qt}`:s.t=='cover'?P.coverTag:'Resultado',46,52,184,20,bf,700,'left');
+ box(c,28,26,220,38,19,'#fff',3.5,'#000',0);c.fillStyle='#000';fit(c,q?LB().q(qn,qt):s.t=='cover'?P.coverTag:LB().res,46,52,184,20,bf,700,'left');
  if(P.handle){c.textAlign='center';c.font=bf(700,17);c.lineWidth=5;c.strokeStyle='rgba(0,0,0,.55)';c.strokeText(P.handle,270,104);c.fillStyle='#fff';c.fillText(P.handle,270,104)}
  const cnt=q&&lt<s.secs,rem=q?Math.ceil(s.secs-lt):0,cy=118,ch=q?480:540,rt=q?lt-s.secs:-1;
  c.save();enter(c,lt,270,cy+ch/2);
@@ -335,7 +704,7 @@ function draw(c,W,tt){
   const y0=cy+60+(Ls.length-1)*lh+24;pic(c,s,52,y0,436,cy+ch-24-y0,26,C.ac,5,cnt?lt/s.secs:1);
   if(s.fact&&rt>.15){const e=Math.min(1,(rt-.15)/.4),eb=1+2.70158*(e-1)**3+1.70158*(e-1)**2,fy=cy+ch-24-118;
    c.save();c.translate(270,fy+50);c.scale(eb,eb);c.translate(-270,-(fy+50));c.globalAlpha*=Math.min(1,e*2);
-   box(c,44,fy,452,104,22,C.hi,4,'#000',5);c.fillStyle='#000';c.textAlign='left';c.font=bf(700,17);c.fillText('💡 DATO CURIOSO',64,fy+28);
+   box(c,44,fy,452,104,22,C.hi,4,'#000',5);c.fillStyle='#000';c.textAlign='left';c.font=bf(700,17);fit(c,P.factLabel||LB().fact,64,fy+28,412,17,bf,700,'left');c.textAlign='left';
    let fs=24,FL;do{c.font=bf(600,fs);FL=wrap(c,s.fact,412);fs-=2}while(FL.length>2&&fs>15);FL.slice(0,2).forEach((l,j)=>c.fillText(l,64,fy+58+j*(fs+6)));c.restore()}}
  else{const Ls=String(s.title).split('\n').slice(0,3);Ls.forEach((l,j)=>{c.fillStyle=j==1?C.ac:'#0A1840';fit(c,l,52,cy+72+j*56,436,48,tf,700,'left')});
   const y0=cy+72+(Ls.length-1)*56+26;
@@ -345,7 +714,7 @@ function draw(c,W,tt){
    tiers.forEach(([a,b],j)=>{const x=52+j%2*222,y=cy+ch-24-th+Math.floor(j/2)*72;
     box(c,x,y,214,62,18,j==tiers.length-1?C.hi:'#F3F4FA',3.5,'#000',0);c.fillStyle='#000';fit(c,a,x+14,y+26,186,22,bf,700,'left');fit(c,b||'',x+14,y+50,186,19,bf,500,'left')})}}
  c.restore();
- if(s.t=='cover'&&!THUMB){const m='Empieza en '+Math.max(1,P.coverSecs-Math.floor(lt)),p=1+.12*Math.max(0,1-(lt%1)*4);c.save();c.translate(270,760);c.scale(p,p);c.textAlign='center';c.font=tf(700,62);c.lineWidth=11;c.strokeStyle='#000';c.fillStyle='#fff';c.strokeText(m,0,0);c.fillText(m,0,0);c.restore()}
+ if(s.t=='cover'&&!THUMB){const m=LB().start+' '+Math.max(1,P.coverSecs-Math.floor(lt)),p=1+.12*Math.max(0,1-(lt%1)*4);c.save();c.translate(270,760);c.scale(p,p);c.textAlign='center';c.font=tf(700,62);c.lineWidth=11;c.strokeStyle='#000';c.fillStyle='#fff';c.strokeText(m,0,0);c.fillText(m,0,0);c.restore()}
  if(s.t=='final'&&lt>.3){for(let i=0;i<40;i++){const u=lt-.3,a=rnd(i)*Math.PI*2,v=250+rnd(i+40)*350,x=270+Math.cos(a)*v*u,y=200+Math.sin(a)*v*u+260*u*u;if(u>2.5)break;c.save();c.globalAlpha=Math.max(0,1-u/2.5);c.translate(x,y);c.rotate(u*6+i);c.fillStyle=[C.ac,C.hi,'#fff',C.b1][i%4];c.fillRect(-6,-4,12,8);c.restore()}}
  if(q){
   if(cnt){const x=462,y=74,p=1+.08*Math.max(0,1-(lt%1)*5);c.save();c.translate(x,y);c.scale(p,p);c.translate(-x,-y);
@@ -366,7 +735,7 @@ function draw(c,W,tt){
     c.save();c.globalAlpha=Math.max(0,1-rt/1.3);c.translate(px,py);c.rotate(rt*8+i);c.fillStyle=[C.hi,C.ac,'#fff','#22C55E'][i%4];c.fillRect(-6,-3.5,12,7);c.restore()}}});
   const by=872;box(c,28,by,484,24,12,'#fff',4,'#000',4);const fr=cnt?(s.secs-lt)/s.secs:0;
   if(fr>0){c.save();rr(c,28,by,484,24,12);c.clip();const gr=c.createLinearGradient(28,0,512,0);gr.addColorStop(0,'#EF4444');gr.addColorStop(.5,'#F59E0B');gr.addColorStop(1,'#22C55E');c.fillStyle=rem<=3?'#EF4444':gr;c.fillRect(28,by,484*fr,24);c.restore()}
-  c.fillStyle='#000';fit(c,cnt?rem+'s':'¡Respuesta!',270,by+18,200,16,bf,700,'center')}
+  c.fillStyle='#000';fit(c,cnt?rem+'s':LB().ans,270,by+18,200,16,bf,700,'center')}
  if(N<=18){let x=270-(N*20+8)/2;for(let i=0;i<N;i++){if(i==ix){box(c,x,920,28,12,6,C.ac,2.5,'#000',0);x+=34}else{dot(c,x+6,926,6,i<ix?C.hi:'#fff',2.5);x+=20}}}
  else{box(c,90,920,360,12,6,'#fff',2.5,'#000',0);rr(c,90,920,360*tt/(Z.a+Z.d),12,6);c.fillStyle=C.ac;c.fill()}
 }
@@ -430,21 +799,23 @@ function mkAudio(sr){const T=tl(),n=Math.ceil(tot()*sr),a=new Float32Array(n),K=
 
 /* ---------- vista previa ---------- */
 const cx=$('cv').getContext('2d'),fm=x=>Math.floor(x/60)+':'+String(Math.floor(x%60)).padStart(2,'0');
-function render(follow){const T=tl(),total=tot();t=clamp(t,0,total-.001);draw(cx,540,t);
+function render(follow){const T=tl(),total=tot();t=clamp(t,0,total-.001);
+ if(FS){fsSize();draw(fsCx,$('fsCv').width,t)}else draw(cx,540,t);
  const i=T.findIndex(o=>t<o.a+o.d);if(follow&&i!=sel){sel=i;chips();form()}
- $('scrub').value=t/total*1000;$('tm').textContent=fm(t)+' / '+fm(total)}
-function stop(){playing=false;try{src&&src.stop()}catch(e){}src=null;$('play').textContent='▶'}
-function play(){if(playing)return stop();if(t>=tot()-.1)t=0;
+ const v=t/total*1000,tx=fm(t)+' / '+fm(total);$('scrub').value=v;$('tm').textContent=tx;$('fsScrub').value=v;$('fsTm').textContent=tx}
+function setPlayUI(){['play','fsPlay'].forEach(id=>{$(id).textContent=playing?'⏸':'▶';$(id).setAttribute('aria-label',playing?'Pausar':'Reproducir')})}
+function stop(){playing=false;try{src&&src.stop()}catch(e){}src=null;setPlayUI()}
+function play(){if(playing)return stop();if(t>=tot()-.1)t=0;$('fsEnd').hidden=true;
  if($('snd').checked){try{ac=ac||new AudioContext();ac.resume();const a=mkAudio(48000),b=ac.createBuffer(1,a.length,48000);b.copyToChannel(a,0);src=ac.createBufferSource();src.buffer=b;src.connect(ac.destination);src.start(0,t)}catch(e){}}
- playing=true;t0=performance.now()-t*1000;$('play').textContent='⏸';loop()}
-function loop(){if(!playing)return;t=(performance.now()-t0)/1000;if(t>=tot()-.001){render(true);stop();return}render(true);requestAnimationFrame(loop)}
-$('play').onclick=play;
+ playing=true;t0=performance.now()-t*1000;setPlayUI();loop()}
+function loop(){if(!playing)return;t=(performance.now()-t0)/1000;if(t>=tot()-.001){render(true);stop();if(FS){$('fsEnd').hidden=false;$('fs').classList.remove('idle')}return}render(true);requestAnimationFrame(loop)}
+$('play').onclick=play;$('fsPlay').onclick=play;
 $('scrub').oninput=e=>{stop();t=e.target.value/1000*tot();render(true)};
-document.addEventListener('keydown',e=>{if(e.code=='Space'&&!/INPUT|TEXTAREA|SELECT|BUTTON/.test(e.target.tagName)){e.preventDefault();play()}});
+$('fsScrub').oninput=e=>{stop();$('fsEnd').hidden=true;t=e.target.value/1000*tot();render(true)};
+document.addEventListener('keydown',e=>{const top=LAYERS[LAYERS.length-1];if(e.code=='Space'&&VIEW=='editor'&&(top=='editor'||top=='fs')&&!/INPUT|TEXTAREA|SELECT|BUTTON/.test(e.target.tagName)){e.preventDefault();play()}});
 
 /* ---------- guardado local ---------- */
 let svT;
-function persist(){try{localStorage.setItem('qvs2',JSON.stringify(P,(k,v)=>k=='musicData'?undefined:v))}catch(e){$('msg2').textContent='El proyecto es muy grande para el guardado automático. Usa «Guardar proyecto».'}}
 /* deshacer / rehacer: copias superficiales, las imágenes se comparten sin duplicarse */
 const clone=p=>({...p,colors:{...p.colors},bgSet:[...p.bgSet],slides:p.slides.map(s=>({...s,o:s.o?[...s.o]:s.o}))});
 let H=[],hi=-1,hT=0;
@@ -453,28 +824,25 @@ function flushSnap(){if(hT){clearTimeout(hT);pushSnap()}}
 function histUI(){$('undo').disabled=hi<=0;$('redo').disabled=hi>=H.length-1}
 function dirty(){clearTimeout(svT);svT=setTimeout(persist,600);clearTimeout(hT);hT=setTimeout(pushSnap,400)}
 function restore(i){if(i<0||i>=H.length)return;stop();hi=i;const keepMusic=P.musicData;P=clone(H[i]);if(!P.musicData&&keepMusic&&P.music=='custom')P.musicData=keepMusic;persist();refreshAll();histUI()}
-function refreshAll(){sel=clamp(sel,0,S().length-1);chips();form();styleUI();musicUI();if(tab=='bg')bgMenu();render()}
+function refreshAll(){sel=clamp(sel,0,S().length-1);chips();form();styleUI();musicUI();if(SHEET=='bg')bgMenu();$('pname').value=P.name||'';render()}
 $('undo').onclick=()=>{flushSnap();restore(hi-1)};$('redo').onclick=()=>{flushSnap();restore(hi+1)};
-document.addEventListener('keydown',e=>{if(!(e.ctrlKey||e.metaKey)||/INPUT|TEXTAREA/.test(e.target.tagName))return;const k=e.key.toLowerCase();
+document.addEventListener('keydown',e=>{if(!(e.ctrlKey||e.metaKey)||/INPUT|TEXTAREA/.test(e.target.tagName)||VIEW!='editor')return;const k=e.key.toLowerCase();
  if(k=='z'&&!e.shiftKey){e.preventDefault();$('undo').click()}else if(k=='y'||(k=='z'&&e.shiftKey)){e.preventDefault();$('redo').click()}});
 
 const changed=()=>{render();dirty()};
 
-/* ---------- pestañas ---------- */
-document.querySelector('.tabs').onclick=e=>{const b=e.target.closest('button');if(!b)return;tab=b.dataset.tab;
- document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('on',x==b));['q','bg','mu','st','ex'].forEach(k=>$('tab-'+k).hidden=k!=tab);
- if(tab=='bg'){bgMenu();thumbLoop()}if(tab=='st')styleUI();if(tab=='mu')musicUI()};
+
 
 /* ---------- editor de preguntas ---------- */
-function chips(){let n=0;$('chips').innerHTML=S().map((s,i)=>`<button data-i="${i}" class="${i==sel?'on':''}">${s.t=='cover'?'Portada':s.t=='final'?'Final':'P'+(++n)}</button>`).join('')}
-function pick(i){stop();sel=clamp(i,0,S().length-1);chips();form();const o=tl()[sel];t=o.a+(o.s.t=='q'?1.3:1.2);render()}
+function chips(){let n=0;$('chips').innerHTML=S().map((s,i)=>`<button data-i="${i}" class="${i==sel?'on':''}" aria-pressed="${i==sel}">${s.t=='cover'?'Portada':s.t=='final'?'Final':'P'+(++n)}</button>`).join('');const on=$('chips').querySelector('.on');if(on){const c=$('chips');c.scrollLeft=Math.max(0,on.offsetLeft-c.clientWidth/2+on.offsetWidth/2)}slideInfo()}
+function pick(i){stop();sel=clamp(i,0,S().length-1);chips();form();swapAnim();const o=tl()[sel];t=o.a+(o.s.t=='q'?1.3:1.2);render()}
 $('chips').onclick=e=>{const i=e.target.dataset.i;if(i!=null)pick(+i)};
 const bgSel=s=>`<label>Fondo de esta diapositiva<select data-k="bg"><option value="">Automático (según menú de fondos)</option>${BGK.map(k=>`<option value="${k}" ${s.bg==k?'selected':''}>${BGS[k].n}</option>`).join('')}</select></label>`;
 function form(){const s=S()[sel];let h='';
  if(s.t=='q')h=`<label>Pregunta<textarea data-k="title" rows="2" id="f-title">${esc(s.title)}</textarea></label><label>Opciones (marca la correcta)</label>`+
   s.o.map((o,j)=>`<div class="opt"><input type="radio" name="cr" data-k="c" value="${j}" ${s.c==j?'checked':''} aria-label="Correcta ${LET[j]}"><b>${LET[j]}</b><input type="text" data-k="o${j}" id="f-o${j}" value="${esc(o)}" aria-label="Opción ${LET[j]}"></div>`).join('')+
   `<div class="row" style="margin-top:8px"><button class="sm" data-act="addo" ${s.o.length>=4?'disabled':''}>+ Opción</button><button class="sm" data-act="delo" ${s.o.length<=2?'disabled':''}>− Opción</button><button class="sm" data-act="mixo">🔀 Mezclar opciones</button></div>`+
-  `<label>Tiempo para responder: <b id="sv">${s.secs}s</b><input type="range" data-k="secs" id="f-secs" min="3" max="20" value="${s.secs}"></label>`+
+  `<label>Tiempo para responder: <b id="secV">${s.secs}s</b><input type="range" data-k="secs" id="f-secs" min="3" max="20" value="${s.secs}"></label>`+
   `<label>Dato curioso <span class="hint">(opcional, aparece al revelar)</span><input type="text" data-k="fact" id="f-fact" value="${esc(s.fact)}" placeholder="Ej: Se construyó en 1889."></label>`;
  else h=`<label>Título <span class="hint">(la 2.ª línea va en color de acento)</span><textarea data-k="title" id="f-title" rows="2">${esc(s.title)}</textarea></label><label>Subtítulo<input type="text" data-k="sub" id="f-sub" value="${esc(s.sub)}"></label>`;
  h+=`<label>Imagen</label><div class="imgrow"><div class="thumb">${s.img?`<img src="${s.img}" alt="Imagen actual">`:esc(s.em||'🖼️')}</div>
@@ -486,7 +854,7 @@ function form(){const s=S()[sel];let h='';
  $('form').innerHTML=h;
  $('file').onchange=e=>setImgFile(e.target.files[0])}
 $('form').oninput=e=>{const el=e.target,k=el.dataset.k,s=S()[sel];if(!k)return;
- if(k[0]=='o'&&k.length==2)s.o[+k[1]]=el.value;else if(k=='c')s.c=+el.value;else if(k=='secs'){s.secs=+el.value;$('sv').textContent=el.value+'s'}
+ if(k[0]=='o'&&k.length==2)s.o[+k[1]]=el.value;else if(k=='c')s.c=+el.value;else if(k=='secs'){s.secs=+el.value;$('secV').textContent=el.value+'s'}
  else if(k=='iz'||k=='ix'||k=='iy')s[k]=+el.value;else s[k]=el.value;
  if(k=='bg'){const o=tl()[sel];t=o.a+.7}
  if(k=='fx'){const o=tl()[sel];stop();t=o.a+.4;render();dirty();play();return}
@@ -497,7 +865,7 @@ $('form').onclick=e=>{const a=e.target.dataset.act,s=S()[sel];if(!a)return;
  if(a=='delo'&&s.o.length>2){s.o.pop();if(s.c>=s.o.length)s.c=0}
  if(a=='mixo'){const ok=s.o[s.c];for(let i=s.o.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[s.o[i],s.o[j]]=[s.o[j],s.o[i]]}s.c=s.o.indexOf(ok)}
  if(a=='noimg'){s.img='';s.iz=1;s.ix=0;s.iy=0}form();changed()};
-$('add').onclick=()=>{S().splice(S().length-1,0,mk('Nueva pregunta',['Opción A','Opción B','Opción C'],0,'❓'));dirty();pick(S().length-2)};
+$('add').onclick=()=>{S().splice(S().length-1,0,(P.lang=='en'?mk('New question',['Option A','Option B','Option C'],0,'❓'):mk('Nueva pregunta',['Opción A','Opción B','Opción C'],0,'❓')));dirty();pick(S().length-2)};
 $('dup').onclick=()=>{const s=S()[sel];if(s.t!='q')return;S().splice(sel+1,0,{...s,o:[...s.o]});dirty();pick(sel+1)};
 $('del').onclick=()=>{if(S()[sel].t!='q'||S().filter(x=>x.t=='q').length<2)return;S().splice(sel,1);dirty();pick(Math.min(sel,S().length-2))};
 function move(d){const j=sel+d,A=S();if(A[sel].t!='q'||!A[j]||A[j].t!='q')return;[A[sel],A[j]]=[A[j],A[sel]];dirty();pick(j)}
@@ -523,42 +891,74 @@ $('bulkAI').onclick=async()=>{const tx=AIP($('topic').value.trim(),$('topicN').v
 
 /* ---------- imágenes: subir, pegar, arrastrar ---------- */
 async function setImgFile(f){if(!f||!/^image\//.test(f.type))return;const s=S()[sel];try{s.img=await toData(f);s.iz=1;s.ix=0;s.iy=0;form();changed()}catch(e){}}
-document.addEventListener('paste',e=>{const f=[...(e.clipboardData?.files||[])].find(x=>/^image\//.test(x.type));if(f){e.preventDefault();setImgFile(f)}});
+document.addEventListener('paste',e=>{if(VIEW!='editor')return;const f=[...(e.clipboardData?.files||[])].find(x=>/^image\//.test(x.type));if(f){e.preventDefault();setImgFile(f)}});
 const STG=document.querySelector('.stage');
 STG.addEventListener('dragover',e=>{e.preventDefault();STG.classList.add('drop')});STG.addEventListener('dragleave',()=>STG.classList.remove('drop'));
 STG.addEventListener('drop',e=>{e.preventDefault();STG.classList.remove('drop');setImgFile(e.dataTransfer.files[0])});
 $('form').addEventListener('dragover',e=>e.preventDefault());$('form').addEventListener('drop',e=>{e.preventDefault();setImgFile(e.dataTransfer.files[0])});
 
 /* ---------- más acciones de preguntas ---------- */
-$('addvf').onclick=()=>{S().splice(S().length-1,0,mk('Escribe una afirmación',['Verdadero','Falso'],0,'🤔'));dirty();pick(S().length-2)};
+$('addvf').onclick=()=>{S().splice(S().length-1,0,mk(P.lang=='en'?'Write a statement':'Escribe una afirmación',VF(),0,'🤔'));dirty();pick(S().length-2)};
 $('mixq').onclick=()=>{const A=S(),q=A.filter(x=>x.t=='q');for(let i=q.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[q[i],q[j]]=[q[j],q[i]]}A.splice(1,q.length,...q);dirty();pick(1)};
 
-/* ---------- plantillas ---------- */
-const VF=['Verdadero','Falso'];
+/* ---------- plantillas por modo ---------- */
+const VF=()=>[LB().t,LB().f];
+const cov=(title,sub,em)=>({t:'cover',title,sub,em,img:'',bg:''});
+const fin=(title,sub,em='🏆')=>({t:'final',title,sub,em,img:'',bg:''});
+const qs=(rows,extra)=>rows.map(([q,o,c,em,f])=>({...mk(q,o,c,em,f),...(extra||{})}));
+const look=k=>({pal:k,colors:(({n,...c})=>c)(PALS[k])});
+const EN={lang:'en',factLabel:'🇪🇸 EN ESPAÑOL',coverTag:'English Quiz',reveal:2.5,music:'pop',musicVol:.25,trans:'zoom',
+ tiers:'0-3 | Keep practicing! 💪\n4-6 | Good job! 👍\n7-8 | Excellent! 🌟'};
 const TPL={
- geo:{n:'🌍 ¿En qué país está? (geografía)',f:()=>example()},
- vf:{n:'✅ Verdadero o falso: ciencia',f:()=>({...example(),pal:'jungle',colors:{...PALS.jungle},bgSet:['burbujas','ondas','puntos'],coverTag:'Verdadero o falso',
-  tiers:'0-3 | Mito andante\n4-5 | Curioso\n6-7 | Científico\n8 | Genio',slides:[{t:'cover',title:'¿Verdadero\no falso?',sub:'Casi nadie acierta las 8',em:'🧪',img:'',bg:''},
-  mk('El Sol es una estrella',VF,0,'☀️','Es una estrella enana amarilla.'),
-  mk('Los murciélagos son ciegos',VF,1,'🦇','Pueden ver, y muchos además usan ecolocalización.'),
-  mk('El agua hierve a 100 °C al nivel del mar',VF,0,'💧','A más altura, hierve a menor temperatura.'),
-  mk('Usamos solo el 10% del cerebro',VF,1,'🧠','Es un mito: usamos prácticamente todo el cerebro.'),
-  mk('Los pulpos tienen tres corazones',VF,0,'🐙','Dos bombean sangre a las branquias y uno al cuerpo.'),
-  mk('La Gran Muralla se ve a simple vista desde la Luna',VF,1,'🧱','Es demasiado angosta para verse desde tan lejos.'),
-  mk('Los diamantes están hechos de carbono',VF,0,'💎','Igual que el grafito de los lápices.'),
-  mk('Un rayo nunca cae dos veces en el mismo lugar',VF,1,'⚡','Los edificios altos reciben rayos varias veces al año.'),
-  {t:'final',title:'¿Cuántas\nacertaste?',sub:'Escribe tu puntaje en los comentarios',em:'🏆',img:'',bg:''}]})},
- ani:{n:'🐾 Adivina el animal (con efecto silueta)',f:()=>({...example(),pal:'sunset',colors:{...PALS.sunset},bgSet:['rayos','confeti','aurora'],coverTag:'Quiz de animales',
-  tiers:'0-2 | Turista del zoo\n3-4 | Amante de los animales\n5 | Veterinario\n6 | Experto salvaje',slides:[{t:'cover',title:'¿Qué tanto\nsabes de animales?',sub:'El 80% falla la última',em:'🦁',img:'',bg:''},
+ geo:{cats:['redes'],n:'¿En qué país está?',em:'🌍',d:'Lugares famosos del mundo',f:()=>({...example(),name:'¿En qué país está?'})},
+ ani:{cats:['redes','clase'],n:'Adivina el animal',em:'🐾',d:'Con efectos de silueta y pixelado',f:()=>({...example(),...look('sunset'),name:'Adivina el animal',bgSet:['rayos','confeti','aurora'],coverTag:'Quiz de animales',
+  tiers:'0-2 | Turista del zoo\n3-4 | Amante de los animales\n5 | Veterinario\n6 | Experto salvaje',slides:[cov('¿Qué tanto\nsabes de animales?','El 80% falla la última','🦁'),
   {...mk('¿Cuál es el animal terrestre más rápido?',['León','Guepardo','Caballo'],1,'🐆','Puede superar los 100 km/h en carreras cortas.'),fx:'silueta'},
   {...mk('¿Cuál es el animal más grande del mundo?',['Elefante','Ballena azul','Jirafa'],1,'🐋','Puede medir cerca de 30 metros.'),fx:'silueta'},
   {...mk('¿Cuántas patas tiene una araña?',['6','8','10'],1,'🕷️','Las arañas no son insectos: los insectos tienen 6.'),fx:'pixel'},
   {...mk('¿De qué color es la piel del oso polar?',['Blanca','Negra','Rosada'],1,'🐻‍❄️','Su pelo es transparente y su piel es negra.'),fx:'blur'},
   {...mk('¿Cuál de estas aves no puede volar?',['Águila','Pingüino','Gaviota'],1,'🐧','Usa sus alas para nadar bajo el agua.'),fx:'silueta'},
   {...mk('¿Qué animal tiene la lengua azul?',['Jirafa','Cebra','Hipopótamo'],0,'🦒','Su color oscuro la protegería del sol.'),fx:'zoom'},
-  {t:'final',title:'¿Cuántas\nacertaste?',sub:'Cuéntame en los comentarios',em:'🏆',img:'',bg:''}]})}};
-$('tpl').innerHTML=Object.entries(TPL).map(([k,v])=>`<option value="${k}">${v.n}</option>`).join('');
-$('tplGo').onclick=()=>{flushSnap();const keep={music:P.music,musicVol:P.musicVol,musicData:P.musicData,musicName:P.musicName};P=Object.assign(TPL[$('tpl').value].f(),keep);dirty();refreshAll();pick(1)};
+  fin('¿Cuántas\nacertaste?','Cuéntame en los comentarios')]})},
+ vf:{cats:['redes','clase'],n:'Verdadero o falso: ciencia',em:'🧪',d:'Mitos y verdades para pensar',f:()=>{const V=['Verdadero','Falso'];return{...example(),...look('jungle'),name:'Verdadero o falso',bgSet:['burbujas','ondas','puntos'],coverTag:'Verdadero o falso',
+  tiers:'0-3 | Mito andante\n4-5 | Curioso\n6-7 | Científico\n8 | Genio',slides:[cov('¿Verdadero\no falso?','Casi nadie acierta las 8','🧪'),...qs([
+  ['El Sol es una estrella',V,0,'☀️','Es una estrella enana amarilla.'],['Los murciélagos son ciegos',V,1,'🦇','Pueden ver, y muchos además usan ecolocalización.'],
+  ['El agua hierve a 100 °C al nivel del mar',V,0,'💧','A más altura, hierve a menor temperatura.'],['Usamos solo el 10% del cerebro',V,1,'🧠','Es un mito: usamos prácticamente todo el cerebro.'],
+  ['Los pulpos tienen tres corazones',V,0,'🐙','Dos bombean sangre a las branquias y uno al cuerpo.'],['La Gran Muralla se ve a simple vista desde la Luna',V,1,'🧱','Es demasiado angosta para verse desde tan lejos.'],
+  ['Los diamantes están hechos de carbono',V,0,'💎','Igual que el grafito de los lápices.'],['Un rayo nunca cae dos veces en el mismo lugar',V,1,'⚡','Los edificios altos reciben rayos varias veces al año.']]),
+  fin('¿Cuántas\nacertaste?','Escribe tu puntaje en los comentarios')]}}},
+ math:{cats:['clase'],n:'Cálculo mental',em:'🧮',d:'Tablas, sumas y restas con trucos',f:()=>({...example(),...look('ice'),name:'Cálculo mental',bgSet:['cuadros','puntos','rayas'],coverTag:'Matemáticas',reveal:3,music:'lofi',musicVol:.2,trans:'subir',
+  tiers:'0-3 | ¡A practicar! 💪\n4-6 | ¡Vas muy bien! 👍\n7-8 | ¡Genio de los números! 🌟',slides:[cov('¿Cuánto sabes\nde mates?','Responde antes de que acabe el tiempo','🧮'),...qs([
+  ['¿Cuánto es 7 × 8?',['54','56','64'],1,'✖️','Truco: 5, 6, 7, 8 → 56 = 7 × 8'],['¿Cuánto es 9 × 6?',['54','45','63'],0,'✖️','Con el 9, las cifras del resultado suman 9: 5 + 4'],
+  ['¿Cuánto es 12 + 15?',['37','25','27'],2,'➕','Suma decenas y unidades: 10 + 10 y 2 + 5'],['¿Cuánto es 100 − 37?',['63','73','67'],0,'➖','Comprueba: 37 + 63 = 100'],
+  ['¿Cuánto es 81 ÷ 9?',['7','9','8'],1,'➗','Porque 9 × 9 = 81'],['¿Cuánto es 6 × 7?',['48','36','42'],2,'✖️','Es lo mismo que 7 × 6'],
+  ['¿Cuánto es 15 × 3?',['45','35','55'],0,'✖️','15 + 15 + 15 = 45'],['¿Cuánto es 48 ÷ 6?',['6','8','7'],1,'➗','Porque 6 × 8 = 48']],{secs:12}),
+  fin('¿Cuántas\nacertaste?','¡Sigue practicando cada día!','🌟')]})},
+ en_ani:{cats:['ingles','clase'],n:'Animals in English',em:'🐶',d:'¿Qué animal es? Con la traducción',f:()=>({...example(),...look('jungle'),...EN,name:'Animals in English',bgSet:['burbujas','puntos','ondas'],
+  slides:[cov('What animal\nis this?','Learn animals in English','🐾'),...qs([
+  ['What animal is this?',['Cat','Dog','Horse'],1,'🐶','Dog = Perro'],['What animal is this?',['Cat','Mouse','Rabbit'],0,'🐱','Cat = Gato'],
+  ['What animal is this?',['Lion','Bear','Elephant'],2,'🐘','Elephant = Elefante'],['What animal is this?',['Monkey','Duck','Pig'],0,'🐵','Monkey = Mono'],
+  ['What animal is this?',['Tiger','Lion','Wolf'],1,'🦁','Lion = León'],['What animal is this?',['Rabbit','Sheep','Fox'],0,'🐰','Rabbit = Conejo'],
+  ['What animal is this?',['Frog','Snake','Turtle'],2,'🐢','Turtle = Tortuga'],['What animal is this?',['Fish','Bird','Bee'],1,'🐦','Bird = Pájaro']],{secs:10}),
+  fin('How many\ndid you get?','Practice again tomorrow!','🌟')]})},
+ en_col:{cats:['ingles','clase'],n:'Colors in English',em:'🎨',d:'Los colores con imagen y traducción',f:()=>({...example(),...look('candy'),...EN,name:'Colors in English',bgSet:['puntos','confeti','aurora'],
+  slides:[cov('What color\nis it?','Learn colors in English','🎨'),...qs([
+  ['What color is it?',['Blue','Red','Green'],1,'🔴','Red = Rojo'],['What color is it?',['Blue','Pink','Brown'],0,'🔵','Blue = Azul'],
+  ['What color is it?',['Yellow','Black','Green'],2,'🟢','Green = Verde'],['What color is it?',['Yellow','White','Gray'],0,'🟡','Yellow = Amarillo'],
+  ['What color is it?',['Orange','Purple','Red'],1,'🟣','Purple = Morado'],['What color is it?',['Pink','Blue','Orange'],2,'🟠','Orange = Naranja'],
+  ['What color is it?',['Black','Green','White'],0,'⚫','Black = Negro'],['What color is it?',['Brown','White','Yellow'],1,'⚪','White = Blanco']],{secs:8}),
+  fin('How many\ndid you get?','Great job!','🌈')]})},
+ en_fru:{cats:['ingles','clase'],n:'Fruits in English',em:'🍎',d:'Las frutas con imagen y traducción',f:()=>({...example(),...look('sunset'),...EN,name:'Fruits in English',bgSet:['rayos','burbujas','confeti'],
+  slides:[cov('What fruit\nis this?','Learn fruits in English','🍓'),...qs([
+  ['What fruit is this?',['Apple','Pear','Peach'],0,'🍎','Apple = Manzana'],['What fruit is this?',['Lemon','Banana','Mango'],1,'🍌','Banana = Plátano'],
+  ['What fruit is this?',['Cherries','Plums','Grapes'],2,'🍇','Grapes = Uvas'],['What fruit is this?',['Strawberry','Raspberry','Tomato'],0,'🍓','Strawberry = Fresa'],
+  ['What fruit is this?',['Melon','Watermelon','Kiwi'],1,'🍉','Watermelon = Sandía'],['What fruit is this?',['Coconut','Papaya','Pineapple'],2,'🍍','Pineapple = Piña'],
+  ['What fruit is this?',['Orange','Lime','Apricot'],0,'🍊','Orange = Naranja'],['What fruit is this?',['Lemon','Banana','Pear'],0,'🍋','Lemon = Limón']],{secs:10}),
+  fin('How many\ndid you get?','Practice again tomorrow!','🌟')]})}};
+function blank(lang='es'){const en=lang=='en',q=()=>mk(en?'Write your question here':'Escribe tu pregunta aquí',en?['Option A','Option B','Option C']:['Opción A','Opción B','Opción C'],0,'❓');
+ return{...example(),...(en?EN:{}),name:en?'My English quiz':'Mi quiz',lang,coverTag:en?'English Quiz':'Quiz',tiers:en?'0-1 | Keep practicing!\n2 | Good job!\n3 | Perfect!':'0-1 | ¡A practicar!\n2 | ¡Bien!\n3 | ¡Perfecto!',
+  slides:[cov(en?'My amazing\nquiz':'Mi quiz\nincreíble',en?'Can you get them all?':'¿Aciertas todas?','🧠'),q(),q(),q(),fin(en?'How many\ndid you get?':'¿Cuántas\nacertaste?',en?'Tell me your score!':'Cuéntame tu puntaje en los comentarios')]}}
+
 
 /* ---------- música y efectos ---------- */
 $('tick').innerHTML=Object.entries(TICKS).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
@@ -571,7 +971,7 @@ function playBuf(a){try{prevSrc&&prevSrc.stop()}catch(e){}stop();ac=ac||new Audi
 $('mus').onclick=e=>{const b=e.target.closest('button');if(!b)return;P.music=b.dataset.m;if(P.music=='custom'&&!P.musicData)setTimeout(()=>$('musFile').click(),50);musicUI();dirty()};
 $('musFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;if(f.size>25e6){$('custMsg').textContent='El archivo es muy grande (máximo 25 MB).';return}
  const r=new FileReader();r.onload=async()=>{P.musicData=r.result;P.musicName=f.name.replace(/\.[^.]+$/,'');CUST=null;$('custMsg').textContent='Preparando la canción…';await decodeCustom();
-  $('custMsg').textContent=CUST?'Lista. Se repite si el video es más largo que la canción. Para conservarla, usa «Guardar proyecto».':'No pude leer ese archivo de audio. Prueba con un MP3.';musicUI();dirty()};r.readAsDataURL(f)};
+  $('custMsg').textContent=CUST?'Lista. Se repite si el video es más largo que la canción.':'No pude leer ese archivo de audio. Prueba con un MP3.';musicUI();dirty()};r.readAsDataURL(f)};
 $('mv').oninput=e=>{P.musicVol=+e.target.value;$('mvV').textContent=Math.round(P.musicVol*100)+'%';dirty()};
 $('sv').oninput=e=>{P.sfxVol=+e.target.value;$('svV').textContent=Math.round(P.sfxVol*100)+'%';dirty()};
 $('tick').onchange=e=>{P.tick=e.target.value;dirty();$('sfxPrev').click()};$('ding').onchange=e=>{P.ding=e.target.value;dirty();$('sfxPrev').click()};
@@ -583,7 +983,7 @@ musicUI();
 /* ---------- menú de fondos ---------- */
 function bgMenu(){$('rot').checked=P.rotate;
  $('bgHint').textContent=P.rotate?`Toca los fondos para incluirlos o quitarlos de la rotación (${P.bgSet.length} elegidos).`:'Toca un fondo para usarlo en todo el video.';
- $('bgs').innerHTML=BGK.map(k=>{const on=P.rotate?P.bgSet.includes(k):P.bg==k;return `<button data-k="${k}" class="${on?'on':''}" aria-pressed="${on}"><canvas width="108" height="192"></canvas><span>${BGS[k].n}</span><i class="ck">✓</i></button>`}).join('');
+ $('bgs').innerHTML=BGK.map(k=>{const on=P.rotate?P.bgSet.includes(k):P.bg==k;return `<button data-k="${k}" class="${on?'on':''}" aria-pressed="${on}"><canvas width="108" height="192"></canvas><span>${BGS[k].n}</span><i class="ck" aria-hidden="true">✓</i></button>`}).join('');
  $('bgImgBox').hidden=!(P.rotate?P.bgSet.includes('imagen'):P.bg=='imagen');
  $('dim').value=P.dim;$('dimV').textContent=Math.round(P.dim*100)+'%';$('spd').value=P.bgSpeed;$('spdV').textContent=P.bgSpeed+'×';thumbsOnce()}
 $('bgs').onclick=e=>{const b=e.target.closest('button');if(!b)return;const k=b.dataset.k;
@@ -596,14 +996,14 @@ $('spd').oninput=e=>{P.bgSpeed=+e.target.value;$('spdV').textContent=P.bgSpeed+'
 $('bgFile').onchange=async e=>{const f=e.target.files[0];if(f){P.bgImg=await toData(f,1600);changed();thumbsOnce()}};
 const RM=matchMedia('(prefers-reduced-motion: reduce)');
 function thumbsOnce(tm){const cs=$('bgs').querySelectorAll('canvas');tm=tm??performance.now()/1000;cs.forEach((cv,i)=>{const c=cv.getContext('2d');c.setTransform(108/540,0,0,108/540,0,0);paintBg(c,BGK[i],tm*P.bgSpeed,P.colors)})}
-let lastTh=0;function thumbLoop(now){if(tab!='bg')return;if(!RM.matches&&(!now||now-lastTh>33)){lastTh=now||0;thumbsOnce()}requestAnimationFrame(thumbLoop)}
+let lastTh=0;function thumbLoop(now){if(SHEET!='bg')return;if(!RM.matches&&(!now||now-lastTh>33)){lastTh=now||0;thumbsOnce()}requestAnimationFrame(thumbLoop)}
 
 /* ---------- estilo ---------- */
 $('font').innerHTML=Object.entries(FONTS).map(([k,f])=>`<option value="${k}">${f.n}</option>`).join('');
 function styleUI(){$('pals').innerHTML=Object.entries(PALS).map(([k,p])=>`<button data-p="${k}" class="${P.pal==k?'on':''}"><i><b style="background:${p.b1}"></b><b style="background:${p.b2}"></b><b style="background:${p.ac}"></b><b style="background:${p.hi}"></b></i>${p.n}</button>`).join('');
  ['b1','b2','ac','hi'].forEach(k=>$('c-'+k).value=P.colors[k]);$('font').value=P.font;$('trans').value=P.trans;
  $('rev').value=P.reveal;$('revV').textContent=P.reveal+'s';$('cov').value=P.coverSecs;$('covV').textContent=P.coverSecs+'s';
- $('handle').value=P.handle;$('tag').value=P.coverTag;$('tiers').value=P.tiers}
+ $('handle').value=P.handle;$('tag').value=P.coverTag;$('tiers').value=P.tiers;$('lang').value=P.lang||'es';$('factLbl').value=P.factLabel||'';$('factLbl').placeholder=LB().fact}
 $('pals').onclick=e=>{const b=e.target.closest('button');if(!b)return;P.pal=b.dataset.p;P.colors={...PALS[P.pal]};delete P.colors.n;styleUI();changed()};
 ['b1','b2','ac','hi'].forEach(k=>$('c-'+k).oninput=e=>{P.colors[k]=e.target.value;P.pal='';document.querySelectorAll('#pals button').forEach(b=>b.classList.remove('on'));changed()});
 $('font').onchange=e=>{P.font=e.target.value;document.fonts.load(tf(700,30)).then(changed)};
@@ -656,16 +1056,196 @@ async function exportVideo(base){
 const hasUse=()=>typeof window.claude?.use=='function';
 $('png').onclick=async()=>{await preload();await document.fonts.load(tf(700,30));const cv=document.createElement('canvas');cv.width=1080;cv.height=1920;THUMB=true;draw(cv.getContext('2d'),1080,Math.min(1.5,tl()[0].d-.1));THUMB=false;cv.toBlob(b=>save(b,slug(String(S()[0].title).replace(/\n/g,' '))+'-portada.png',msg),'image/png')};
 
-/* proyecto */
-const msg2=x=>$('msg2').textContent=x;
-$('saveP').onclick=()=>save(new Blob([JSON.stringify(P,(k,v)=>k=='scene'?undefined:v)],{type:'application/json'}),'quiz-proyecto.json',msg2);
-$('openP').onclick=()=>$('openF').click();
-$('openF').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const j=JSON.parse(await f.text());if(!Array.isArray(j.slides))throw 0;P=Object.assign(example(),j);CUST=null;decodeCustom();dirty();refreshAll();pick(1);msg2('Proyecto abierto.')}catch(x){msg2('Ese archivo no es un proyecto de Quiz Video Studio.')}e.target.value=''};
-let rsT=0;$('reset').onclick=()=>{if(Date.now()-rsT>4000){rsT=Date.now();$('reset').textContent='¿Seguro? Toca otra vez';setTimeout(()=>$('reset').textContent='Empezar de nuevo',4000);return}
- P=example();CUST=null;$('reset').textContent='Empezar de nuevo';dirty();refreshAll();pick(1);msg2('Se cargó el quiz de ejemplo.')};
 
-chips();form();pick(1);H=[clone(P)];hi=0;histUI();decodeCustom();
-Promise.all([bf(700,30),bf(600,30),tf(700,30)].map(f=>document.fonts.load(f))).then(()=>render()).catch(()=>{});
+/* ---------- utilidades ---------- */
+const RMQ=RM;
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+let toastT=0;function toast(x){const el=$('toast');el.textContent=x;el.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),2600)}
+function ago(ts){const s=(Date.now()-ts)/1000;if(s<60)return'hace un momento';if(s<3600)return'hace '+Math.floor(s/60)+' min';if(s<86400)return'hace '+Math.floor(s/3600)+' h';if(s<172800)return'ayer';
+ return new Date(ts).toLocaleDateString('es',{day:'numeric',month:'short'})}
+function swapAnim(){const f=$('form');f.classList.remove('swap');void f.offsetWidth;f.classList.add('swap')}
+const reqFS=el=>{try{const f=el.requestFullscreen||el.webkitRequestFullscreen;if(f){const r=f.call(el);r&&r.catch&&r.catch(()=>{})}}catch(e){}};
+const exitFS=()=>{try{if(document.fullscreenElement){const r=document.exitFullscreen();r&&r.catch&&r.catch(()=>{})}}catch(e){}};
+
+/* ---------- proyectos guardados en el dispositivo ---------- */
+const DB=(()=>{let p=null;const open=()=>p||(p=new Promise((res,rej)=>{try{const r=indexedDB.open('quizvideostudio',1);r.onupgradeneeded=()=>r.result.createObjectStore('projects',{keyPath:'id'});r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}catch(e){rej(e)}}));
+ const tx=async(mode,fn)=>{const db=await open();return new Promise((res,rej)=>{const t=db.transaction('projects',mode),q=fn(t.objectStore('projects'));t.oncomplete=()=>res(q&&q.result);t.onerror=()=>rej(t.error)})};
+ return{all:()=>tx('readonly',s=>s.getAll()),get:id=>tx('readonly',s=>s.get(id)),put:o=>tx('readwrite',s=>s.put(o)),del:id=>tx('readwrite',s=>s.delete(id))}})();
+let CUR=null,thumbCache='',lastThumb=0,dbWarned=false;
+function thumbData(){try{const c=document.createElement('canvas');c.width=216;c.height=384;THUMB=true;draw(c.getContext('2d'),216,Math.min(1.3,tl()[0].d-.1));THUMB=false;return c.toDataURL('image/jpeg',.72)}catch(e){THUMB=false;return''}}
+async function saveNow(){clearTimeout(svT);if(!CUR)return;const now=Date.now();if(!thumbCache||now-lastThumb>4000){thumbCache=thumbData();lastThumb=now}
+ try{await DB.put({id:CUR,name:P.name||'Mi quiz',updated:now,nq:S().filter(s=>s.t=='q').length,thumb:thumbCache,data:P})}
+ catch(e){if(!dbWarned){dbWarned=true;toast('No se pudo guardar en este dispositivo. Usa ☰ → Guardar como archivo.')}}}
+function persist(){saveNow()}
+function loadP(data,id){stop();P=Object.assign(example(),data);if(!P.name)P.name='Mi quiz';CUR=id;CUST=null;thumbCache='';decodeCustom();H=[clone(P)];hi=0;histUI();sel=S().length>2?1:0;refreshAll();pick(sel)}
+async function newProject(data){loadP(data,uid());await saveNow();enterEditor();toast('Proyecto creado ✨')}
+async function openProject(id){try{const r=await DB.get(id);if(!r)return;loadP(r.data,r.id);enterEditor()}catch(e){toast('No se pudo abrir el proyecto.')}}
+async function renderHome(){let L=[];try{L=await DB.all()||[]}catch(e){}
+ L.sort((a,b)=>b.updated-a.updated);$('pCount').textContent=L.length?`· ${L.length}`:'';
+ $('projects').innerHTML=L.length?L.map((p,i)=>`<div class="proj" style="--i:${Math.min(i,8)}"><button class="pth" data-open="${p.id}" aria-label="Abrir ${esc(p.name)}">${p.thumb?`<img src="${p.thumb}" alt="">`:'❓'}</button>
+  <div class="pin"><button class="pnm" data-open="${p.id}" title="${esc(p.name)}">${esc(p.name)}</button><span class="hint">${p.nq} preguntas · ${ago(p.updated)}</span>
+  <div class="pact"><button class="sm" data-dup="${p.id}">⧉ Duplicar</button><button class="sm warn" data-del="${p.id}" aria-label="Eliminar ${esc(p.name)}">🗑</button></div></div></div>`).join('')
+  :`<div class="empty"><span>🎬</span><p><b>Aquí aparecerán tus videos.</b><br>Elige un modo arriba para crear el primero.</p></div>`}
+$('projects').onclick=async e=>{const b=e.target.closest('button');if(!b)return;
+ if(b.dataset.open)return openProject(b.dataset.open);
+ if(b.dataset.dup){const r=await DB.get(b.dataset.dup);if(r){await DB.put({...r,id:uid(),name:r.name+' (copia)',updated:Date.now()});renderHome();toast('Proyecto duplicado')}}
+ if(b.dataset.del){const r=await DB.get(b.dataset.del);if(r&&await ask(`¿Eliminar «${r.name}»? No se puede deshacer.`,'Eliminar')){await DB.del(r.id);renderHome();toast('Proyecto eliminado')}}};
+
+/* ---------- navegación: vistas y capas (funciona con el botón atrás de Android) ---------- */
+function showView(v,dir){if(VIEW==v)return;stop();$(VIEW).hidden=true;const b=$(v);b.hidden=false;b.classList.remove('in-r','in-l','go');void b.offsetWidth;b.classList.add(dir<0?'in-l':'in-r');VIEW=v;window.scrollTo(0,0);
+ if(v=='home'){saveNow();renderHome();heroLoop()}else render()}
+function enterEditor(){if(VIEW=='editor'){const k=LAYERS.length-1;if(k>0)history.go(-k);return}openLayer('editor')}
+function showLayer(n){
+ if(n=='editor')return showView('editor',1);
+ if(n=='drawer'){$('dEd').hidden=VIEW!='editor';$('scrim').hidden=false;$('drawer').hidden=false;requestAnimationFrame(()=>{$('scrim').classList.add('open');$('drawer').classList.add('open')});return}
+ if(n=='sheet'){$('scrim').hidden=false;$('sheet').hidden=false;requestAnimationFrame(()=>{$('scrim').classList.add('open');$('sheet').classList.add('open')});return}
+ if(n=='fs')return fsShow();
+ if(n=='player')return pgShow();
+ if(n=='dlg'){$('dlg').hidden=false;$('dlgYes').focus()}}
+function hideLayer(n){
+ if(n=='editor')return showView('home',-1);
+ if(n=='drawer'||n=='sheet'){const el=$(n);el.classList.remove('open');if(!LAYERS.some(x=>x=='drawer'||x=='sheet'))$('scrim').classList.remove('open');
+  setTimeout(()=>{if(!el.classList.contains('open'))el.hidden=true;if(!$('scrim').classList.contains('open'))$('scrim').hidden=true},340);if(n=='sheet'){SHEET='';try{prevSrc&&prevSrc.stop()}catch(e){}}return}
+ if(n=='fs')return fsHide();
+ if(n=='player')return pgHide();
+ if(n=='dlg'){$('dlg').hidden=true;if(dlgRes){dlgRes(false);dlgRes=null}}}
+function openLayer(n){const top=LAYERS[LAYERS.length-1];
+ if(n!='dlg'&&['drawer','sheet','fs','player'].includes(top)){hideLayer(LAYERS.pop());LAYERS.push(n);history.replaceState({d:LAYERS.length},'')}
+ else{LAYERS.push(n);history.pushState({d:LAYERS.length},'')}showLayer(n)}
+function closeTop(){if(LAYERS.length)history.back()}
+addEventListener('popstate',e=>{const d=(e.state&&e.state.d)||0;while(LAYERS.length>d)hideLayer(LAYERS.pop())});
+$('scrim').onclick=closeTop;$('dClose').onclick=closeTop;$('shClose').onclick=closeTop;
+document.addEventListener('keydown',e=>{if(e.key=='Escape'&&LAYERS.length&&LAYERS[LAYERS.length-1]!='editor'){e.preventDefault();closeTop()}});
+let dlgRes=null;
+function ask(text,yes){$('dlgTx').textContent=text;$('dlgYes').textContent=yes;return new Promise(r=>{dlgRes=r;openLayer('dlg')})}
+$('dlgYes').onclick=()=>{const r=dlgRes;dlgRes=null;r&&r(true);closeTop()};$('dlgNo').onclick=closeTop;
+
+/* ---------- menú y hojas ---------- */
+const SHT={tpl:'Elige una plantilla',bg:'Fondos animados',mu:'Música y sonidos',st:'Estilo, textos e idioma',ex:'Exportar video',help:'Cómo se usa',about:'Acerca de'};
+function openSheet(k,title){SHEET=k;$('shTitle').textContent=title||SHT[k];document.querySelectorAll('.sbody>div').forEach(d=>d.hidden=d.id!='tab-'+k);$('sheet').querySelector('.sbody').scrollTop=0;
+ if(k=='bg'){bgMenu();requestAnimationFrame(thumbLoop)}if(k=='mu')musicUI();if(k=='st')styleUI();
+ if(LAYERS[LAYERS.length-1]=='sheet')return;openLayer('sheet')}
+$('menuH').onclick=$('menuE').onclick=()=>openLayer('drawer');
+$('drawer').onclick=e=>{const b=e.target.closest('button.di');if(!b)return;if(b.dataset.sheet)return openSheet(b.dataset.sheet);const a=b.dataset.act;
+ if(a=='play')return openPlayer();if(a=='fs')return openFs();
+ if(a=='saveFile'){closeTop();return save(new Blob([JSON.stringify(P,(k,v)=>k=='scene'?undefined:v)],{type:'application/json'}),slug(P.name||'quiz')+'.quiz.json',toast)}
+ if(a=='openFile')return $('openF').click();
+ if(a=='home'){if(VIEW=='editor')history.go(-LAYERS.length);else closeTop();return}
+ if(a=='theme')return cycleTheme()};
+$('openF').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
+ try{const j=JSON.parse(await f.text());if(!Array.isArray(j.slides))throw 0;if(!j.name)j.name=f.name.replace(/(\.quiz)?\.json$/i,'');
+  if(VIEW=='editor')history.go(-LAYERS.length);else if(LAYERS.length)history.back();setTimeout(()=>newProject(j),120)}
+ catch(x){toast('Ese archivo no es un proyecto de Quiz Video Studio.')}};
+const THEME0=document.documentElement.getAttribute('data-theme'),THM={auto:'Automática',light:'Clara',dark:'Oscura'};
+let theme='auto';try{theme=localStorage.getItem('qvs-theme')||'auto'}catch(e){}
+function applyTheme(){if(theme=='auto'){if(THEME0)document.documentElement.setAttribute('data-theme',THEME0);else document.documentElement.removeAttribute('data-theme')}else document.documentElement.setAttribute('data-theme',theme);$('themeV').textContent=THM[theme]}
+function cycleTheme(){theme={auto:'light',light:'dark',dark:'auto'}[theme];try{localStorage.setItem('qvs-theme',theme)}catch(e){}applyTheme();toast('Apariencia: '+THM[theme])}
+applyTheme();
+
+/* ---------- inicio: modos, plantillas e idea del día ---------- */
+document.querySelector('.modes').onclick=e=>{const b=e.target.closest('button.mode');if(!b)return;const m=b.dataset.mode;
+ if(m=='blank')return newProject(blank('es'));tplUI(m);openSheet('tpl',{redes:'Videos para redes',clase:'Para clase',ingles:'Inglés con imágenes'}[m])};
+function tplUI(cat){const L=Object.entries(TPL).filter(([k,v])=>v.cats.includes(cat));
+ $('tplList').innerHTML=L.map(([k,v],i)=>{const d=v.f(),n=d.slides.filter(s=>s.t=='q').length;
+  return`<button class="tcard" style="--i:${i};--c1:${d.colors.b1};--c2:${d.colors.b2}" data-tpl="${k}"><span class="tem">${v.em}</span><span class="ttx"><b>${esc(v.n)}</b><span>${esc(v.d)}</span><small>${n} preguntas · ${LANGN[d.lang||'es']}</small></span><span class="tgo">Usar →</span></button>`}).join('')+
+  `<button class="tcard" style="--i:${L.length};--c1:#FFF1A8;--c2:#FFD600" data-blank="${cat=='ingles'?'en':'es'}"><span class="tem">✍️</span><span class="ttx"><b>${cat=='ingles'?'English quiz en blanco':'En blanco'}</b><span>Empieza con 3 preguntas vacías</span><small>${cat=='ingles'?'English':'Español'}</small></span><span class="tgo">Crear →</span></button>`}
+$('tplList').onclick=e=>{const b=e.target.closest('button.tcard');if(!b)return;if(b.dataset.tpl){const T=TPL[b.dataset.tpl],d=T.f();d.name=T.n;newProject(d)}else newProject(blank(b.dataset.blank))};
+const IDEAS=['Planetas del sistema solar','Animales del océano','Capitales de América','Inventos que cambiaron el mundo','Partes del cuerpo en inglés','Banderas del mundo','Comidas típicas de cada país','Dinosaurios','Récords del mundo animal','Instrumentos musicales','Profesiones en inglés','Monumentos famosos','Ríos y montañas del mundo','Verbos en inglés','El cuerpo humano','Ciencia en la cocina','Historia de los Juegos Olímpicos','Números en inglés','Países y sus idiomas','Datos del espacio'];
+const idea=IDEAS[Math.floor(Date.now()/864e5)%IDEAS.length];$('ideaTx').textContent=idea;
+$('ideaGo').onclick=async()=>{const d=blank(/inglés/i.test(idea)?'en':'es');d.name=idea;d.slides[0].title=idea;await newProject(d);
+ $('topic').value=idea;$('bulk').open=true;setTimeout(()=>{$('bulk').scrollIntoView({behavior:RMQ.matches?'auto':'smooth',block:'start'});toast('Copia la instrucción y pégala en un chat de IA gratis')},450)};
+
+/* vista previa animada del inicio */
+const DEMO=example(),hcx=$('heroCv').getContext('2d');let heroOn=false,heroLast=0;const heroT0=performance.now();
+function heroDraw(tt){const keep=P;P=DEMO;try{const T=tl(),Z=T[T.length-1];draw(hcx,270,tt%(Z.a+Z.d))}catch(e){}P=keep}
+function heroLoop(){if(heroOn)return;if(RMQ.matches){heroDraw(4.5);return}heroOn=true;const f=now=>{if(VIEW!='home'){heroOn=false;return}if(now-heroLast>40){heroLast=now;if(!document.hidden)heroDraw((now-heroT0)/1000)}requestAnimationFrame(f)};requestAnimationFrame(f)}
+
+/* ---------- editor ---------- */
+$('back').onclick=()=>history.go(-LAYERS.length);
+$('pname').oninput=e=>{P.name=e.target.value;dirty()};
+$('pname').onblur=e=>{if(!e.target.value.trim()){P.name='Mi quiz';e.target.value=P.name;dirty()}};
+$('pname').onkeydown=e=>{if(e.key=='Enter')e.target.blur()};
+$('expBtn').onclick=()=>openSheet('ex');
+$('cv').onclick=play;
+$('fsBtn').onclick=()=>openFs();$('playBtn').onclick=()=>openPlayer();
+$('exFs').onclick=()=>openFs();$('exPlay').onclick=()=>openPlayer();
+function slideInfo(){const n=S().filter(s=>s.t=='q').length;$('slideInfo').textContent=`${n} preguntas · ${fm(tot())}`}
+$('lang').onchange=e=>{P.lang=e.target.value;$('factLbl').placeholder=LB().fact;changed()};
+$('factLbl').oninput=e=>{P.factLabel=e.target.value;changed()};
+
+/* ---------- pantalla completa ---------- */
+const fsCx=$('fsCv').getContext('2d');let fsIdleT=0;
+function fsSize(){const cv=$('fsCv'),w=Math.min(1080,Math.max(270,Math.round(cv.getBoundingClientRect().width*(devicePixelRatio||1))));if(cv.width!=w){cv.width=w;cv.height=Math.round(w*16/9)}}
+function openFs(){openLayer('fs')}
+function fsShow(){stop();FS=true;$('fs').hidden=false;$('fsEnd').hidden=true;reqFS($('fs'));fsWake();t=0;requestAnimationFrame(()=>{fsSize();render();play()})}
+function fsHide(){stop();FS=false;$('fs').hidden=true;exitFS();render()}
+function fsWake(){$('fs').classList.remove('idle');clearTimeout(fsIdleT);fsIdleT=setTimeout(()=>{if(playing)$('fs').classList.add('idle')},2500)}
+$('fs').addEventListener('pointermove',fsWake);$('fs').addEventListener('pointerdown',fsWake);
+$('fsCv').onclick=()=>{play();fsWake()};$('fsClose').onclick=closeTop;
+$('fsAgain').onclick=()=>{t=0;play()};$('fsEdit').onclick=closeTop;$('fsExport').onclick=()=>openSheet('ex');
+addEventListener('resize',()=>{if(FS){fsSize();if(!playing)render()}});
+
+/* ---------- modo jugar o presentar ---------- */
+let G=null;const pfx=$('pgFx'),pcx=pfx.getContext('2d');let PARTS=[],partOn=false;
+function sfx(kind){try{ac=ac||new AudioContext();ac.resume();const sr=44100,a=new Float32Array(Math.round(sr*(kind=='ding'||kind=='fan'?1.8:.6))),K=sfxKit(a,sr);
+ if(kind=='tick')K.tick(0,false);else if(kind=='tick3')K.tick(0,true);else if(kind=='ding')K.ding(0);else if(kind=='fan')K.fanfare(0);
+ else if(kind=='bad'){const s=synth(a,sr);s.osc(0,220,.25,.3*P.sfxVol,'saw',.005,.25);s.osc(.16,150,.35,.3*P.sfxVol,'saw',.005,.35)}
+ for(let i=0;i<a.length;i++)a[i]=Math.tanh(a[i]);const b=ac.createBuffer(1,a.length,sr);b.copyToChannel(a,0);const s=ac.createBufferSource();s.buffer=b;s.connect(ac.destination);s.start()}catch(e){}}
+function burst(x,y,n){if(RMQ.matches)return;const C=P.colors,cols=[C.hi,C.ac,'#fff','#22C55E',C.b1];for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2,v=4+Math.random()*9;PARTS.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-5,r:Math.random()*6,s:5+Math.random()*6,c:cols[i%cols.length],l:1})}
+ if(!partOn){partOn=true;pfx.hidden=false;const f=()=>{const W=pfx.width=innerWidth,Hh=pfx.height=innerHeight;pcx.clearRect(0,0,W,Hh);PARTS=PARTS.filter(p=>p.l>0&&p.y<Hh+20);
+  for(const p of PARTS){p.vy+=.28;p.x+=p.vx;p.y+=p.vy;p.vx*=.99;p.r+=.15;p.l-=.011;pcx.save();pcx.globalAlpha=Math.max(0,p.l);pcx.translate(p.x,p.y);pcx.rotate(p.r);pcx.fillStyle=p.c;pcx.fillRect(-p.s/2,-p.s/3,p.s,p.s*.66);pcx.restore()}
+  if(PARTS.length)requestAnimationFrame(f);else{partOn=false;pfx.hidden=true}};requestAnimationFrame(f)}}
+const SPK='speechSynthesis' in window;
+function say(tx){if(!SPK){toast('Este dispositivo no tiene voz disponible.');return}try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(tx);u.lang={es:'es-ES',en:'en-US',pt:'pt-BR',fr:'fr-FR'}[P.lang]||'es-ES';u.rate=.92;speechSynthesis.speak(u)}catch(e){toast('Este dispositivo no tiene voz disponible.')}}
+function openPlayer(){const q=S().filter(s=>s.t=='q');if(!q.length)return toast('Agrega al menos una pregunta.');openLayer('player')}
+function pgShow(){stop();const C=P.colors,el=$('player');el.style.setProperty('--b1',C.b1);el.style.setProperty('--b2',C.b2);el.style.setProperty('--ac',C.ac);el.style.setProperty('--hi',C.hi);
+ G={i:-1,score:0,qs:S().filter(s=>s.t=='q'),useTime:G?G.useTime:true,ans:false,raf:0};el.hidden=false;$('pgSpeak').hidden=!SPK;reqFS(el);pgIntro()}
+function pgHide(){if(G)cancelAnimationFrame(G.raf);try{SPK&&speechSynthesis.cancel()}catch(e){}$('player').hidden=true;exitFS();if(G)G={useTime:G.useTime}}
+function pgTop(){const L=LB(),n=G.qs.length;$('pgCount').textContent=G.i>=0&&G.i<n?L.q(G.i+1,n):(P.name||'Quiz');$('pgScore').textContent='⭐ '+G.score}
+const pgMedia=(s,cls='')=>s.img?`<img src="${s.img}" alt="">`:`<span class="pem ${cls}">${esc(s.em||'❓')}</span>`;
+function pgIntro(){const L=LB(),c=S()[0]&&S()[0].t=='cover'?S()[0]:null;G.i=-1;G.score=0;pgTop();$('pgTimer').hidden=true;
+ $('pgMain').innerHTML=`<div class="pcard pintro">${c&&c.img?`<div class="pimg" style="height:clamp(120px,24vh,240px);margin-bottom:12px">${pgMedia(c)}</div>`:`<span class="pem big">${esc(c&&c.em||'🧠')}</span>`}
+  <h2>${esc(c?c.title:P.name).replace(/\n/g,'<br>')}</h2>${c&&c.sub?`<p>${esc(c.sub)}</p>`:''}<p class="pmeta">${G.qs.length} ${L.qs}</p></div>
+  <label class="ptog"><input type="checkbox" id="pgUseT" ${G.useTime?'checked':''}> ⏱ ${L.timed}</label>
+  <button class="pnext" data-act="start">▶ ${L.play}</button>`}
+function pgQ(){G.i++;G.ans=false;if(G.i>=G.qs.length)return pgEnd();const s=G.qs[G.i],fx=s.fx&&s.fx!='none'?s.fx:'';pgTop();
+ $('pgMain').innerHTML=`<div class="pcard"><h2>${esc(s.title)}</h2><div class="pimg ${fx?'fx-'+fx:''}" id="pgImg">${pgMedia(s)}${fx=='hide'?'<b class="qm">?</b>':''}</div></div>
+  <div class="popts">${s.o.map((o,j)=>`<button class="popt" style="--i:${j}" data-j="${j}"><b>${LET[j]}</b><span>${esc(o)}</span></button>`).join('')}</div><div id="pgFoot"></div>`;
+ cancelAnimationFrame(G.raf);const bar=$('pgTime'),box=$('pgTimer');box.hidden=!G.useTime;box.classList.remove('hurry');bar.style.transform='scaleX(1)';if(!G.useTime)return;
+ const t0=performance.now()+300,D=s.secs*1000;let last=-1;const f=now=>{if(!G||G.ans)return;const el=Math.max(0,now-t0),rem=Math.ceil((D-el)/1000);bar.style.transform=`scaleX(${Math.max(0,1-el/D)})`;
+  if(rem!=last&&rem>0&&el>0){last=rem;box.classList.toggle('hurry',rem<=3);sfx(rem<=3?'tick3':'tick')}if(el>=D)return pgAnswer(-1);G.raf=requestAnimationFrame(f)};G.raf=requestAnimationFrame(f)}
+function pgAnswer(j){if(!G||G.ans||G.i<0||G.i>=G.qs.length)return;G.ans=true;cancelAnimationFrame(G.raf);const L=LB(),s=G.qs[G.i],ok=j==s.c;if(ok)G.score++;
+ document.querySelectorAll('.popt').forEach((b,k)=>{b.disabled=true;b.classList.add(k==s.c?'ok':k==j?'bad':'dim')});
+ const im=$('pgImg');im&&im.classList.add('rev');sfx(ok?'ding':'bad');
+ if(ok){const r=document.querySelector('.popt.ok').getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,70)}
+ pgTop();const sc=$('pgScore');sc.classList.remove('bump');void sc.offsetWidth;if(ok)sc.classList.add('bump');
+ $('pgFoot').innerHTML=`<p class="pfeed">${j<0?L.timeup:ok?L.ok:L.bad}</p>${s.fact?`<div class="pfact"><b>${esc(P.factLabel||L.fact)}</b><span>${esc(s.fact)}</span></div>`:''}
+  <button class="pnext" data-act="next">${G.i+1<G.qs.length?L.next+' →':L.seeRes+' 🏆'}</button>`;
+ const nx=$('pgFoot').querySelector('.pnext');nx.focus({preventScroll:true});nx.scrollIntoView({block:'nearest',behavior:RMQ.matches?'auto':'smooth'})}
+function tierFor(sc){for(const line of String(P.tiers).split('\n')){const [r,n]=line.split('|').map(x=>x&&x.trim());if(!r)continue;const m=r.match(/(\d+)\s*(?:-|–|a)\s*(\d+)/),lo=m?+m[1]:parseInt(r,10),hi=m?+m[2]:lo;if(sc>=lo&&sc<=hi)return n||''}return''}
+function pgEnd(){const L=LB(),n=G.qs.length,f=S().find(s=>s.t=='final');G.i=n;pgTop();$('pgTimer').hidden=true;
+ $('pgMain').innerHTML=`<div class="pcard pend"><span class="pem big">${esc(f&&f.em||'🏆')}</span><p class="pbig">${G.score}<small>/${n}</small></p><h2>${esc(tierFor(G.score)||L.done)}</h2>${f&&f.sub?`<p class="pmeta">${esc(f.sub)}</p>`:''}</div>
+  <div class="prow"><button class="pnext" data-act="again">↺ ${L.again}</button><button class="pexit" data-act="exit">${L.exit}</button></div>`;
+ sfx('fan');if(G.score>=n/2){burst(innerWidth*.25,innerHeight*.35,60);setTimeout(()=>burst(innerWidth*.75,innerHeight*.35,60),250);setTimeout(()=>burst(innerWidth*.5,innerHeight*.2,80),500)}}
+$('pgMain').onclick=e=>{const b=e.target.closest('button');if(!b||!G)return;if(b.dataset.j!=null)return pgAnswer(+b.dataset.j);const a=b.dataset.act;
+ if(a=='start'){G.useTime=$('pgUseT').checked;try{ac=ac||new AudioContext();ac.resume()}catch(x){}pgQ()}
+ if(a=='next')pgQ();if(a=='again')pgIntro();if(a=='exit')closeTop()};
+$('pgClose').onclick=closeTop;
+$('pgSpeak').onclick=()=>{if(!G)return;const s=G.qs[G.i];if(!s){const c=S()[0];return say(String(c&&c.title||P.name).replace(/\n/g,' '))}
+ say(G.ans?s.o[s.c]+'. '+(s.fact||''):s.title+'. '+s.o.map((o,j)=>LET[j]+': '+o).join('. '))};
+document.addEventListener('keydown',e=>{if(LAYERS[LAYERS.length-1]!='player'||!G)return;const k=e.key.toLowerCase(),j='1234'.indexOf(k)>=0?'1234'.indexOf(k):'abcd'.indexOf(k);
+ if(j>=0&&G.i>=0&&G.i<G.qs.length&&!G.ans&&j<G.qs[G.i].o.length){e.preventDefault();pgAnswer(j)}
+ else if((k=='enter'||k==' ')&&!/BUTTON|INPUT/.test(e.target.tagName)){const b=document.querySelector('#pgMain .pnext');if(b){e.preventDefault();b.click()}}});
+
+/* ---------- entrada y arranque ---------- */
+function hideSplash(){const s=$('splash');if(!s||s.classList.contains('bye'))return;s.classList.add('bye');setTimeout(()=>s.remove(),700);const h=$('home');h.classList.remove('go');void h.offsetWidth;h.classList.add('go')}
+$('splash').onclick=hideSplash;setTimeout(hideSplash,RMQ.matches?500:2600);
+(async()=>{history.replaceState({d:0},'');
+ try{const L=await DB.all()||[];if(!L.length){const j=JSON.parse(localStorage.getItem('qvs2')||'null');
+  if(j&&Array.isArray(j.slides)&&j.slides.length>=3){const keep=P;P=Object.assign(example(),j);P.name=P.name||'Mi primer quiz';CUR=uid();await saveNow();P=keep;CUR=null;thumbCache=''}}}catch(e){}
+ renderHome();heroLoop()})();
+chips();form();H=[clone(P)];hi=0;histUI();
+Promise.all([bf(700,30),bf(600,30),tf(700,30),'400 30px "Lilita One"'].map(f=>document.fonts.load(f))).then(()=>{render();if(VIEW=='home')heroDraw((performance.now()-heroT0)/1000)}).catch(()=>{});
 </script>
 
 </body>
