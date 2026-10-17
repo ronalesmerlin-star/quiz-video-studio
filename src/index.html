@@ -210,6 +210,14 @@ button.tcard:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ln)
 .help li>i{flex:none;width:32px;height:32px;border-radius:50%;background:var(--pk);color:#fff;font-style:normal;font-weight:700;display:grid;place-items:center;border:2.5px solid #000}
 .help b{display:block}.help span{color:var(--mut);font-size:14px}
 .tips{padding-left:20px;margin:6px 0 0;display:grid;gap:6px;font-size:14px}
+.donbox{text-align:center;background:var(--pn);border:2.5px solid var(--ln);border-radius:20px;box-shadow:4px 4px 0 var(--ln);padding:18px 16px;margin-top:4px}
+.donh{font-size:46px;display:inline-block;animation:beat 1.6s ease-in-out infinite}
+.donbox h3{font:400 22px var(--fd);margin:6px 0 6px}.donbox p{margin:0 auto;max-width:36ch;color:var(--mut)}
+@keyframes beat{0%,100%{transform:scale(1)}15%{transform:scale(1.18)}30%{transform:scale(1)}45%{transform:scale(1.12)}}
+.ppgo{display:block;text-align:center;margin-top:14px;background:#FFC439;color:#0A1840;border:2.5px solid #000;border-radius:999px;padding:12px;font-weight:700;font-size:16px;text-decoration:none;box-shadow:3px 3px 0 #000;transition:transform .14s}
+.ppgo:active{transform:scale(.96)}
+#ppMail{font-weight:600}
+button.di.don i{animation:beat 1.6s ease-in-out infinite}
 .about{text-align:center;padding:20px 0}.about .logo{margin:0 auto 14px;width:76px;height:76px;border-radius:22px;border-width:3.5px;box-shadow:5px 5px 0 #000}.about .logo b{font-size:56px}.about .logo i{width:32px;height:32px;right:-12px;bottom:-12px;border-width:3.5px}.about .logo i::after{left:9px;top:6px;border-left-width:10px;border-top-width:7px;border-bottom-width:7px}
 .about h3{font:400 26px var(--fd);margin:0}.about p{margin:6px auto;max-width:34ch;color:var(--mut)}
 
@@ -421,11 +429,12 @@ button.danger{background:#DC2626;color:#fff}
   <button class="di" data-act="saveFile" style="--i:6"><i>💾</i>Guardar como archivo</button>
  </div>
  <p class="dl">App</p>
- <button class="di" data-act="home" style="--i:7"><i>🏠</i>Inicio</button>
- <button class="di" data-act="openFile" style="--i:8"><i>📂</i>Abrir archivo de proyecto</button>
- <button class="di" data-sheet="help" style="--i:9"><i>❓</i>Cómo se usa</button>
- <button class="di" data-act="theme" style="--i:10"><i>🌓</i>Apariencia<b id="themeV">Automática</b></button>
- <button class="di" data-sheet="about" style="--i:11"><i>ℹ️</i>Acerca de</button>
+ <button class="di don" data-sheet="don" style="--i:7"><i>💛</i>Apoyar el proyecto</button>
+ <button class="di" data-act="home" style="--i:8"><i>🏠</i>Inicio</button>
+ <button class="di" data-act="openFile" style="--i:9"><i>📂</i>Abrir archivo de proyecto</button>
+ <button class="di" data-sheet="help" style="--i:10"><i>❓</i>Cómo se usa</button>
+ <button class="di" data-act="theme" style="--i:11"><i>🌓</i>Apariencia<b id="themeV">Automática</b></button>
+ <button class="di" data-sheet="about" style="--i:12"><i>ℹ️</i>Acerca de</button>
  <p class="dfoot">Quiz Video Studio · Beta 0.2</p>
  <input type="file" id="openF" accept=".json,application/json" hidden>
 </nav>
@@ -521,6 +530,20 @@ button.danger{background:#DC2626;color:#fff}
     <li>En el modo jugar, el botón 🔊 lee la pregunta en voz alta, si tu dispositivo tiene voz.</li>
     <li>Tus proyectos se guardan solos en este dispositivo. Para pasarlos a otro, usa ☰ → Guardar como archivo.</li>
    </ul>
+  </div>
+
+  <div id="tab-don" hidden>
+   <div class="donbox">
+    <span class="donh" aria-hidden="true">💛</span>
+    <h3>¿Te gusta Quiz Video Studio?</h3>
+    <p>La app es gratis y sin anuncios. Si te ayuda con tus videos o tus clases, puedes apoyar su desarrollo con una donación por PayPal, del monto que quieras. ¡Gracias!</p>
+   </div>
+   <label for="ppMail">Correo de PayPal</label>
+   <div class="opt"><input type="text" id="ppMail" value="ronalesmerlin@gmail.com" readonly><button class="sm" id="ppCopy">Copiar</button></div>
+   <a class="ppgo" id="ppGo" href="https://www.paypal.com/donate/?business=ronalesmerlin%40gmail.com&amp;currency_code=USD" target="_blank" rel="noopener">Donar con PayPal</a>
+   <p class="hint">Si el botón no abre PayPal, copia el correo y envía el dinero desde tu app de PayPal, en «Enviar».</p>
+   <h3>Otras formas de ayudar, gratis</h3>
+   <ul class="tips"><li>Comparte la app con amigos, profesores y creadores.</li><li>Cuéntame qué mejorarías para la próxima versión.</li><li>Sigue el canal de YouTube donde se presentan las novedades.</li></ul>
   </div>
 
   <div id="tab-about" hidden>
@@ -1121,7 +1144,7 @@ function ask(text,yes){$('dlgTx').textContent=text;$('dlgYes').textContent=yes;r
 $('dlgYes').onclick=()=>{const r=dlgRes;dlgRes=null;r&&r(true);closeTop()};$('dlgNo').onclick=closeTop;
 
 /* ---------- menú y hojas ---------- */
-const SHT={tpl:'Elige una plantilla',bg:'Fondos animados',mu:'Música y sonidos',st:'Estilo, textos e idioma',ex:'Exportar video',help:'Cómo se usa',about:'Acerca de'};
+const SHT={don:'Apoyar el proyecto',tpl:'Elige una plantilla',bg:'Fondos animados',mu:'Música y sonidos',st:'Estilo, textos e idioma',ex:'Exportar video',help:'Cómo se usa',about:'Acerca de'};
 function openSheet(k,title){SHEET=k;$('shTitle').textContent=title||SHT[k];document.querySelectorAll('.sbody>div').forEach(d=>d.hidden=d.id!='tab-'+k);$('sheet').querySelector('.sbody').scrollTop=0;
  if(k=='bg'){bgMenu();requestAnimationFrame(thumbLoop)}if(k=='mu')musicUI();if(k=='st')styleUI();
  if(LAYERS[LAYERS.length-1]=='sheet')return;openLayer('sheet')}
@@ -1141,6 +1164,9 @@ let theme='auto';try{theme=localStorage.getItem('qvs-theme')||'auto'}catch(e){}
 function applyTheme(){if(theme=='auto'){if(THEME0)document.documentElement.setAttribute('data-theme',THEME0);else document.documentElement.removeAttribute('data-theme')}else document.documentElement.setAttribute('data-theme',theme);$('themeV').textContent=THM[theme]}
 function cycleTheme(){theme={auto:'light',light:'dark',dark:'auto'}[theme];try{localStorage.setItem('qvs-theme',theme)}catch(e){}applyTheme();toast('Apariencia: '+THM[theme])}
 applyTheme();
+
+$('ppCopy').onclick=async()=>{const v=$('ppMail').value;try{await navigator.clipboard.writeText(v);toast('Correo copiado 💛')}catch(e){const i=$('ppMail');i.focus();i.select();toast('Correo seleccionado: cópialo con «Copiar»')}};
+$('ppMail').onfocus=e=>e.target.select();
 
 /* ---------- inicio: modos, plantillas e idea del día ---------- */
 document.querySelector('.modes').onclick=e=>{const b=e.target.closest('button.mode');if(!b)return;const m=b.dataset.mode;
