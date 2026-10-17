@@ -1,0 +1,9 @@
+{
+  "appId": "com.quizvideostudio.app",
+  "appName": "Quiz Video Studio",
+  "webDir": "www",
+  "android": { "allowMixedContent": false },
+  "plugins": {
+    "SystemBars": { "insetsHandling": "native", "initialViewportFitValueHint": "cover" }
+  }
+}
