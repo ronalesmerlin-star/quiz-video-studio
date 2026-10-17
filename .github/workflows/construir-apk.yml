@@ -1,0 +1,74 @@
+name: Construir APK beta
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el proyecto
+        uses: actions/checkout@v4
+
+      - name: Preparar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Preparar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: gradle
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Armar la app web y copiarla a Android
+        run: |
+          npm run build
+          npx cap sync android
+
+      - name: Preparar la llave de firma
+        env:
+          KS: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          if [ -n "$KS" ]; then
+            echo "$KS" | base64 -d > "$RUNNER_TEMP/llave.jks"
+            echo "ANDROID_KEYSTORE_PATH=$RUNNER_TEMP/llave.jks" >> "$GITHUB_ENV"
+          else
+            echo "::warning::No configuraste la llave de firma."
+          fi
+
+      - name: Compilar el APK
+        env:
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleRelease --no-daemon --stacktrace
+          cp app/build/outputs/apk/release/app-release.apk ../QuizVideoStudio-beta.apk
+
+      - name: Guardar el APK como archivo de la compilación
+        uses: actions/upload-artifact@v4
+        with:
+          name: QuizVideoStudio-beta
+          path: QuizVideoStudio-beta.apk
+
+      - name: Publicar la versión en Releases
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: beta-${{ github.run_number }}
+          name: Quiz Video Studio Beta ${{ github.run_number }}
+          make_latest: true
+          files: QuizVideoStudio-beta.apk
+          body: |
+            Versión beta de Quiz Video Studio para Android.
+            Descarga QuizVideoStudio-beta.apk, ábrelo en tu teléfono y permite instalar apps de esta fuente.
