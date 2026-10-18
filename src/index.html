@@ -115,6 +115,41 @@ button.mode:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ln)}
 .home.go .proj{animation:rise .5s var(--ease) calc(.5s + var(--i)*.05s) both}
 @keyframes rise{from{opacity:0;transform:translateY(22px) scale(.97)}}
 
+/* ---------- pon a prueba tu mente ---------- */
+button.brainc{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:14px;width:100%;margin-top:16px;text-align:left;border-radius:24px;padding:16px;border-width:3px;color:#fff;background:linear-gradient(135deg,#7C3AED,#FF1E8A);box-shadow:5px 5px 0 var(--ln);position:relative;overflow:hidden;isolation:isolate}
+button.brainc::after{content:"";position:absolute;inset:-60%;background:repeating-conic-gradient(rgba(255,255,255,.1) 0 7.5deg,transparent 7.5deg 15deg);animation:spin 40s linear infinite;pointer-events:none;z-index:-1}
+button.brainc:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--ln)}
+.bci{font-size:46px;animation:wob 3s ease-in-out infinite;filter:drop-shadow(2px 2px 0 rgba(0,0,0,.35))}
+.bct{display:grid;gap:4px;min-width:0}.bct small{font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:11px;background:var(--yl);color:#000;border-radius:999px;padding:1px 8px;justify-self:start;border:2px solid #000}
+.bct b{font:400 23px var(--fd);text-shadow:2px 2px 0 #000;line-height:1.1}
+.bct>span{font-size:13.5px;font-weight:600}
+.bcbar{display:block;height:10px;border-radius:9px;background:rgba(0,0,0,.3);overflow:hidden;border:2px solid rgba(0,0,0,.45)}
+.bcbar i{display:block;height:100%;width:0;background:var(--yl);border-radius:9px;transition:width .8s var(--ease)}
+.bcgo{background:var(--yl);color:#000;border:2.5px solid #000;border-radius:999px;padding:9px 16px;font-weight:700;box-shadow:3px 3px 0 #000;white-space:nowrap}
+@media(max-width:430px){.bcgo{padding:8px 11px;font-size:14px}.bci{font-size:36px}.bct b{font-size:20px}}
+.home.go .brainc{animation:rise .55s var(--spring) .1s both}
+.bstat{background:linear-gradient(135deg,#7C3AED,#FF1E8A);color:#fff;border:3px solid var(--ln);border-radius:24px;box-shadow:5px 5px 0 var(--ln);padding:18px;display:grid;gap:14px;margin-top:8px}
+.bsl{display:grid;gap:7px}.bsl b{font:400 25px var(--fd);text-shadow:2px 2px 0 #000}.bsl small{font-weight:600}
+.bsn{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.bsn span{background:rgba(0,0,0,.22);border-radius:16px;padding:10px 6px;text-align:center;display:grid}.bsn b{font:400 27px var(--fd);font-variant-numeric:tabular-nums}.bsn small{font-size:12px;font-weight:600}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.seg button{padding:12px 6px;border-radius:16px;font-size:15px;box-shadow:3px 3px 0 var(--ln)}
+.seg button.on{background:var(--ink);color:var(--bg);animation:pop .3s var(--spring)}
+.cats{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+button.cat{position:relative;display:grid;justify-items:start;align-content:start;gap:2px;text-align:left;padding:14px;border-radius:20px;color:#fff;background:linear-gradient(150deg,var(--c1),var(--c2));border:3px solid #000;box-shadow:4px 4px 0 var(--ln);min-height:132px;animation:rise .45s var(--spring) calc(var(--i)*.04s) both;overflow:hidden}
+button.cat:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ln)}
+.cem{font-size:40px;line-height:1;margin-bottom:8px;filter:drop-shadow(2px 2px 0 rgba(0,0,0,.35));transition:transform .3s var(--spring)}
+button.cat:hover .cem{transform:scale(1.15) rotate(-8deg)}
+button.cat b{font:400 19px var(--fd);text-shadow:2px 2px 0 rgba(0,0,0,.45);line-height:1.15}
+button.cat small{font-size:12px;font-weight:600;opacity:.92}
+button.cat i{position:absolute;top:10px;right:10px;font-style:normal;font-size:12px;font-weight:700;background:rgba(0,0,0,.35);border-radius:999px;padding:2px 8px}
+button.cat.mix{grid-column:1/-1;min-height:0;grid-template-columns:auto 1fr;align-items:center;column-gap:14px}
+button.cat.mix .cem{grid-row:span 2;font-size:46px;margin:0}
+.pimg.mini{height:clamp(70px,13vh,120px)}.pimg.mini .pem{font-size:clamp(46px,9vh,80px)}
+.pbadge{display:inline-block;background:var(--yl);color:#000;border:3px solid #000;border-radius:999px;padding:4px 14px;font-weight:700;margin-top:6px;animation:pop .5s var(--spring) .4s both}
+.pend .bcbar{background:#E5E7EB;border-color:#000;max-width:320px;margin:8px auto 0}.pend .bcbar i{background:var(--ac,#FF1E8A)}
+.fly{position:fixed;z-index:98;font:400 30px var(--fd);color:#FFD600;text-shadow:2px 2px 0 #000;pointer-events:none;animation:flyUp 1.1s var(--ease) forwards}
+@keyframes flyUp{to{transform:translateY(-80px) scale(1.3);opacity:0}}
+
 /* ---------- editor ---------- */
 .ed{display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:24px;align-items:start}
 .stage{position:sticky;top:calc(env(safe-area-inset-top,0px) + 78px)}
@@ -264,7 +299,7 @@ button.di.don i{animation:beat 1.6s ease-in-out infinite}
 .pimg{position:relative;height:clamp(130px,30vh,320px);border:4px solid var(--ac,#FF1E8A);border-radius:20px;overflow:hidden;background:linear-gradient(135deg,#CFE9FF,#FFD6E8);display:grid;place-items:center}
 .pimg img{width:100%;height:100%;object-fit:cover;transition:filter .8s,transform .8s,opacity .5s}
 .pem{font-size:clamp(80px,17vh,150px);line-height:1;transition:filter .8s,transform .8s,opacity .5s;display:inline-block}
-.pem.big{font-size:clamp(70px,14vh,120px);animation:pop .6s var(--spring) .2s both}
+.pem.big{font-size:clamp(70px,14vh,120px);animation:pop .6s var(--spring) .2s both;display:block;margin:0 auto 10px;line-height:1.15}
 .fx-silueta :is(img,.pem){filter:brightness(0)}
 .fx-blur :is(img,.pem){filter:blur(16px)}
 .fx-pixel :is(img,.pem){filter:blur(9px) saturate(1.6)}
@@ -369,6 +404,8 @@ button.danger{background:#DC2626;color:#fff}
    <div class="phone" aria-hidden="true"><canvas id="heroCv" width="270" height="480"></canvas></div>
   </div>
 
+  <button class="brainc" id="brainCard"><span class="bci" aria-hidden="true">🧠</span><span class="bct"><small>Nuevo</small><b>Pon a prueba tu mente</b><span id="bcLv"></span><span class="bcbar"><i id="bcBar"></i></span><span id="bcStreak" class="bcs"></span></span><span class="bcgo">Jugar ▶</span></button>
+
   <h2 class="sec">Crear nuevo</h2>
   <div class="modes">
    <button class="mode" data-mode="redes" style="--i:0;--mc:#FFD6E8"><span class="me">🎬</span><b>Videos para redes</b><span>Cuenta atrás, música y efectos para TikTok, Reels y Shorts.</span></button>
@@ -380,6 +417,26 @@ button.danger{background:#DC2626;color:#fff}
 
   <h2 class="sec">Mis proyectos <small id="pCount"></small></h2>
   <div id="projects" class="projs"></div>
+ </div>
+</section>
+
+<section id="brain" class="view" hidden>
+ <header class="top"><div class="in">
+  <button class="ib" id="bBack" aria-label="Volver al inicio">←</button>
+  <span class="bt">Pon a prueba tu <em>mente</em></span>
+  <span class="gap"></span>
+  <button class="ib" id="menuB" aria-label="Abrir menú">☰</button>
+ </div></header>
+ <div class="wrap">
+  <div class="bstat">
+   <div class="bsl"><b id="bStatLv"></b><span class="bcbar"><i id="bStatBar"></i></span><small id="bStatXp"></small></div>
+   <div class="bsn"><span><b id="bStatS">0</b><small>🔥 Racha</small></span><span><b id="bStatG">0</b><small>🎮 Partidas</small></span><span><b id="bStatA">—</b><small>🎯 Aciertos</small></span></div>
+  </div>
+  <h2 class="sec">Elige el nivel</h2>
+  <div class="seg" id="bLevel"><button data-lv="e">🟢 Fácil</button><button data-lv="n">🟡 Normal</button><button data-lv="d">🔴 Difícil</button></div>
+  <h2 class="sec">Elige una categoría</h2>
+  <div class="cats" id="cats"></div>
+  <p class="hint">Cuanto más rápido respondas, más puntos ganas. Con 3 aciertos seguidos activas la racha 🔥. Tu progreso se guarda en este dispositivo.</p>
  </div>
 </section>
 
@@ -604,7 +661,7 @@ const LBL={
   play:'Começar',next:'Próxima',seeRes:'Ver resultado',again:'Jogar de novo',exit:'Sair',ok:'Correto! 🎉',bad:'Quase! 😅',timeup:'Acabou o tempo! ⏰',timed:'Com tempo',qs:'perguntas',done:'Muito bem!',sub:'Inscreva-se'},
  fr:{q:(a,b)=>`Question ${a} sur ${b}`,res:'Résultat',start:'Début dans',ans:'Réponse !',fact:'💡 LE SAVIEZ-VOUS ?',t:'Vrai',f:'Faux',up:'Ajoute une image',
   play:'Commencer',next:'Suivante',seeRes:'Voir le résultat',again:'Rejouer',exit:'Quitter',ok:'Bravo ! 🎉',bad:'Presque ! 😅',timeup:'Temps écoulé ! ⏰',timed:'Avec chrono',qs:'questions',done:'Bien joué !',sub:'Abonne-toi'}};
-const LB=()=>LBL[P.lang]||LBL.es;
+let LBO=null;const LB=()=>LBL[LBO||P.lang]||LBL.es;
 const LANGN={es:'Español',en:'English',pt:'Português',fr:'Français'};
 
 
@@ -1267,7 +1324,7 @@ function persist(){saveNow()}
 function loadP(data,id){stop();P=Object.assign(example(),data);if(!P.name)P.name='Mi quiz';CUR=id;CUST=null;thumbCache='';decodeCustom();H=[clone(P)];hi=0;histUI();sel=S().length>2?1:0;refreshAll();pick(sel)}
 async function newProject(data){loadP(data,uid());await saveNow();enterEditor();toast('Proyecto creado ✨')}
 async function openProject(id){try{const r=await DB.get(id);if(!r)return;loadP(r.data,r.id);enterEditor()}catch(e){toast('No se pudo abrir el proyecto.')}}
-async function renderHome(){let L=[];try{L=await DB.all()||[]}catch(e){}
+async function renderHome(){try{brainCardsUI()}catch(e){}let L=[];try{L=await DB.all()||[]}catch(e){}
  L.sort((a,b)=>b.updated-a.updated);$('pCount').textContent=L.length?`· ${L.length}`:'';
  $('projects').innerHTML=L.length?L.map((p,i)=>`<div class="proj" style="--i:${Math.min(i,8)}"><button class="pth" data-open="${p.id}" aria-label="Abrir ${esc(p.name)}">${p.thumb?`<img src="${p.thumb}" alt="">`:'❓'}</button>
   <div class="pin"><button class="pnm" data-open="${p.id}" title="${esc(p.name)}">${esc(p.name)}</button><span class="hint">${p.nq} preguntas · ${ago(p.updated)}</span>
@@ -1279,18 +1336,20 @@ $('projects').onclick=async e=>{const b=e.target.closest('button');if(!b)return;
  if(b.dataset.del){const r=await DB.get(b.dataset.del);if(r&&await ask(`¿Eliminar «${r.name}»? No se puede deshacer.`,'Eliminar')){await DB.del(r.id);renderHome();toast('Proyecto eliminado')}}};
 
 /* ---------- navegación: vistas y capas (funciona con el botón atrás de Android) ---------- */
-function showView(v,dir){if(VIEW==v)return;stop();$(VIEW).hidden=true;const b=$(v);b.hidden=false;b.classList.remove('in-r','in-l','go');void b.offsetWidth;b.classList.add(dir<0?'in-l':'in-r');VIEW=v;window.scrollTo(0,0);
- if(v=='home'){saveNow();renderHome();heroLoop()}else render()}
+function showView(v,dir){if(VIEW==v)return;if(VIEW=='editor')saveNow();stop();$(VIEW).hidden=true;const b=$(v);b.hidden=false;b.classList.remove('in-r','in-l','go');void b.offsetWidth;b.classList.add(dir<0?'in-l':'in-r');VIEW=v;window.scrollTo(0,0);
+ if(v=='home'){saveNow();renderHome();heroLoop()}else if(v=='brain')brainUI();else render()}
+const prevView=()=>[...LAYERS].reverse().find(x=>x=='editor'||x=='brain')||'home';
 function enterEditor(){if(VIEW=='editor'){const k=LAYERS.length-1;if(k>0)history.go(-k);return}openLayer('editor')}
 function showLayer(n){
  if(n=='editor')return showView('editor',1);
+ if(n=='brain')return showView('brain',1);
  if(n=='drawer'){$('dEd').hidden=VIEW!='editor';$('scrim').hidden=false;$('drawer').hidden=false;requestAnimationFrame(()=>{$('scrim').classList.add('open');$('drawer').classList.add('open')});return}
  if(n=='sheet'){$('scrim').hidden=false;$('sheet').hidden=false;requestAnimationFrame(()=>{$('scrim').classList.add('open');$('sheet').classList.add('open')});return}
  if(n=='fs')return fsShow();
  if(n=='player')return pgShow();
  if(n=='dlg'){$('dlg').hidden=false;$('dlgYes').focus()}}
 function hideLayer(n){
- if(n=='editor')return showView('home',-1);
+ if(n=='editor'||n=='brain')return showView(prevView(),-1);
  if(n=='drawer'||n=='sheet'){const el=$(n);el.classList.remove('open');if(!LAYERS.some(x=>x=='drawer'||x=='sheet'))$('scrim').classList.remove('open');
   setTimeout(()=>{if(!el.classList.contains('open'))el.hidden=true;if(!$('scrim').classList.contains('open'))$('scrim').hidden=true},340);if(n=='sheet'){SHEET='';try{prevSrc&&prevSrc.stop()}catch(e){}}return}
  if(n=='fs')return fsHide();
@@ -1317,7 +1376,7 @@ $('drawer').onclick=e=>{const b=e.target.closest('button.di');if(!b)return;if(b.
  if(a=='play')return openPlayer();if(a=='fs')return openFs();
  if(a=='saveFile'){closeTop();return save(new Blob([JSON.stringify(P,(k,v)=>k=='scene'?undefined:v)],{type:'application/json'}),slug(P.name||'quiz')+'.quiz.json',toast)}
  if(a=='openFile')return $('openF').click();
- if(a=='home'){if(VIEW=='editor')history.go(-LAYERS.length);else closeTop();return}
+ if(a=='home'){if(LAYERS.some(x=>x=='editor'||x=='brain'))history.go(-LAYERS.length);else closeTop();return}
  if(a=='theme')return cycleTheme()};
 $('openF').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
  try{const j=JSON.parse(await f.text());if(!Array.isArray(j.slides))throw 0;if(!j.name)j.name=f.name.replace(/(\.quiz)?\.json$/i,'');
@@ -1359,7 +1418,7 @@ function heroDraw(tt){const keep=P;P=DEMO;try{const T=tl(),q=T[1],cyc=Math.floor
 function heroLoop(){if(heroOn)return;if(RMQ.matches){heroDraw(4.5);return}heroOn=true;const f=now=>{if(VIEW!='home'){heroOn=false;return}if(now-heroLast>40){heroLast=now;if(!document.hidden)heroDraw((now-heroT0)/1000)}requestAnimationFrame(f)};requestAnimationFrame(f)}
 
 /* ---------- editor ---------- */
-$('back').onclick=()=>history.go(-LAYERS.length);
+$('back').onclick=closeTop;
 $('pname').oninput=e=>{P.name=e.target.value;dirty()};
 $('pname').onblur=e=>{if(!e.target.value.trim()){P.name='Mi quiz';e.target.value=P.name;dirty()}};
 $('pname').onkeydown=e=>{if(e.key=='Enter')e.target.blur()};
@@ -1396,44 +1455,342 @@ function burst(x,y,n){if(RMQ.matches)return;const C=P.colors,cols=[C.hi,C.ac,'#f
 const SPK='speechSynthesis' in window;
 function say(tx){if(!SPK){toast('Este dispositivo no tiene voz disponible.');return}try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(tx);u.lang={es:'es-ES',en:'en-US',pt:'pt-BR',fr:'fr-FR'}[P.lang]||'es-ES';u.rate=.92;speechSynthesis.speak(u)}catch(e){toast('Este dispositivo no tiene voz disponible.')}}
 function openPlayer(){const q=S().filter(s=>s.t=='q');if(!q.length)return toast('Agrega al menos una pregunta.');openLayer('player')}
-function pgShow(){stop();const C=P.colors,el=$('player');el.style.setProperty('--b1',C.b1);el.style.setProperty('--b2',C.b2);el.style.setProperty('--ac',C.ac);el.style.setProperty('--hi',C.hi);
- G={i:-1,score:0,qs:S().filter(s=>s.t=='q'),useTime:G?G.useTime:true,ans:false,raf:0};el.hidden=false;$('pgSpeak').hidden=!SPK;reqFS(el);pgIntro()}
-function pgHide(){if(G)cancelAnimationFrame(G.raf);try{SPK&&speechSynthesis.cancel()}catch(e){}$('player').hidden=true;exitFS();if(G)G={useTime:G.useTime}}
-function pgTop(){const L=LB(),n=G.qs.length;$('pgCount').textContent=G.i>=0&&G.i<n?L.q(G.i+1,n):(P.name||'Quiz');$('pgScore').textContent='⭐ '+G.score}
+function pgShow(){stop();const cfg=PGC,C=cfg?cfg.colors:P.colors,el=$('player');LBO=cfg?'es':null;el.style.setProperty('--b1',C.b1);el.style.setProperty('--b2',C.b2);el.style.setProperty('--ac',C.ac);el.style.setProperty('--hi',C.hi);
+ G={i:-1,score:0,pts:0,combo:0,cfg,qs:cfg?cfg.qs:S().filter(s=>s.t=='q'),useTime:G?G.useTime:true,ans:false,raf:0};el.hidden=false;$('pgSpeak').hidden=!SPK;reqFS(el);pgIntro()}
+function pgHide(){if(G)cancelAnimationFrame(G.raf);try{SPK&&speechSynthesis.cancel()}catch(e){}$('player').hidden=true;exitFS();if(G)G={useTime:G.useTime};PGC=null;LBO=null}
+function pgTop(){const L=LB(),n=G.qs.length;$('pgCount').textContent=G.i>=0&&G.i<n?L.q(G.i+1,n):(G.cfg?G.cfg.title:(P.name||'Quiz'));$('pgScore').textContent='⭐ '+(G.cfg?fmtN(G.pts):G.score)}
 const pgMedia=(s,cls='')=>s.img?`<img src="${s.img}" alt="">`:`<span class="pem ${cls}">${esc(s.em||'❓')}</span>`;
-function pgIntro(){const L=LB(),c=S()[0]&&S()[0].t=='cover'?S()[0]:null;G.i=-1;G.score=0;pgTop();$('pgTimer').hidden=true;
+function pgIntro(){if(G.cfg)return pgIntroB();const L=LB(),c=S()[0]&&S()[0].t=='cover'?S()[0]:null;G.i=-1;G.score=0;pgTop();$('pgTimer').hidden=true;
  $('pgMain').innerHTML=`<div class="pcard pintro">${c&&c.img?`<div class="pimg" style="height:clamp(120px,24vh,240px);margin-bottom:12px">${pgMedia(c)}</div>`:`<span class="pem big">${esc(c&&c.em||'🧠')}</span>`}
   <h2>${esc(c?c.title:P.name).replace(/\n/g,'<br>')}</h2>${c&&c.sub?`<p>${esc(c.sub)}</p>`:''}<p class="pmeta">${G.qs.length} ${L.qs}</p></div>
   <label class="ptog"><input type="checkbox" id="pgUseT" ${G.useTime?'checked':''}> ⏱ ${L.timed}</label>
   <button class="pnext" data-act="start">▶ ${L.play}</button>`}
 function pgQ(){G.i++;G.ans=false;if(G.i>=G.qs.length)return pgEnd();const s=G.qs[G.i],fx=s.fx&&s.fx!='none'?s.fx:'';pgTop();
- $('pgMain').innerHTML=`<div class="pcard"><h2>${esc(s.title)}</h2><div class="pimg ${fx?'fx-'+fx:''}" id="pgImg">${pgMedia(s)}${fx=='hide'?'<b class="qm">?</b>':''}</div></div>
+ $('pgMain').innerHTML=`<div class="pcard"><h2>${esc(s.title)}</h2>${s.img||s.em?`<div class="pimg ${fx?'fx-'+fx:''} ${s.mini?'mini':''}" id="pgImg">${pgMedia(s)}${fx=='hide'?'<b class="qm">?</b>':''}</div>`:''}</div>
   <div class="popts">${s.o.map((o,j)=>`<button class="popt" style="--i:${j}" data-j="${j}"><b>${LET[j]}</b><span>${esc(o)}</span></button>`).join('')}</div><div id="pgFoot"></div>`;
- cancelAnimationFrame(G.raf);const bar=$('pgTime'),box=$('pgTimer');box.hidden=!G.useTime;box.classList.remove('hurry');bar.style.transform='scaleX(1)';if(!G.useTime)return;
+ G.qT0=performance.now()+300;cancelAnimationFrame(G.raf);const bar=$('pgTime'),box=$('pgTimer');box.hidden=!G.useTime;box.classList.remove('hurry');bar.style.transform='scaleX(1)';if(!G.useTime)return;
  const t0=performance.now()+300,D=s.secs*1000;let last=-1;const f=now=>{if(!G||G.ans)return;const el=Math.max(0,now-t0),rem=Math.ceil((D-el)/1000);bar.style.transform=`scaleX(${Math.max(0,1-el/D)})`;
   if(rem!=last&&rem>0&&el>0){last=rem;box.classList.toggle('hurry',rem<=3);sfx(rem<=3?'tick3':'tick')}if(el>=D)return pgAnswer(-1);G.raf=requestAnimationFrame(f)};G.raf=requestAnimationFrame(f)}
 function pgAnswer(j){if(!G||G.ans||G.i<0||G.i>=G.qs.length)return;G.ans=true;cancelAnimationFrame(G.raf);const L=LB(),s=G.qs[G.i],ok=j==s.c;if(ok)G.score++;
+ let gain=0;if(G.cfg){if(ok){G.combo++;const L2=LVL[G.cfg.lv],fr=G.useTime?Math.max(0,1-(performance.now()-G.qT0)/(s.secs*1000)):.5;gain=L2.pts+Math.round(L2.pts*fr)+(G.combo>=3?5*(G.combo-2):0);G.pts+=gain}else G.combo=0}
  document.querySelectorAll('.popt').forEach((b,k)=>{b.disabled=true;b.classList.add(k==s.c?'ok':k==j?'bad':'dim')});
  const im=$('pgImg');im&&im.classList.add('rev');sfx(ok?'ding':'bad');
  if(ok){const r=document.querySelector('.popt.ok').getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,70)}
  pgTop();const sc=$('pgScore');sc.classList.remove('bump');void sc.offsetWidth;if(ok)sc.classList.add('bump');
- $('pgFoot').innerHTML=`<p class="pfeed">${j<0?L.timeup:ok?L.ok:L.bad}</p>${s.fact?`<div class="pfact"><b>${esc(P.factLabel||L.fact)}</b><span>${esc(s.fact)}</span></div>`:''}
+ if(gain){const r=sc.getBoundingClientRect(),f=document.createElement('div');f.className='fly';f.textContent='+'+gain;f.style.left=(r.left+r.width/2-20)+'px';f.style.top=(r.bottom+4)+'px';document.body.appendChild(f);setTimeout(()=>f.remove(),1200)}
+ $('pgFoot').innerHTML=`<p class="pfeed">${j<0?L.timeup:ok?L.ok:L.bad}${G.cfg&&ok&&G.combo>=3?' 🔥 x'+G.combo:''}</p>${s.fact?`<div class="pfact"><b>${esc(G.cfg?L.fact:(P.factLabel||L.fact))}</b><span>${esc(s.fact)}</span></div>`:''}
   <button class="pnext" data-act="next">${G.i+1<G.qs.length?L.next+' →':L.seeRes+' 🏆'}</button>`;
  const nx=$('pgFoot').querySelector('.pnext');nx.focus({preventScroll:true});nx.scrollIntoView({block:'nearest',behavior:RMQ.matches?'auto':'smooth'})}
 function tierFor(sc){for(const line of String(P.tiers).split('\n')){const [r,n]=line.split('|').map(x=>x&&x.trim());if(!r)continue;const m=r.match(/(\d+)\s*(?:-|–|a)\s*(\d+)/),lo=m?+m[1]:parseInt(r,10),hi=m?+m[2]:lo;if(sc>=lo&&sc<=hi)return n||''}return''}
-function pgEnd(){const L=LB(),n=G.qs.length,f=S().find(s=>s.t=='final');G.i=n;pgTop();$('pgTimer').hidden=true;
+function pgEnd(){if(G.cfg)return pgEndB();const L=LB(),n=G.qs.length,f=S().find(s=>s.t=='final');G.i=n;pgTop();$('pgTimer').hidden=true;
  $('pgMain').innerHTML=`<div class="pcard pend"><span class="pem big">${esc(f&&f.em||'🏆')}</span><p class="pbig">${G.score}<small>/${n}</small></p><h2>${esc(tierFor(G.score)||L.done)}</h2>${f&&f.sub?`<p class="pmeta">${esc(f.sub)}</p>`:''}</div>
   <div class="prow"><button class="pnext" data-act="again">↺ ${L.again}</button><button class="pexit" data-act="exit">${L.exit}</button></div>`;
  sfx('fan');if(G.score>=n/2){burst(innerWidth*.25,innerHeight*.35,60);setTimeout(()=>burst(innerWidth*.75,innerHeight*.35,60),250);setTimeout(()=>burst(innerWidth*.5,innerHeight*.2,80),500)}}
 $('pgMain').onclick=e=>{const b=e.target.closest('button');if(!b||!G)return;if(b.dataset.j!=null)return pgAnswer(+b.dataset.j);const a=b.dataset.act;
  if(a=='start'){G.useTime=$('pgUseT').checked;try{ac=ac||new AudioContext();ac.resume()}catch(x){}pgQ()}
- if(a=='next')pgQ();if(a=='again')pgIntro();if(a=='exit')closeTop()};
+ if(a=='next')pgQ();if(a=='again')pgIntro();if(a=='exit')closeTop();
+ if(a=='bagain'){G.cfg.qs=G.qs=makeGame(G.cfg.cat,G.cfg.lv);pgIntro()}if(a=='bvideo')brainToVideo()};
+function pgIntroB(){const L=LB(),g=G.cfg,V=LVL[g.lv];G.i=-1;G.score=0;G.pts=0;G.combo=0;pgTop();$('pgTimer').hidden=true;
+ $('pgMain').innerHTML=`<div class="pcard pintro"><span class="pem big">${g.em}</span><h2>${esc(g.title)}</h2><p>${V.em} Nivel ${V.n} · ${G.qs.length} preguntas</p><p class="pmeta">Responde rápido para ganar más puntos</p></div>
+  <label class="ptog"><input type="checkbox" id="pgUseT" ${G.useTime?'checked':''}> ⏱ ${L.timed}</label>
+  <button class="pnext" data-act="start">▶ ${L.play}</button>`}
+function pgEndB(){const n=G.qs.length,r=brainFinish(),h=brainHome();G.i=n;pgTop();$('pgTimer').hidden=true;
+ $('pgMain').innerHTML=`<div class="pcard pend"><span class="pem big">${G.score>=n*.8?'🏆':G.score>=n*.5?'🎉':'💪'}</span>${r.rec?'<br><span class="pbadge">⭐ ¡Nuevo récord!</span>':''}
+  <p class="pbig">${fmtN(G.pts)}<small> pts</small></p><h2>${G.score} de ${n} correctas</h2>
+  <p class="pmeta">${h.re} Nivel ${h.l} · ${h.rn}${r.up?' · ¡Subiste de nivel! 🎊':''}</p><span class="bcbar"><i style="width:0"></i></span><p class="pmeta">${h.st?'🔥 Racha de '+h.st+(h.st==1?' día':' días'):''}</p></div>
+  <div class="prow"><button class="pnext" data-act="bagain">↺ Otra partida</button><button class="pexit" data-act="bvideo">🎬 Convertir en video</button><button class="pexit" data-act="exit">Salir</button></div>`;
+ requestAnimationFrame(()=>{const b=$('pgMain').querySelector('.pend .bcbar i');if(b)b.style.width=Math.round(h.p*100)+'%'});
+ sfx('fan');if(G.score>=n/2){burst(innerWidth*.25,innerHeight*.35,60);setTimeout(()=>burst(innerWidth*.75,innerHeight*.35,60),250);setTimeout(()=>burst(innerWidth*.5,innerHeight*.2,80),500)}}
 $('pgClose').onclick=closeTop;
 $('pgSpeak').onclick=()=>{if(!G)return;const s=G.qs[G.i];if(!s){const c=S()[0];return say(String(c&&c.title||P.name).replace(/\n/g,' '))}
  say(G.ans?s.o[s.c]+'. '+(s.fact||''):s.title+'. '+s.o.map((o,j)=>LET[j]+': '+o).join('. '))};
 document.addEventListener('keydown',e=>{if(LAYERS[LAYERS.length-1]!='player'||!G)return;const k=e.key.toLowerCase(),j='1234'.indexOf(k)>=0?'1234'.indexOf(k):'abcd'.indexOf(k);
  if(j>=0&&G.i>=0&&G.i<G.qs.length&&!G.ans&&j<G.qs[G.i].o.length){e.preventDefault();pgAnswer(j)}
  else if((k=='enter'||k==' ')&&!/BUTTON|INPUT/.test(e.target.tagName)){const b=document.querySelector('#pgMain .pnext');if(b){e.preventDefault();b.click()}}});
+
+
+/* ---------- Pon a prueba tu mente: banco de preguntas, generadores y progreso ---------- */
+/* formato: pregunta|correcta|incorrecta|incorrecta[|incorrecta]~dato opcional */
+const BANK={
+general:{e:`¿Cuántos días tiene una semana?|7|5|10
+¿Cuántos meses tiene un año?|12|10|14
+¿De qué color es el cielo en un día despejado?|Azul|Verde|Rojo
+¿Cuántas patas tiene un perro?|4|2|6
+¿Qué usamos para ver la hora?|Reloj|Cuchara|Tijeras
+¿Qué color sale al mezclar azul y amarillo?|Verde|Morado|Naranja
+¿Cuántos lados tiene un triángulo?|3|4|5
+¿Qué fruta es amarilla y alargada?|Plátano|Fresa|Uva`,
+n:`¿Cuántos colores tiene el arcoíris?|7|5|6|8
+¿En qué idioma se escribió «Don Quijote de la Mancha»?|Español|Italiano|Francés|Latín
+¿Quién pintó la Mona Lisa?|Leonardo da Vinci|Pablo Picasso|Vincent van Gogh|Miguel Ángel
+¿Cuántos años tiene un siglo?|100|10|1000|50
+¿Qué instrumento tiene teclas blancas y negras?|Piano|Violín|Trompeta|Guitarra
+¿Cuál es la moneda de Japón?|Yen|Won|Yuan|Rupia
+¿Cuántas cuerdas tiene una guitarra clásica?|6|4|5|8
+¿Cuántos minutos tiene un día completo?|1.440|1.000|2.400|720~24 horas × 60 minutos = 1.440`,
+d:`¿Quién escribió «Cien años de soledad»?|Gabriel García Márquez|Mario Vargas Llosa|Pablo Neruda|Julio Cortázar~Ganó el Nobel de Literatura en 1982.
+¿Qué significa «www» en una dirección web?|World Wide Web|World Web Wide|Web World Wide|Wide World Web
+¿Quién compuso la «Novena Sinfonía» con el «Himno a la alegría»?|Ludwig van Beethoven|Wolfgang Amadeus Mozart|Johann Sebastian Bach|Antonio Vivaldi
+¿Qué nota musical sigue a «sol»?|La|Fa|Si|Mi
+¿En qué país se inventó el papel?|China|Egipto|Grecia|India~Se atribuye a Cai Lun, hacia el año 105.
+¿Cuántos lados tiene un decágono?|10|12|8|9
+¿Quién pintó «La noche estrellada»?|Vincent van Gogh|Claude Monet|Salvador Dalí|Pablo Picasso
+¿Cuántos ceros tiene un millón?|6|5|7|9`},
+ciencia:{e:`¿Qué necesitan las plantas para vivir?|Agua y luz|Solo arena|Plástico
+¿En qué estado está el hielo?|Sólido|Líquido|Gaseoso
+¿Qué atrae un imán?|Hierro|Madera|Papel
+¿A qué temperatura se congela el agua?|0 °C|50 °C|100 °C
+¿Qué da luz y calor a la Tierra?|El Sol|La Luna|Las nubes
+¿Qué pasa con el agua al hervir?|Se convierte en vapor|Se vuelve hielo|Cambia de color
+¿Qué sirve para ver cosas muy pequeñas?|Microscopio|Telescopio|Termómetro
+¿Qué mide un termómetro?|La temperatura|El peso|La distancia`,
+n:`¿Cuál es la fórmula química del agua?|H₂O|CO₂|O₂|NaCl
+¿Qué gas absorben las plantas del aire?|Dióxido de carbono|Oxígeno|Nitrógeno|Helio
+¿Qué metal es líquido a temperatura ambiente?|Mercurio|Hierro|Plata|Aluminio
+¿Qué parte de la planta hace principalmente la fotosíntesis?|La hoja|La raíz|La flor|El tallo
+¿Cuál es el símbolo químico del oro?|Au|Ag|Or|Go~Viene del latín «aurum».
+¿Cuál es la velocidad aproximada de la luz?|300.000 km/s|3.000 km/s|30.000 km/s|3 millones de km/s
+¿Quién propuso la teoría de la relatividad?|Albert Einstein|Isaac Newton|Galileo Galilei|Marie Curie
+¿Qué partícula del átomo tiene carga negativa?|Electrón|Protón|Neutrón|Núcleo`,
+d:`¿Cuál es el elemento más abundante del universo?|Hidrógeno|Helio|Oxígeno|Carbono
+¿Qué científica ganó premios Nobel en dos ciencias distintas?|Marie Curie|Rosalind Franklin|Ada Lovelace|Lise Meitner~Física en 1903 y Química en 1911.
+¿Cuál es el pH del agua pura a 25 °C?|7|0|14|5
+¿Cuál es el símbolo químico del sodio?|Na|So|Sd|S~Viene del latín «natrium».
+¿Cuántos elementos tiene la tabla periódica?|118|92|108|150
+¿Quién formuló la ley de la gravitación universal?|Isaac Newton|Johannes Kepler|Nicolás Copérnico|Albert Einstein
+¿Qué gas forma la mayor parte del aire?|Nitrógeno|Oxígeno|Dióxido de carbono|Argón~Cerca del 78 % del aire es nitrógeno.
+¿Cuál es la unidad de fuerza en el Sistema Internacional?|Newton|Julio|Vatio|Pascal`},
+historia:{e:`¿Quiénes construyeron las pirámides de Guiza?|Los egipcios|Los romanos|Los vikingos
+¿Qué civilización construyó Machu Picchu?|Los incas|Los aztecas|Los mayas
+¿Qué ciudad era el centro del Imperio romano?|Roma|París|Londres
+¿Quién llegó a América en 1492?|Cristóbal Colón|Napoleón Bonaparte|Julio César
+¿Qué usaban los caballeros medievales para protegerse?|Armadura|Chaleco salvavidas|Traje espacial
+¿Quién fue el primer ser humano en pisar la Luna?|Neil Armstrong|Cristóbal Colón|Albert Einstein
+¿Qué inventaron los hermanos Wright?|El avión|El teléfono|La bombilla
+¿Qué civilización antigua creó los Juegos Olímpicos?|Los griegos|Los egipcios|Los chinos`,
+n:`¿En qué año terminó la Segunda Guerra Mundial?|1945|1939|1918|1950
+¿Quién fue el primer presidente de Estados Unidos?|George Washington|Abraham Lincoln|Thomas Jefferson|John Adams
+¿Qué muro cayó en 1989?|El Muro de Berlín|La Gran Muralla|El Muro de Adriano|El Muro de las Lamentaciones
+¿Qué pueblo tenía su capital en Tenochtitlan?|Los aztecas|Los incas|Los mayas|Los olmecas~Sobre sus ruinas se levantó la Ciudad de México.
+¿En qué año comenzó la Revolución francesa?|1789|1776|1810|1848
+¿Qué barco se hundió en 1912 tras chocar con un iceberg?|Titanic|Lusitania|Santa María|Mayflower
+¿Quién fue el primer ser humano en viajar al espacio?|Yuri Gagarin|Neil Armstrong|John Glenn|Alan Shepard~Lo hizo en 1961.
+¿Qué civilización mesoamericana creó una escritura con glifos y un calendario muy preciso?|Los mayas|Los incas|Los vikingos|Los celtas`,
+d:`¿En qué año cayó el Imperio romano de Occidente?|476|1492|333|800
+¿Quién fue la última gobernante del Egipto ptolemaico?|Cleopatra VII|Nefertiti|Hatshepsut|Nefertari
+¿En qué año comenzó la Primera Guerra Mundial?|1914|1918|1905|1939
+¿Qué reina apoyó el primer viaje de Colón?|Isabel I de Castilla|Isabel I de Inglaterra|María Antonieta|Victoria del Reino Unido
+¿Cómo se llamaba la red de rutas comerciales entre China y Europa?|Ruta de la Seda|Ruta del Oro|Camino de Santiago|Ruta del Té
+¿En qué siglos vivió Leonardo da Vinci?|Siglos XV y XVI|Siglos XII y XIII|Siglo XVIII|Siglo X
+¿Qué país fue el primero en dar el voto a las mujeres en elecciones nacionales?|Nueva Zelanda|Estados Unidos|Francia|Reino Unido~Fue en 1893.
+¿A quién se atribuye «El arte de la guerra»?|Sun Tzu|Confucio|Nicolás Maquiavelo|Napoleón Bonaparte`},
+geografia:{e:`¿Cuál es el océano más grande?|Pacífico|Atlántico|Índico
+¿En qué país está la Torre Eiffel?|Francia|Italia|España
+¿Qué país tiene forma de bota?|Italia|Chile|Japón
+¿Cuál es el país más grande de América del Sur?|Brasil|Chile|Ecuador
+¿En qué continente está el desierto del Sahara?|África|Asia|Europa
+¿Qué país es famoso por sus canguros?|Australia|Canadá|México
+¿En qué país están las pirámides de Guiza?|Egipto|México|Perú
+¿Qué es más grande?|Un continente|Una ciudad|Un barrio`,
+n:`¿Cuál es el río más caudaloso del mundo?|Amazonas|Nilo|Misisipi|Yangtsé
+¿Cuál es la montaña más alta del mundo?|Everest|K2|Aconcagua|Kilimanjaro
+¿Cuál es el país más grande del mundo?|Rusia|Canadá|China|Estados Unidos
+¿Qué país tiene más habitantes?|India|China|Estados Unidos|Indonesia~India superó a China en 2023.
+¿Cuál es el desierto cálido más grande del mundo?|Sahara|Gobi|Atacama|Kalahari
+¿Qué cordillera recorre el oeste de América del Sur?|Los Andes|Los Alpes|El Himalaya|Los Pirineos
+¿Qué lago comparten Perú y Bolivia?|Titicaca|Victoria|Baikal|Superior
+¿En qué continente está Egipto?|África|Asia|Europa|Oceanía`,
+d:`¿Cuál es el país más pequeño del mundo?|Ciudad del Vaticano|Mónaco|San Marino|Liechtenstein
+¿Cuál es el lago más profundo del mundo?|Baikal|Tanganica|Titicaca|Superior
+¿Dónde está el punto más bajo en tierra firme?|A orillas del mar Muerto|Valle de la Muerte|Fosa de las Marianas|Mar Caspio
+¿Cuál es el desierto no polar más seco del mundo?|Atacama|Sahara|Gobi|Namib
+¿Qué país tiene más husos horarios, contando sus territorios?|Francia|Rusia|Estados Unidos|China~Por sus territorios de ultramar.
+¿Cuál es la montaña más alta de América?|Aconcagua|Denali|Chimborazo|Huascarán
+¿Qué estrecho separa Europa de África?|Estrecho de Gibraltar|Estrecho de Magallanes|Estrecho de Bering|Canal de Panamá
+¿Cuál es el río más largo de Europa?|Volga|Danubio|Rin|Sena`},
+animales:{e:`¿Qué animal dice «miau»?|Gato|Perro|Vaca
+¿Cuál es el animal más grande del mundo?|Ballena azul|Elefante|Jirafa
+¿Qué animal tiene trompa?|Elefante|Caballo|Tigre
+¿Qué usan las abejas para hacer miel?|Néctar de las flores|Hojas|Carne
+¿Cuántas patas tiene una araña?|8|6|4
+¿Qué animal es conocido como el rey de la selva?|León|Mono|Loro
+¿Dónde viven los peces?|En el agua|En los árboles|En el desierto
+¿Qué ave no puede volar?|Pingüino|Águila|Paloma`,
+n:`¿Cuál es el animal terrestre más rápido?|Guepardo|León|Caballo|Antílope
+¿Cuántos corazones tiene un pulpo?|3|1|2|8
+¿De qué se alimenta principalmente el panda gigante?|Bambú|Pescado|Frutas|Insectos
+¿Qué mamífero puede volar?|Murciélago|Ardilla|Pingüino|Avestruz
+¿Cuál es el ave más grande del mundo?|Avestruz|Cóndor|Águila real|Pelícano
+¿Qué animal cambia de color para camuflarse?|Camaleón|Iguana|Cocodrilo|Tortuga
+¿Cuántas patas tiene un insecto?|6|8|4|10
+¿Qué animal tiene la lengua de color azul oscuro?|Jirafa|Cebra|Hipopótamo|Elefante`,
+d:`¿Qué mamífero pone huevos, además de los equidnas?|Ornitorrinco|Canguro|Koala|Armadillo
+¿Qué animal tiene el cerebro más grande?|Cachalote|Elefante africano|Delfín|Gorila~Su cerebro puede pesar cerca de 8 kg.
+¿Qué animal es famoso por regenerar patas e incluso partes del corazón?|Ajolote|Sapo|Tortuga|Serpiente
+¿Cuántos años puede vivir una tortuga gigante de Galápagos?|Más de 100|Unos 20|Unos 10|Unos 40
+¿Qué animal produce la seda?|Gusano de seda|Abeja|Hormiga|Mariposa monarca
+¿Cuál es el pez más grande del mundo?|Tiburón ballena|Ballena azul|Tiburón blanco|Manta raya~La ballena azul es un mamífero, no un pez.
+¿Qué animal tiene la mordida más fuerte que se ha medido?|Cocodrilo de agua salada|León|Tiburón blanco|Hipopótamo
+¿Cómo respiran los peces?|Con branquias|Con pulmones|Por la piel|Con tráqueas`},
+cuerpo:{e:`¿Con qué órgano pensamos?|Cerebro|Estómago|Pulmón
+¿Cuántos dedos tiene una mano?|5|4|6
+¿Qué órgano bombea la sangre?|Corazón|Hígado|Riñón
+¿Con qué vemos?|Con los ojos|Con las orejas|Con la nariz
+¿Qué parte del cuerpo usamos para oír?|Los oídos|Los codos|Las rodillas
+¿Dónde están los dientes?|En la boca|En las manos|En los pies
+¿Qué cubre todo nuestro cuerpo?|La piel|El pelo|Las uñas
+¿Qué tomamos al respirar?|Aire|Agua|Arena`,
+n:`¿Cuántos huesos tiene un adulto?|206|150|300|180
+¿Cuál es el órgano más grande del cuerpo?|La piel|El hígado|El cerebro|Los pulmones
+¿Qué tipo de sangre se considera donante universal?|O negativo|AB positivo|A positivo|B negativo
+¿Cuántos dientes tiene normalmente un adulto?|32|28|20|36~Contando las muelas del juicio.
+¿Qué órgano filtra la sangre y produce la orina?|Riñón|Hígado|Pulmón|Páncreas
+¿Cuál es el hueso más largo del cuerpo?|Fémur|Tibia|Húmero|Radio
+¿Cuántas cavidades tiene el corazón humano?|4|2|3|6
+¿Qué vitamina produce la piel con la luz del sol?|Vitamina D|Vitamina C|Vitamina A|Vitamina B12`,
+d:`¿Cuál es el hueso más pequeño del cuerpo?|Estribo|Rótula|Falange|Coxis~Está dentro del oído.
+¿Qué órgano produce la insulina?|Páncreas|Hígado|Bazo|Vesícula
+¿Cuántos pares de cromosomas tiene una célula humana normal?|23|46|22|24~En total son 46 cromosomas.
+¿Cuál es el músculo más grande del cuerpo?|Glúteo mayor|Bíceps|Pectoral mayor|Deltoides
+¿Qué parte del ojo le da su color?|Iris|Retina|Pupila|Córnea
+¿Cuánta sangre tiene aproximadamente un adulto?|Unos 5 litros|Unos 2 litros|Unos 10 litros|Unos 15 litros
+¿Qué glándula es conocida como la «glándula maestra»?|Hipófisis|Tiroides|Suprarrenal|Timo
+¿En qué órgano están los alvéolos?|Pulmones|Riñones|Intestino|Corazón`},
+espacio:{e:`¿Cuál es el planeta más cercano al Sol?|Mercurio|Marte|Neptuno
+¿Qué gira alrededor de la Tierra?|La Luna|El Sol|Marte
+¿Cuál es conocido como el planeta rojo?|Marte|Venus|Saturno
+¿Qué planeta tiene anillos muy famosos?|Saturno|Mercurio|Marte
+¿Cómo se llama nuestra galaxia?|Vía Láctea|Andrómeda|Estrella Polar
+¿Qué es el Sol?|Una estrella|Un planeta|Un satélite
+¿Cuál es el planeta más grande?|Júpiter|La Tierra|Mercurio
+¿Cómo se llaman las personas que viajan al espacio?|Astronautas|Pilotos|Marineros`,
+n:`¿Cuántos planetas tiene el sistema solar?|8|9|7|10~Plutón es un planeta enano desde 2006.
+¿Cuál es el planeta más caliente?|Venus|Mercurio|Marte|Júpiter~Su atmósfera atrapa el calor.
+¿Cuánto tarda la luz del Sol en llegar a la Tierra?|Unos 8 minutos|Unos 8 segundos|Unas 8 horas|Unos 8 días
+¿En qué año llegó el ser humano a la Luna?|1969|1959|1979|1989
+¿Qué planeta gira «acostado» de lado?|Urano|Neptuno|Saturno|Venus
+¿Cuántas lunas tiene Marte?|2|0|1|4~Se llaman Fobos y Deimos.
+¿Qué es una «estrella fugaz»?|Un meteoro|Una estrella que cae|Un cometa grande|Un planeta
+¿Cuál es la estrella más cercana a la Tierra?|El Sol|Próxima Centauri|Sirio|Betelgeuse`,
+d:`¿Qué planeta tiene el día (rotación) más largo?|Venus|Mercurio|Júpiter|Neptuno~Un día en Venus dura más que su año.
+¿Cuál es la estrella más cercana al Sol?|Próxima Centauri|Sirio|Vega|Polaris
+¿Cuál es la luna más grande del sistema solar?|Ganimedes|Titán|Europa|La Luna~Orbita alrededor de Júpiter.
+¿Qué sonda es el objeto humano más lejano de la Tierra?|Voyager 1|Voyager 2|New Horizons|Pioneer 10
+¿Cómo se llama el volcán más alto conocido, que está en Marte?|Monte Olimpo|Mauna Kea|Monte Everest|Monte Elysium
+¿Cuánto dura aproximadamente un año en Marte?|687 días terrestres|365 días|200 días|1.000 días
+¿Qué tipo de galaxia es la Vía Láctea?|Espiral barrada|Elíptica|Irregular|Lenticular
+¿Quién fue la primera mujer en viajar al espacio?|Valentina Tereshkova|Sally Ride|Mae Jemison|Svetlana Savitskaya~Lo hizo en 1963.`},
+deportes:{e:`¿Con qué parte del cuerpo se juega principalmente al fútbol?|Con los pies|Con las manos|Con la cabeza
+¿Qué deporte se juega con raqueta y una pelota amarilla?|Tenis|Béisbol|Natación
+¿Cuántos jugadores tiene un equipo de fútbol en el campo?|11|9|7
+¿Qué se necesita para nadar?|Agua|Hielo|Arena
+¿En qué deporte se encesta un balón en un aro?|Baloncesto|Fútbol|Golf
+¿Qué deporte se juega sobre hielo con un disco?|Hockey sobre hielo|Voleibol|Rugby
+¿Qué puesto gana quien llega primero en una carrera?|El primero|El último|El tercero
+¿Qué deporte se juega con un bate?|Béisbol|Tenis|Ciclismo`,
+n:`¿Cada cuántos años se celebra el Mundial de fútbol?|4|2|3|5
+¿Cuántos anillos tiene la bandera olímpica?|5|4|6|7
+¿En qué juego se usa la expresión «jaque mate»?|Ajedrez|Tenis|Golf|Boxeo
+¿Cuántos puntos vale un tiro libre en baloncesto?|1|2|3|0
+¿Cuántos jugadores de voleibol tiene un equipo en la cancha?|6|5|7|11
+¿En qué deporte se usa un «tee»?|Golf|Rugby|Béisbol|Tenis
+¿Cuánto mide una maratón?|42,195 km|21 km|50 km|10 km
+¿En qué país nació el judo?|Japón|China|Corea del Sur|Tailandia`,
+d:`¿En qué ciudad se celebraron los primeros Juegos Olímpicos modernos?|Atenas|París|Londres|Roma~Fue en 1896.
+¿Cuántos sets hay que ganar en un partido masculino de Grand Slam?|3|2|4|5
+¿Cuánto dura un partido de la NBA sin prórroga?|48 minutos|40 minutos|60 minutos|90 minutos
+¿Quién tiene más medallas de oro olímpicas de la historia?|Michael Phelps|Usain Bolt|Carl Lewis|Larisa Latýnina~Ganó 23 oros.
+¿Qué deporte se compite en el Tour de Francia?|Ciclismo|Atletismo|Automovilismo|Vela
+¿Cuántos jugadores tiene un equipo de rugby union en el campo?|15|11|13|12
+¿Cuántos hoyos tiene un recorrido estándar de golf?|18|9|12|21
+¿De qué país es originario el taekwondo?|Corea del Sur|Japón|China|Tailandia`}};
+
+/* países: código, nombre, capital ('' si es ambigua), continente, nivel de fama */
+const PAISES=`MX|México|Ciudad de México|am|1;US|Estados Unidos|Washington D. C.|am|1;CA|Canadá|Ottawa|am|1;BR|Brasil|Brasilia|am|1;AR|Argentina|Buenos Aires|am|1;CO|Colombia|Bogotá|am|1;PE|Perú|Lima|am|1;CL|Chile|Santiago|am|1;VE|Venezuela|Caracas|am|2;EC|Ecuador|Quito|am|2;BO|Bolivia||am|2;PY|Paraguay|Asunción|am|2;UY|Uruguay|Montevideo|am|2;CU|Cuba|La Habana|am|2;DO|República Dominicana|Santo Domingo|am|2;GT|Guatemala|Ciudad de Guatemala|am|2;HN|Honduras|Tegucigalpa|am|3;SV|El Salvador|San Salvador|am|2;NI|Nicaragua|Managua|am|3;CR|Costa Rica|San José|am|2;PA|Panamá|Ciudad de Panamá|am|2;JM|Jamaica|Kingston|am|3;HT|Haití|Puerto Príncipe|am|3;ES|España|Madrid|eu|1;FR|Francia|París|eu|1;IT|Italia|Roma|eu|1;DE|Alemania|Berlín|eu|1;GB|Reino Unido|Londres|eu|1;PT|Portugal|Lisboa|eu|1;NL|Países Bajos|Ámsterdam|eu|2;BE|Bélgica|Bruselas|eu|2;CH|Suiza|Berna|eu|2;AT|Austria|Viena|eu|2;GR|Grecia|Atenas|eu|2;SE|Suecia|Estocolmo|eu|2;NO|Noruega|Oslo|eu|2;DK|Dinamarca|Copenhague|eu|2;FI|Finlandia|Helsinki|eu|2;IE|Irlanda|Dublín|eu|2;PL|Polonia|Varsovia|eu|2;CZ|Chequia|Praga|eu|3;HU|Hungría|Budapest|eu|3;RO|Rumania|Bucarest|eu|3;UA|Ucrania|Kiev|eu|2;RU|Rusia|Moscú|eu|1;HR|Croacia|Zagreb|eu|3;IS|Islandia|Reikiavik|eu|3;BG|Bulgaria|Sofía|eu|3;RS|Serbia|Belgrado|eu|3;JP|Japón|Tokio|as|1;CN|China|Pekín|as|1;KR|Corea del Sur|Seúl|as|1;IN|India|Nueva Delhi|as|1;TH|Tailandia|Bangkok|as|2;VN|Vietnam|Hanói|as|2;PH|Filipinas|Manila|as|2;ID|Indonesia||as|2;TR|Turquía|Ankara|as|2;SA|Arabia Saudita|Riad|as|2;IR|Irán|Teherán|as|3;IQ|Irak|Bagdad|as|3;AE|Emiratos Árabes Unidos|Abu Dabi|as|3;PK|Pakistán|Islamabad|as|3;MY|Malasia|Kuala Lumpur|as|3;SG|Singapur|Singapur|as|3;NP|Nepal|Katmandú|as|3;MN|Mongolia|Ulán Bator|as|3;KZ|Kazajistán|Astaná|as|3;JO|Jordania|Amán|as|3;QA|Catar|Doha|as|3;LB|Líbano|Beirut|as|3;EG|Egipto|El Cairo|af|1;MA|Marruecos|Rabat|af|2;NG|Nigeria|Abuya|af|3;KE|Kenia|Nairobi|af|2;ET|Etiopía|Adís Abeba|af|3;ZA|Sudáfrica||af|2;DZ|Argelia|Argel|af|3;GH|Ghana|Acra|af|3;SN|Senegal|Dakar|af|3;TN|Túnez|Túnez|af|3;CM|Camerún|Yaundé|af|3;MG|Madagascar|Antananarivo|af|3;AO|Angola|Luanda|af|3;AU|Australia|Canberra|oc|1;NZ|Nueva Zelanda|Wellington|oc|2;FJ|Fiyi|Suva|oc|3`
+ .split(';').map(r=>{const [c,n,cap,co,t]=r.split('|');return{c,n,cap,co,t:+t,f:String.fromCodePoint(...[...c].map(ch=>0x1F1E6+ch.charCodeAt(0)-65))}});
+/* vocabulario: emoji|español|inglés|tema|difícil */
+const VOC=`🐶|perro|dog|a;🐱|gato|cat|a;🐴|caballo|horse|a;🐮|vaca|cow|a;🐷|cerdo|pig|a;🐑|oveja|sheep|a;🐟|pez|fish|a;🐦|pájaro|bird|a;🐘|elefante|elephant|a;🦁|león|lion|a;🐯|tigre|tiger|a;🐵|mono|monkey|a;🐰|conejo|rabbit|a;🐢|tortuga|turtle|a|1;🐸|rana|frog|a;🐍|serpiente|snake|a;🐻|oso|bear|a;🦒|jirafa|giraffe|a|1;🐝|abeja|bee|a;🦋|mariposa|butterfly|a|1;🐭|ratón|mouse|a;🦆|pato|duck|a;🐺|lobo|wolf|a|1;🦊|zorro|fox|a|1;🍎|manzana|apple|f;🍌|plátano|banana|f;🍇|uvas|grapes|f;🍓|fresa|strawberry|f|1;🍉|sandía|watermelon|f|1;🍍|piña|pineapple|f|1;🍊|naranja|orange|f;🍋|limón|lemon|f;🥕|zanahoria|carrot|f|1;🍅|tomate|tomato|f;🥔|papa|potato|f;🍞|pan|bread|f;🧀|queso|cheese|f;🥚|huevo|egg|f;🥛|leche|milk|f;🍚|arroz|rice|f;🍦|helado|ice cream|f;🍰|pastel|cake|f;🍪|galleta|cookie|f;🏠|casa|house|o;🚗|carro|car|o;🚲|bicicleta|bicycle|o;✈️|avión|airplane|o;📚|libros|books|o;✏️|lápiz|pencil|o;🪑|silla|chair|o;🛏️|cama|bed|o;🚪|puerta|door|o;🔑|llave|key|o;⏰|reloj despertador|alarm clock|o|1;👟|zapato|shoe|o;🎒|mochila|backpack|o|1;☂️|paraguas|umbrella|o|1;🌞|sol|sun|n;🌙|luna|moon|n;⭐|estrella|star|n;🌳|árbol|tree|n;🌸|flor|flower|n;☁️|nube|cloud|n;🌧️|lluvia|rain|n;❄️|nieve|snow|n;👁️|ojo|eye|b;👂|oreja|ear|b;👃|nariz|nose|b;👄|boca|mouth|b;✋|mano|hand|b;🦶|pie|foot|b;🦷|diente|tooth|b|1;🧑‍🚒|bombero|firefighter|j|1;👩‍🏫|maestra|teacher|j;👨‍🍳|cocinero|cook|j;👮|policía|police officer|j|1;🧑‍🌾|granjero|farmer|j|1;👩‍⚕️|doctora|doctor|j`
+ .split(';').map(r=>{const [e,es,en,tp,h]=r.split('|');return{e,es,en,tp,h:!!h}});
+
+const CATS=[
+ {k:'mix',n:'Sorpréndeme',em:'🎲',c1:'#FF1E8A',c2:'#7C3AED',d:'Un poco de todo'},
+ {k:'general',n:'Cultura general',em:'🧠',c1:'#7C3AED',c2:'#4C1D95'},
+ {k:'banderas',n:'Banderas',em:'🏳️',c1:'#EF4444',c2:'#991B1B',gen:1},
+ {k:'capitales',n:'Capitales',em:'🏙️',c1:'#0EA5E9',c2:'#075985',gen:1},
+ {k:'mates',n:'Matemáticas',em:'🧮',c1:'#2563EB',c2:'#1E3A8A',gen:1},
+ {k:'ingles',n:'Inglés',em:'🇬🇧',c1:'#16A34A',c2:'#14532D',gen:1},
+ {k:'geografia',n:'Geografía',em:'🌍',c1:'#0891B2',c2:'#164E63'},
+ {k:'ciencia',n:'Ciencia',em:'🔬',c1:'#059669',c2:'#064E3B'},
+ {k:'historia',n:'Historia',em:'🏛️',c1:'#B45309',c2:'#78350F'},
+ {k:'animales',n:'Animales',em:'🐾',c1:'#EA580C',c2:'#9A3412'},
+ {k:'cuerpo',n:'Cuerpo humano',em:'🫀',c1:'#DB2777',c2:'#831843'},
+ {k:'espacio',n:'Espacio',em:'🚀',c1:'#4338CA',c2:'#1E1B4B'},
+ {k:'deportes',n:'Deportes',em:'⚽',c1:'#65A30D',c2:'#365314'}];
+const LVL={e:{n:'Fácil',em:'🟢',secs:15,pts:10,k:3},n:{n:'Normal',em:'🟡',secs:12,pts:20,k:4},d:{n:'Difícil',em:'🔴',secs:10,pts:30,k:4}};
+const shuf=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const pickR=a=>a[Math.floor(Math.random()*a.length)];
+function mkQ(title,correct,wrongs,em,fact,lv,mini){const o=shuf([correct,...wrongs]);return{t:'q',title,o,c:o.indexOf(correct),em:em||'',fact:fact||'',secs:LVL[lv].secs,img:'',mini:!!mini}}
+const parsed={};
+function bankQs(cat,lv){const key=cat+lv;if(!parsed[key])parsed[key]=BANK[cat][lv].trim().split('\n').map(l=>{const [main,fact]=l.split('~'),p=main.split('|');return{q:p[0],c:p[1],w:p.slice(2),fact}});return parsed[key]}
+const CEM=k=>(CATS.find(c=>c.k==k)||{}).em||'❓';
+function fromBank(cat,lv,n){const k=LVL[lv].k;return shuf(bankQs(cat,lv)).slice(0,n).map(x=>mkQ(x.q,x.c,shuf(x.w).slice(0,k-1),CEM(cat),x.fact,lv,1))}
+/* generadores con respuesta siempre correcta */
+function genFlag(lv){const pool=PAISES.filter(p=>p.t<=({e:1,n:2,d:3})[lv]),p=pickR(pool),k=LVL[lv].k,near=PAISES.filter(x=>x!==p&&(lv!='e'?x.co==p.co:true)&&x.t<=({e:2,n:3,d:3})[lv]);
+ return mkQ('¿De qué país es esta bandera?',p.n,shuf(near).slice(0,k-1).map(x=>x.n),p.f,'',lv)}
+function genCap(lv){const pool=PAISES.filter(p=>p.cap&&p.t<=({e:1,n:2,d:3})[lv]),p=pickR(pool),k=LVL[lv].k,near=shuf(PAISES.filter(x=>x!==p&&x.cap&&x.cap!==p.cap&&(lv!='e'?x.co==p.co:true)));
+ if(lv=='d'&&Math.random()<.4)return mkQ(`¿De qué país es capital ${p.cap}?`,p.n,near.slice(0,k-1).map(x=>x.n),p.f,'',lv);
+ return mkQ(`¿Cuál es la capital de ${p.n}?`,p.cap,near.slice(0,k-1).map(x=>x.cap),p.f,'',lv)}
+const ri=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+function nearNums(v,k,spread){const s=new Set([v]);let g=0;while(s.size<k&&g++<200){const d=ri(1,spread)*(Math.random()<.5?-1:1);if(v+d>=0)s.add(v+d)}s.delete(v);return[...s].slice(0,k-1)}
+const fmtN=v=>String(v).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+function genMath(lv){const k=LVL[lv].k;let q,v,f='';const r=Math.random();
+ if(lv=='e'){if(r<.5){const a=ri(1,12),b=ri(1,9);v=a+b;q=`${a} + ${b}`}else{const a=ri(6,20),b=ri(1,a);v=a-b;q=`${a} − ${b}`}}
+ else if(lv=='n'){if(r<.45){const a=ri(2,10),b=ri(2,10);v=a*b;q=`${a} × ${b}`}else if(r<.75){const a=ri(15,79),b=ri(11,59);v=a+b;q=`${a} + ${b}`}else{const a=ri(40,99),b=ri(11,a-5);v=a-b;q=`${a} − ${b}`}}
+ else{if(r<.3){const a=ri(12,49),b=ri(3,9);v=a*b;q=`${a} × ${b}`}else if(r<.55){const b=ri(3,12),c=ri(4,15);v=c;q=`${b*c} ÷ ${b}`;f=`Porque ${b} × ${c} = ${b*c}`}else if(r<.8){const a=ri(11,25);v=a*a;q=`${a}²`;f=`${a} × ${a} = ${a*a}`}else{const p=pickR([10,20,25,50]),b=ri(2,20)*({10:10,20:5,25:4,50:2})[p];v=b*p/100;q=`El ${p} % de ${b}`}}
+ return mkQ(`¿Cuánto es ${q}?`,fmtN(v),nearNums(v,k,lv=='e'?3:lv=='n'?8:15).map(fmtN),'🧮',f,lv,1)}
+function genEng(lv){const k=LVL[lv].k,pool=VOC.filter(w=>lv=='e'?!w.h:true),w=pickR(lv=='d'?VOC.filter(x=>x.h).concat(pool):pool),same=shuf(VOC.filter(x=>x!==w&&x.tp==w.tp)),others=shuf(VOC.filter(x=>x!==w));const wr=[...same,...others].filter((x,i,a)=>a.indexOf(x)==i);
+ const r=Math.random();
+ if(lv=='e'||(lv=='n'&&r<.5))return mkQ('What is this?',w.en,wr.slice(0,k-1).map(x=>x.en),w.e,`${w.en[0].toUpperCase()+w.en.slice(1)} = ${w.es}`,lv);
+ if(lv=='n')return mkQ(`¿Cómo se dice «${w.es}» en inglés?`,w.en,wr.slice(0,k-1).map(x=>x.en),w.e,'',lv);
+ return r<.5?mkQ(`¿Qué significa «${w.en}»?`,w.es,wr.slice(0,k-1).map(x=>x.es),'','',lv,1):mkQ(`¿Cómo se dice «${w.es}» en inglés?`,w.en,wr.slice(0,k-1).map(x=>x.en),'','',lv,1)}
+const GENS={banderas:genFlag,capitales:genCap,mates:genMath,ingles:genEng};
+function uniq(gen,lv,n){const out=[],seen=new Set();let g=0;while(out.length<n&&g++<n*20){const q=gen(lv);if(!seen.has(q.title+q.o[q.c])){seen.add(q.title+q.o[q.c]);out.push(q)}}return out}
+function makeGame(cat,lv,n=10){if(GENS[cat])return uniq(GENS[cat],lv,n);
+ if(cat=='mix'){const banks=Object.keys(BANK),qs=[...shuf(banks).slice(0,6).flatMap(b=>fromBank(b,lv,1)),...uniq(genFlag,lv,1),...uniq(genCap,lv,1),...uniq(genMath,lv,1),...uniq(genEng,lv,1)];return shuf(qs).slice(0,n)}
+ const own=fromBank(cat,lv,8),others=['e','n','d'].filter(x=>x!=lv);let extra=fromBank(cat,pickR(others),2);if(cat=='geografia')extra=[...uniq(genCap,lv,1),...uniq(genFlag,lv,1)];return shuf([...own,...extra]).slice(0,n)}
+
+/* progreso del jugador (solo en este dispositivo) */
+const BRN=(()=>{let s={xp:0,best:{},streak:0,last:'',games:0,correct:0,total:0};try{Object.assign(s,JSON.parse(localStorage.getItem('qvs-brain')||'{}'))}catch(e){}return s})();
+const saveBRN=()=>{try{localStorage.setItem('qvs-brain',JSON.stringify(BRN))}catch(e){}};
+const dayKey=d=>{d=d||new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const lvOf=xp=>Math.floor(Math.sqrt(xp/60))+1,xpAt=l=>60*(l-1)**2;
+const RANKS=[[1,'Curioso','🐣'],[3,'Aprendiz','📘'],[5,'Pensador','💭'],[8,'Sabio','🦉'],[12,'Genio','🧠'],[17,'Leyenda','👑']];
+const rankOf=l=>{let r=RANKS[0];for(const x of RANKS)if(l>=x[0])r=x;return r};
+function streakNow(){const t=dayKey(),y=dayKey(new Date(Date.now()-864e5));return BRN.last==t||BRN.last==y?BRN.streak:0}
+function brainHome(){const l=lvOf(BRN.xp),[,rn,re]=rankOf(l),p=(BRN.xp-xpAt(l))/(xpAt(l+1)-xpAt(l)),st=streakNow();
+ return{l,rn,re,p,st}}
+function brainCardsUI(){const h=brainHome();
+ $('bcLv').textContent=`${h.re} Nivel ${h.l} · ${h.rn}`;$('bcBar').style.width=Math.round(h.p*100)+'%';$('bcStreak').textContent=h.st?`🔥 ${h.st} ${h.st==1?'día seguido':'días seguidos'}`:'🔥 Juega hoy y empieza una racha';
+ $('bStatLv').textContent=`${h.re} Nivel ${h.l} · ${h.rn}`;$('bStatBar').style.width=Math.round(h.p*100)+'%';$('bStatXp').textContent=`${fmtN(BRN.xp)} puntos · faltan ${fmtN(xpAt(h.l+1)-BRN.xp)} para el nivel ${h.l+1}`;
+ $('bStatS').textContent=h.st;$('bStatG').textContent=BRN.games;$('bStatA').textContent=BRN.total?Math.round(BRN.correct/BRN.total*100)+'%':'—'}
+let BLV='e';try{BLV=localStorage.getItem('qvs-blv')||'e'}catch(e){}
+function brainUI(){brainCardsUI();document.querySelectorAll('#bLevel button').forEach(b=>{b.classList.toggle('on',b.dataset.lv==BLV);b.setAttribute('aria-pressed',b.dataset.lv==BLV)});
+ $('cats').innerHTML=CATS.map((c,i)=>{const best=BRN.best[c.k+BLV];return`<button class="cat${c.k=='mix'?' mix':''}" style="--i:${i};--c1:${c.c1};--c2:${c.c2}" data-cat="${c.k}"><span class="cem">${c.em}</span><b>${c.n}</b><small>${c.k=='mix'?c.d:c.gen?'∞ Preguntas sin fin':'24 preguntas'}</small>${best?`<i>🏆 ${fmtN(best)}</i>`:''}</button>`}).join('')}
+let PGC=null;
+function startBrain(cat,lv){const C=CATS.find(c=>c.k==cat),qs=makeGame(cat,lv);if(!qs.length)return toast('No hay preguntas para esta categoría.');
+ PGC={brain:1,cat,lv,qs,title:C.n,em:C.em,colors:{b1:C.c1,b2:C.c2,ac:C.c1,hi:'#FFD600'}};openLayer('player')}
+$('bLevel').onclick=e=>{const b=e.target.closest('button');if(!b)return;BLV=b.dataset.lv;try{localStorage.setItem('qvs-blv',BLV)}catch(x){}brainUI()};
+$('cats').onclick=e=>{const b=e.target.closest('button.cat');if(b)startBrain(b.dataset.cat,BLV)};
+$('brainCard').onclick=()=>openLayer('brain');
+$('bBack').onclick=closeTop;$('menuB').onclick=()=>openLayer('drawer');
+function brainFinish(){const g=G,key=g.cfg.cat+g.cfg.lv,rec=g.pts>(BRN.best[key]||0)&&g.pts>0,l0=lvOf(BRN.xp);if(rec)BRN.best[key]=g.pts;
+ BRN.xp+=g.pts;BRN.games++;BRN.correct+=g.score;BRN.total+=g.qs.length;const t=dayKey(),y=dayKey(new Date(Date.now()-864e5));if(BRN.last!=t){BRN.streak=BRN.last==y?BRN.streak+1:1;BRN.last=t}saveBRN();
+ return{rec,up:lvOf(BRN.xp)>l0}}
+function brainToVideo(){const g=G.cfg,C=CATS.find(c=>c.k==g.cat),n=G.qs.length,th=pickR(THK.filter(k=>k!='clasico'));
+ const d={...example(),name:'Quiz de '+C.n,theme:th,coverTag:C.n,lang:'es',slides:[{t:'cover',title:'¿Cuánto sabes\nde '+C.n.toLowerCase()+'?',sub:'Nivel '+LVL[g.lv].n.toLowerCase()+' · ¿Aciertas las '+n+'?',em:C.em,img:'',bg:''},
+  ...G.qs.map(q=>({...mk(q.title,[...q.o],q.c,q.em||C.em,q.fact),secs:g.lv=='e'?8:g.lv=='n'?7:6})),{t:'final',title:'¿Cuántas\nacertaste?',sub:'Cuéntame tu puntaje en los comentarios',em:'🏆',img:'',bg:''}],
+  tiers:`0-${Math.floor(n*.3)} | ¡A practicar!\n${Math.floor(n*.3)+1}-${Math.floor(n*.6)} | Vas bien\n${Math.floor(n*.6)+1}-${n-1} | ¡Muy bien!\n${n} | ¡Genio total!`};
+ newProject(d)}
 
 /* ---------- entrada y arranque ---------- */
 function hideSplash(){const s=$('splash');if(!s||s.classList.contains('bye'))return;s.classList.add('bye');setTimeout(()=>s.remove(),700);const h=$('home');h.classList.remove('go');void h.offsetWidth;h.classList.add('go')}
@@ -1442,6 +1799,7 @@ $('splash').onclick=hideSplash;setTimeout(hideSplash,RMQ.matches?500:2600);
  try{const L=await DB.all()||[];if(!L.length){const j=JSON.parse(localStorage.getItem('qvs2')||'null');
   if(j&&Array.isArray(j.slides)&&j.slides.length>=3){const keep=P;P=Object.assign(example(),j);P.name=P.name||'Mi primer quiz';CUR=uid();await saveNow();P=keep;CUR=null;thumbCache=''}}}catch(e){}
  renderHome();heroLoop()})();
+brainCardsUI();
 chips();form();H=[clone(P)];hi=0;histUI();
 Promise.all([bf(700,30),bf(600,30),tf(700,30),'400 30px "Lilita One"'].map(f=>document.fonts.load(f))).then(()=>{render();if(VIEW=='home')heroDraw((performance.now()-heroT0)/1000)}).catch(()=>{});
 </script>
