@@ -1,5 +1,5 @@
 // Puente con Android: guarda archivos en Documentos/QuizVideoStudio y abre el menú de compartir.
-import { Capacitor } from '@capacitor/core';
+import { Capacitor, registerPlugin } from '@capacitor/core';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { Share } from '@capacitor/share';
 import { TextToSpeech } from '@capacitor-community/text-to-speech';
@@ -32,4 +32,13 @@ async function stopSpeak() { try { await TextToSpeech.stop(); } catch (e) { } }
 async function hasLang(lang) { try { return (await TextToSpeech.isLanguageSupported({ lang })).supported; } catch (e) { return true; } }
 async function installVoices() { try { await TextToSpeech.openInstall(); } catch (e) { } }
 
-window.NativeApp = { isNative: Capacitor.isNativePlatform(), platform: Capacitor.getPlatform(), saveFile, speak, stopSpeak, hasLang, installVoices };
+// Voz del narrador como archivo WAV (pieza propia de la app, en Java), para meterla dentro del video
+const VozArchivo = registerPlugin('VozArchivo');
+async function synth(text, lang, rate) {
+  const r = await VozArchivo.synth({ text, lang, rate: rate || 1.0 });
+  const bin = atob(r.data), u8 = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+  return u8.buffer;
+}
+
+window.NativeApp = { isNative: Capacitor.isNativePlatform(), platform: Capacitor.getPlatform(), saveFile, speak, stopSpeak, hasLang, installVoices, synth };

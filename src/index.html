@@ -437,6 +437,14 @@ button.rcard:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ln)
 .langs .ck{font-style:normal;font-weight:700;opacity:0}
 .langs button.on{background:var(--pk);color:#fff}.langs button.on small{color:#fff}.langs button.on .ck{opacity:1}
 #player.player{overflow:clip}
+.vbox{margin-top:14px;border-top:2px dashed var(--soft);padding-top:4px}
+.vrow{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;background:var(--bg);border:2px solid var(--soft);border-radius:14px;padding:8px 10px;margin-top:8px}
+.vl{display:grid;min-width:0}.vl small{color:var(--mut);font-weight:600;font-size:12.5px}
+.vbt{display:flex;gap:6px;flex-wrap:wrap}
+.vbt .on{animation:recp 1.2s ease-in-out infinite}
+@keyframes recp{50%{box-shadow:0 0 0 6px rgba(255,30,138,.25)}}
+.vchk{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:6px}.vchk label{margin:0;display:flex;align-items:center;gap:6px;font-weight:600}.vchk input{width:18px;height:18px;accent-color:var(--pk)}
+.vnote{margin:6px 0 4px;padding:10px 12px;border:2px dashed var(--ln);border-radius:12px}
 body.relang{opacity:.35;pointer-events:none;transition:opacity .2s}
 </style>
 </head>
@@ -568,7 +576,7 @@ body.relang{opacity:.35;pointer-events:none;transition:opacity .2s}
   </section>
   <aside class="panel">
    <div class="card">
-    <div class="phead"><h2>Diapositivas</h2><span class="hint" id="slideInfo"></span><button class="sm" id="thBtn">🎭 <span id="thName">Diseño</span></button></div>
+    <div class="phead"><h2>Diapositivas</h2><span class="hint" id="slideInfo"></span><button class="sm" id="vBtn">🎙️ <span id="vBtnT">Voz</span></button><button class="sm" id="thBtn">🎭 <span id="thName">Diseño</span></button></div>
     <div class="chips" id="chips"></div>
     <div class="acts">
      <button class="sm" id="add">+ Pregunta</button><button class="sm" id="addvf">+ Verdadero / Falso</button>
@@ -596,7 +604,7 @@ body.relang{opacity:.35;pointer-events:none;transition:opacity .2s}
   <p class="dl">Este proyecto</p>
   <button class="di" data-sheet="th" style="--i:0"><i>🎭</i>Diseño del video</button>
   <button class="di" data-sheet="bg" style="--i:0"><i>🌈</i>Fondos animados</button>
-  <button class="di" data-sheet="mu" style="--i:1"><i>🎵</i>Música y sonidos</button>
+  <button class="di" data-sheet="mu" style="--i:1"><i>🎵</i>Música, voz y sonidos</button>
   <button class="di" data-sheet="st" style="--i:2"><i>🎨</i>Estilo, textos e idioma</button>
   <button class="di" data-sheet="ex" style="--i:3"><i>🎬</i>Exportar video</button>
   <button class="di" data-act="play" style="--i:4"><i>🎮</i>Jugar o presentar en clase</button>
@@ -658,6 +666,20 @@ body.relang{opacity:.35;pointer-events:none;transition:opacity .2s}
    <label class="sw" style="margin-top:12px"><input type="checkbox" id="whoosh"> Whoosh al cambiar de diapositiva</label>
    <label>Volumen de los efectos: <b id="svV"></b><input type="range" id="sv" min="0" max="1.5" step="0.05"></label>
    <div class="row" style="margin-top:10px"><button class="sm" id="sfxPrev">▶ Probar efectos</button></div>
+   <h3 id="vSec">🎙️ Narrador</h3>
+   <p class="hint">Una voz lee el video y queda grabada dentro del MP4. La música baja sola mientras habla y la cuenta atrás espera a que termine de leer.</p>
+   <p class="hint vnote" id="vNote" hidden></p>
+   <label class="sw"><input type="checkbox" id="vOn"> Voz automática que lee el video</label>
+   <div id="vOpts">
+    <p class="hint" style="margin-top:8px">¿Qué se lee?</p>
+    <div class="vchk"><label><input type="checkbox" data-vp="cover"> Portada y final</label><label><input type="checkbox" data-vp="q"> Pregunta</label><label><input type="checkbox" data-vp="o"> Opciones</label><label><input type="checkbox" data-vp="ans"> Respuesta</label><label><input type="checkbox" data-vp="fact"> Dato curioso</label></div>
+    <label>Velocidad de la voz<select id="vRate"><option value="0.85">🐢 Lenta</option><option value="1">Normal</option><option value="1.15">🐇 Rápida</option></select></label>
+   </div>
+   <label>Volumen de la voz: <b id="vVolV"></b><input type="range" id="vVol" min="0.3" max="1.6" step="0.05"></label>
+   <label class="sw"><input type="checkbox" id="vDuck"> Bajar la música mientras habla</label>
+   <div class="row" style="margin-top:10px"><button class="sm" id="vTest">▶ Escuchar la voz</button></div>
+   <p class="hint" id="vMsg" role="status"></p>
+   <p class="hint">🎤 ¿Prefieres tu propia voz? En el editor, abre una pregunta y toca «Grabar mi voz». Tu grabación reemplaza a la voz automática en esa parte.</p>
   </div>
 
   <div id="tab-st" hidden>
@@ -772,7 +794,45 @@ const UIL=(()=>{let l='';try{l=localStorage.getItem('qvs-ui')||''}catch(e){}if(!
 const UIX=UILS.indexOf(UIL)-1;
 document.documentElement.lang=UIL;
 /* cada línea: español || inglés || portugués */
-const DICT_TX=`Textos en inglés con preguntas||English texts with questions||Textos em inglês com perguntas
+const DICT_TX=`Música, voz y sonidos||Music, voice and sounds||Música, voz e sons
+🎙️ Narrador||🎙️ Narrator||🎙️ Narrador
+Una voz lee el video y queda grabada dentro del MP4. La música baja sola mientras habla y la cuenta atrás espera a que termine de leer.||A voice reads the video and is recorded inside the MP4. The music lowers while it speaks, and the countdown waits until it finishes reading.||Uma voz lê o vídeo e fica gravada dentro do MP4. A música abaixa sozinha enquanto ela fala e a contagem espera a leitura terminar.
+Voz automática que lee el video||Automatic voice that reads the video||Voz automática que lê o vídeo
+¿Qué se lee?||What gets read?||O que é lido?
+Portada y final||Cover and ending||Capa e final
+Opciones||Options||Opções
+Respuesta||Answer||Resposta
+Velocidad de la voz||Voice speed||Velocidade da voz
+🐢 Lenta||🐢 Slow||🐢 Lenta
+🐇 Rápida||🐇 Fast||🐇 Rápida
+Volumen de la voz:||Voice volume:||Volume da voz:
+Bajar la música mientras habla||Lower the music while it speaks||Abaixar a música enquanto fala
+▶ Escuchar la voz||▶ Hear the voice||▶ Ouvir a voz
+🎤 ¿Prefieres tu propia voz? En el editor, abre una pregunta y toca «Grabar mi voz». Tu grabación reemplaza a la voz automática en esa parte.||🎤 Prefer your own voice? In the editor, open a question and tap “Record my voice”. Your recording replaces the automatic voice for that part.||🎤 Prefere a sua própria voz? No editor, abra uma pergunta e toque em “Gravar minha voz”. Sua gravação substitui a voz automática nessa parte.
+Voz||Voice||Voz
+Voz ✓||Voice ✓||Voz ✓
+La voz automática se graba en el video solo en la app Android. Aquí puedes usar tu propia voz con el micrófono, desde cada pregunta.||The automatic voice can be recorded into the video only in the Android app. Here you can use your own voice with the microphone, from each question.||A voz automática fica gravada no vídeo só no app Android. Aqui você pode usar a sua própria voz com o microfone, em cada pergunta.
+La voz automática se graba en el video solo en la app Android.||The automatic voice can be recorded into the video only in the Android app.||A voz automática fica gravada no vídeo só no app Android.
+Narrador activado 🎙️||Narrator on 🎙️||Narrador ativado 🎙️
+Activa el narrador o graba tu voz para escucharla.||Turn on the narrator or record your voice to hear it.||Ative o narrador ou grave sua voz para ouvir.
+Preparando la voz…||Preparing the voice…||Preparando a voz…
+Preparando la voz… {a}/{b}||Preparing the voice… {a}/{b}||Preparando a voz… {a}/{b}
+Esta parte no tiene voz.||This part has no voice.||Esta parte não tem voz.
+🎤 Tu voz||🎤 Your voice||🎤 Sua voz
+🤖 Voz automática||🤖 Automatic voice||🤖 Voz automática
+Sin voz||No voice||Sem voz
+Detener||Stop||Parar
+Grabar otra vez||Record again||Gravar de novo
+Grabar mi voz||Record my voice||Gravar minha voz
+Borrar grabación||Delete recording||Apagar gravação
+Voz de esta diapositiva||Voice for this slide||Voz deste slide
+Grabación borrada||Recording deleted||Gravação apagada
+Este dispositivo no permite grabar audio aquí.||This device can't record audio here.||Este aparelho não permite gravar áudio aqui.
+No se pudo usar el micrófono. Revisa el permiso en los ajustes del teléfono.||Couldn't use the microphone. Check the permission in your phone settings.||Não foi possível usar o microfone. Confira a permissão nos ajustes do celular.
+La grabación quedó vacía. Inténtalo otra vez.||The recording came out empty. Try again.||A gravação ficou vazia. Tente de novo.
+Voz grabada 🎤||Voice recorded 🎤||Voz gravada 🎤
+Grabando… habla ahora 🎤||Recording… speak now 🎤||Gravando… fale agora 🎤
+Textos en inglés con preguntas||English texts with questions||Textos em inglês com perguntas
 Leer ▶||Read ▶||Ler ▶
 Volver a los textos||Back to the texts||Voltar aos textos
 Lee textos en inglés, toca las palabras que no conozcas y responde las preguntas al final.||Read texts in English, tap the words you don't know and answer the questions at the end.||Leia textos em inglês, toque nas palavras que você não conhece e responda às perguntas no final.
@@ -1210,6 +1270,8 @@ const PATS_TX=[
  [/^([\d.,]+) puntos · faltan ([\d.,]+) para el nivel (\d+)$/,'$1 points · $2 to go for level $3','$1 pontos · faltam $2 para o nível $3'],
  [/^(\d+) de (\d+) correctas$/,'$1 of $2 correct','$1 de $2 corretas'],
  [/^ · ¡Subiste de nivel! 🎊$/,' · Level up! 🎊',' · Você subiu de nível! 🎊'],
+ [/^Preparando la voz… (\d+)\/(\d+)$/,'Preparing the voice… $1/$2','Preparando a voz… $1/$2'],
+ [/^⏹ Detener · (\d+)s$/,'⏹ Stop · $1s','⏹ Parar · $1s'],
  [/^(.+) \(copia\)$/,'$1 (copy)','$1 (cópia)'],
  [/^(\d+) de (\d+) leídos$/,'$1 of $2 read','$1 de $2 lidos'],
 ];
@@ -1896,7 +1958,60 @@ const BGK=Object.keys(BGS);
 
 /* ---------- proyecto ---------- */
 const mk=(title,o,c,em,fact)=>({t:'q',title,o,c,em,secs:8,fact:fact||'',img:'',bg:'',fx:'none',iz:1,ix:0,iy:0});
-function example(){return{name:'¿En qué país está?',lang:'es',factLabel:'',theme:'clasico',music:'pop',musicVol:.3,sfxVol:1,tick:'clasico',ding:'ding',whoosh:true,musicData:'',musicName:'',colors:{...PALS.pop},pal:'pop',font:'lilita',trans:'rebote',reveal:2,coverSecs:3,handle:'',coverTag:'Quiz de preguntas',
+
+/* ---------- narrador: la voz queda grabada dentro del video ---------- */
+const NSYN=()=>!!(window.NativeApp&&NativeApp.isNative&&NativeApp.synth);
+const VDEF=()=>({on:false,parts:{cover:true,q:true,o:false,ans:true,fact:true},rate:1,vol:1,duck:true});
+const VO=()=>{if(!P.voice)P.voice=VDEF();if(!P.voice.parts)P.voice.parts=VDEF().parts;return P.voice};
+const VSR=48000,CL=new Map();let CLV=0;const VI=new WeakMap(),NOV={};
+let vDec=null;
+function trimPCM(a){let s=0,e=a.length-1;while(s<e&&Math.abs(a[s])<.004)s++;while(e>s&&Math.abs(a[e])<.004)e--;s=Math.max(0,s-1900);e=Math.min(a.length,e+2900);const o=a.slice(s,e);
+ let pk=0;for(let i=0;i<o.length;i++){const v=Math.abs(o[i]);if(v>pk)pk=v}if(pk>.01){const g=Math.min(4,.85/pk);for(let i=0;i<o.length;i++)o[i]*=g}return o}
+async function decodePCM(ab){vDec=vDec||new OfflineAudioContext(1,1,VSR);const b=await vDec.decodeAudioData(ab),n=b.numberOfChannels;let m=b.getChannelData(0);
+ if(n>1){const o=new Float32Array(m.length);for(let c=0;c<n;c++){const x=b.getChannelData(c);for(let i=0;i<o.length;i++)o[i]+=x[i]/n}m=o}return trimPCM(m)}
+const vClean=(t,l)=>cleanTx(String(t||'').replace(/\n+/g,' '),l);
+const pKey=p=>p.r?'r'+p.r.length+p.r.slice(-24):p.l+'|'+VO().rate+'|'+vClean(p.t,p.l);
+function factParts(f,L){const FL=/ESPAÑOL/i.test(P.factLabel||'')?'es':/PORTUGU/i.test(P.factLabel||'')?'pt':L,m=f.match(/^(.+?)\s=\s(.+)$/);
+ return m&&FL!=L?[{t:m[1],l:L},{t:m[2],l:FL}]:[{t:f,l:FL}]}
+/* qué se lee en cada diapositiva: tu grabación tiene prioridad sobre la voz automática */
+function vSlots(s){const V=VO(),A=V.on&&NSYN(),L=P.lang||'es',out={};
+ if(s.t=='cover'||s.t=='final'){if(s.rec)out.lead=[{r:s.rec}];else if(A&&V.parts.cover)out.lead=[{t:s.title,l:L},...(s.sub?[{t:s.sub,l:L}]:[])];return out}
+ if(s.t!='q')return out;
+ if(s.rec)out.lead=[{r:s.rec}];else if(A){const p=[];if(V.parts.q)p.push({t:s.title,l:L});if(V.parts.o)s.o.forEach((o,j)=>p.push({t:LET[j]+'. '+o,l:L}));if(p.length)out.lead=p}
+ if(s.recA)out.ans=[{r:s.recA}];else if(A){const p=[],B=LBL[L]||LBL.es;if(V.parts.ans)p.push({t:B.ansIs+' '+s.o[s.c],l:L});if(V.parts.fact&&s.fact)p.push(...factParts(s.fact,L));if(p.length)out.ans=p}
+ return out}
+function slotPCM(parts){const cl=[];for(const p of parts){const c=CL.get(pKey(p));if(c===undefined)return null;if(c!=='x'&&c.length)cl.push(c)}if(!cl.length)return 0;
+ const g=Math.round(.22*VSR);let n=g*(cl.length-1);cl.forEach(c=>n+=c.length);const o=new Float32Array(n);let at=0;cl.forEach(c=>{o.set(c,at);at+=c.length+g});return o}
+let vSigC='',vSigT=0;
+function vSig(){const now=performance.now();if(now-vSigT>30){vSigT=now;vSigC=JSON.stringify(VO())+P.lang+'|'+(P.factLabel||'')+NSYN()}return vSigC}
+function vInfo(s){if(!s||(s.t!='q'&&s.t!='cover'&&s.t!='final'))return NOV;
+ const raw=vSig()+'|'+s.t+'|'+s.title+'|'+(s.sub||'')+'|'+(s.o?s.o.join('¦')+s.c:'')+'|'+(s.fact||'')+'|'+(s.rec?s.rec.length:0)+'|'+(s.recA?s.recA.length:0);
+ const m=VI.get(s);if(m&&m.raw==raw&&(m.done||m.v==CLV))return m.info;
+ const sl=vSlots(s),info={};let done=true;
+ for(const k in sl){const pcm=slotPCM(sl[k]);if(pcm===null){done=false;continue}if(pcm)info[k]={pcm,dur:pcm.length/VSR}}
+ if(!done)vNeed();VI.set(s,{raw,info,done,v:CLV});return info}
+let vNT=0;function vNeed(){clearTimeout(vNT);vNT=setTimeout(()=>prepVoice(),500)}
+let vRun=null,vAgain=false;
+function prepVoice(onProg){if(vRun){vAgain=true;return vRun}
+ vRun=(async()=>{try{do{vAgain=false;const need=[],seen=new Set();
+  for(const s of S()){const sl=vSlots(s);for(const k in sl)for(const p of sl[k]){const key=pKey(p);if(!CL.has(key)&&!seen.has(key)){seen.add(key);need.push({key,p})}}}
+  for(let i=0;i<need.length;i++){const x=need[i];onProg&&onProg(i,need.length);vUI(i,need.length);
+   try{let ab;if(x.p.r)ab=await(await fetch(x.p.r)).arrayBuffer();else{const t=vClean(x.p.t,x.p.l);if(!t||!NSYN())throw 0;ab=await NativeApp.synth(t,LANGC[x.p.l]||'es-ES',VO().rate)}CL.set(x.key,await decodePCM(ab))}
+   catch(e){CL.set(x.key,'x')}CLV++}
+  if(need.length){vUI();if(!playing&&VIEW=='editor'){const o=tl()[sel];if(o&&(t<o.a||t>=o.a+o.d))t=o.a+Math.min(1.2,o.d*.3);render()}try{slideInfo()}catch(e){}}}while(vAgain)}finally{vRun=null}})();return vRun}
+const vOn=()=>VO().on&&NSYN();
+const vHas=()=>S().some(s=>s.rec||s.recA)||vOn();
+/* tiempos: la cuenta atrás espera a que termine la voz */
+const tl=()=>{let a=0;return S().map(s=>{const v=vInfo(s);let d,L=0,FZ=0,T2=0;
+ if(s.t=='cover'){FZ=.5;if(v.lead)L=Math.max(0,.35+v.lead.dur+.35-FZ);d=P.coverSecs+L}
+ else if(s.t=='final')d=v.lead?Math.max(5,.6+v.lead.dur+1.4):5;
+ else{FZ=.9;if(v.lead)L=Math.max(0,.45+v.lead.dur+.4-FZ);if(v.ans)T2=Math.max(0,.4+v.ans.dur+.5-rev(s));d=L+s.secs+rev(s)+T2}
+ const o={s,a,d,L,FZ,v};a+=d;return o})};
+const ltOf=(o,tt)=>{const r=tt-o.a;return!o.L||r<o.FZ?r:r<o.FZ+o.L?o.FZ:r-o.L};
+const vReal=(o,x)=>!o.L||x<o.FZ?x:x+o.L;
+function vClips(T){const out=[];T.forEach(o=>{const v=o.v||{},s=o.s;if(v.lead)out.push([o.a+(s.t=='q'?.45:s.t=='cover'?.35:.6),v.lead.pcm]);if(v.ans)out.push([o.a+vReal(o,s.secs)+.4,v.ans.pcm])});return out}
+
+function example(){return{name:'¿En qué país está?',lang:'es',factLabel:'',theme:'clasico',voice:VDEF(),music:'pop',musicVol:.3,sfxVol:1,tick:'clasico',ding:'ding',whoosh:true,musicData:'',musicName:'',colors:{...PALS.pop},pal:'pop',font:'lilita',trans:'rebote',reveal:2,coverSecs:3,handle:'',coverTag:'Quiz de preguntas',
  tiers:'0-3 | Turista perdido\n4-6 | Viajero curioso\n7-8 | Trotamundos\n9-10 | Experto',
  bg:'rayos',rotate:true,bgSet:['rayos','burbujas','aurora','confeti','ondas','retro','puntos','galaxia'],bgSpeed:1,dim:.35,bgImg:'',
  slides:[{t:'cover',title:'¿En qué país\nestá este lugar?',sub:'El 95% no acierta las 10. ¿Y tú?',em:'🌍',img:'',bg:''},
@@ -1915,7 +2030,7 @@ let P=example();
 let sel=1,t=0,playing=false,t0=0,src=null,ac=null,THUMB=false;
 const S=()=>P.slides;
 const rev=s=>P.reveal+(s.fact?1.5:0);
-const tl=()=>{let a=0;return S().map(s=>{const d=s.t=='cover'?P.coverSecs:s.t=='final'?5:s.secs+rev(s),o={s,a,d};a+=d;return o})};
+
 const tot=()=>{const T=tl(),l=T[T.length-1];return l.a+l.d};
 function bgOf(i){const s=S()[i];if(s&&s.bg&&BGS[s.bg])return s.bg;if(P.rotate&&P.bgSet.length)return P.bgSet[i%P.bgSet.length];return P.bg}
 
@@ -1959,7 +2074,7 @@ function paintBg(c,key,bt,C){c.save();(BGS[key]||BGS.rayos).f(c,bt,C);c.restore(
 function draw(c,W,tt){
  const k=W/540;c.setTransform(k,0,0,k,0,0);c.globalAlpha=1;c.textAlign='left';c.textBaseline='alphabetic';c.lineJoin='round';
  const T=tl(),Z=T[T.length-1];tt=clamp(tt,0,Z.a+Z.d-1e-3);
- const ix=T.findIndex(o=>tt<o.a+o.d),s=T[ix].s,lt=tt-T[ix].a,N=T.length,C=P.colors,bt=tt*P.bgSpeed;
+ const ix=T.findIndex(o=>tt<o.a+o.d),s=T[ix].s,lt=ltOf(T[ix],tt),N=T.length,C=P.colors,bt=tt*P.bgSpeed;
  if(P.theme&&P.theme!='clasico'&&THEMES[P.theme])return drawThemed(c,tt);
  const cur=bgOf(ix);
  if(ix>0&&lt<.6&&bgOf(ix-1)!=cur){paintBg(c,bgOf(ix-1),bt,C);const e=lt/.6;c.globalAlpha=e*e*(3-2*e);paintBg(c,cur,bt,C);c.globalAlpha=1}else paintBg(c,cur,bt,C);
@@ -2116,7 +2231,7 @@ const THK=Object.keys(THEMES);
 function fitText(c,tx,x,y,w,px,al,ff=bf,wt=600){let f=px;c.textAlign=al;do{c.font=ff(wt,f);f-=2}while(c.measureText(tx).width>w&&f>12);c.fillText(tx,x,y)}
 
 function drawThemed(c,tt){const Th=THEMES[P.theme],C=P.colors,T=tl(),Z=T[T.length-1];
- const ix=T.findIndex(o=>tt<o.a+o.d),s=T[ix].s,lt=tt-T[ix].a,N=T.length,q=s.t=='q';
+ const ix=T.findIndex(o=>tt<o.a+o.d),s=T[ix].s,lt=ltOf(T[ix],tt),N=T.length,q=s.t=='q';
  const qn=T.slice(0,ix+1).filter(x=>x.s.t=='q').length,qt=S().filter(x=>x.t=='q').length,cnt=q&&lt<s.secs,rem=q?Math.ceil(s.secs-lt):0,rt=q?lt-s.secs:-1;
  const st={tt,lt,ix,s,q,cnt,rem,rt,C};const bt=tt*P.bgSpeed;
  c.save();if(Th.bgMenu){const cur=bgOf(ix);if(ix>0&&lt<.6&&bgOf(ix-1)!=cur){paintBg(c,bgOf(ix-1),bt,C);const e=lt/.6;c.globalAlpha=e*e*(3-2*e);paintBg(c,cur,bt,C);c.globalAlpha=1}else paintBg(c,cur,bt,C)}else Th.bg(c,bt,C,st);c.restore();
@@ -2205,12 +2320,16 @@ function sfxKit(a,sr){const{osc,noise,whoosh}=synth(a,sr),g=P.sfxVol;
    case'aplausos':for(let i=0;i<46;i++)noise(at+rnd(i)*1.2,.07,(.22+rnd(i+9)*.22)*g,true,.45);break;case'tada':osc(at,523,.15,.16*g,'saw',.005,.3);[659,784,1047].forEach(f=>osc(at+.16,f,.9,.1*g,'saw',.005,.9));break;
    case'ninguno':break;default:[523,659,784].forEach((f,j)=>osc(at+j*.15,f,.55,.38*g,'sine',.01,.55))}},
   fanfare(at){[523,659,784,1047].forEach((f,j)=>osc(at+j*.13,f,.7,.32*g,'sine',.01,.7))},whoosh(at){whoosh(at,.38,.5*g)}}}
-function mkAudio(sr){const T=tl(),n=Math.ceil(tot()*sr),a=new Float32Array(n),K=sfxKit(a,sr);
+function mkAudio(sr){const T=tl(),n=Math.ceil(tot()*sr),a=new Float32Array(n),K=sfxKit(a,sr),VV=vClips(T),V=VO();
+ const tk=(o,k,last)=>K.tick(o.a+(o.L&&k==0?o.FZ+o.L:vReal(o,k)),last);
  T.forEach((o,i)=>{const s=o.s;if(i>0&&P.whoosh)K.whoosh(o.a);
-  if(s.t=='cover')for(let k=0;k<P.coverSecs;k++)K.tick(o.a+k,k==P.coverSecs-1);
+  if(s.t=='cover')for(let k=0;k<P.coverSecs;k++)tk(o,k,k==P.coverSecs-1);
   if(s.t=='final')K.fanfare(o.a+.3);
-  if(s.t=='q'){for(let k=0;k<s.secs;k++)K.tick(o.a+k,s.secs-k<=3);K.ding(o.a+s.secs)}});
- const m=musicBuf(sr,n);if(m){const mv=P.musicVol,f=sr*1.2;for(let i=0;i<n;i++)a[i]+=m[i]*mv*Math.min(1,i/f,(n-i)/f)}
+  if(s.t=='q'){for(let k=0;k<s.secs;k++)tk(o,k,s.secs-k<=3);K.ding(o.a+vReal(o,s.secs))}});
+ let env=null;if(VV.length&&V.duck!==false){env=new Float32Array(n).fill(1);const r=Math.round(.2*sr);
+  for(const [at,p] of VV){const s0=Math.round(at*sr),s1=s0+Math.round(p.length*sr/VSR);for(let i=Math.max(0,s0-r);i<Math.min(n,s1+r);i++){const e=i<s0?(s0-i)/r:i>s1?(i-s1)/r:0;env[i]=Math.min(env[i],.28+.72*e)}}}
+ const m=musicBuf(sr,n);if(m){const mv=P.musicVol,f=sr*1.2;for(let i=0;i<n;i++)a[i]+=m[i]*mv*Math.min(1,i/f,(n-i)/f)*(env?env[i]:1)}
+ const vg=V.vol??1,kk=VSR/sr;for(const [at,p] of VV){const s0=Math.round(at*sr);for(let i=0;s0+i<n&&Math.floor(i*kk)<p.length;i++)if(s0+i>=0)a[s0+i]+=p[Math.floor(i*kk)]*vg}
  for(let i=0;i<n;i++)a[i]=Math.tanh(a[i]);return a}
 
 /* ---------- vista previa ---------- */
@@ -2221,7 +2340,7 @@ function render(follow){const T=tl(),total=tot();t=clamp(t,0,total-.001);
  const v=t/total*1000,tx=fm(t)+' / '+fm(total);$('scrub').value=v;$('tm').textContent=tx;$('fsScrub').value=v;$('fsTm').textContent=tx}
 function setPlayUI(){['play','fsPlay'].forEach(id=>{$(id).textContent=playing?'⏸':'▶';$(id).setAttribute('aria-label',playing?'Pausar':'Reproducir')})}
 function stop(){playing=false;try{src&&src.stop()}catch(e){}src=null;setPlayUI()}
-function play(){if(playing)return stop();if(t>=tot()-.1)t=0;$('fsEnd').hidden=true;
+async function play(){if(playing)return stop();if(vHas()&&(vRun||S().some(s=>{vInfo(s);const m=VI.get(s);return m&&!m.done}))){toast(tr('Preparando la voz…'));await prepVoice();if(playing)return}if(t>=tot()-.1)t=0;$('fsEnd').hidden=true;
  if($('snd').checked){try{ac=ac||new AudioContext();ac.resume();const a=mkAudio(48000),b=ac.createBuffer(1,a.length,48000);b.copyToChannel(a,0);src=ac.createBufferSource();src.buffer=b;src.connect(ac.destination);src.start(0,t)}catch(e){}}
  playing=true;t0=performance.now()-t*1000;setPlayUI();loop()}
 function loop(){if(!playing)return;t=(performance.now()-t0)/1000;if(t>=tot()-.001){render(true);stop();if(FS){$('fsEnd').hidden=false;$('fs').classList.remove('idle')}return}render(true);requestAnimationFrame(loop)}
@@ -2233,7 +2352,7 @@ document.addEventListener('keydown',e=>{const top=LAYERS[LAYERS.length-1];if(e.c
 /* ---------- guardado local ---------- */
 let svT;
 /* deshacer / rehacer: copias superficiales, las imágenes se comparten sin duplicarse */
-const clone=p=>({...p,colors:{...p.colors},bgSet:[...p.bgSet],slides:p.slides.map(s=>({...s,o:s.o?[...s.o]:s.o}))});
+const clone=p=>({...p,colors:{...p.colors},bgSet:[...p.bgSet],voice:p.voice?{...p.voice,parts:{...p.voice.parts}}:p.voice,slides:p.slides.map(s=>({...s,o:s.o?[...s.o]:s.o}))});
 let H=[],hi=-1,hT=0;
 function pushSnap(){hT=0;H=H.slice(0,hi+1);H.push(clone(P));if(H.length>80)H.shift();hi=H.length-1;histUI()}
 function flushSnap(){if(hT){clearTimeout(hT);pushSnap()}}
@@ -2267,7 +2386,7 @@ function form(){const s=S()[sel];let h='';
   <div class="three"><label>Zoom<input type="range" data-k="iz" id="f-iz" min="1" max="3" step="0.05" value="${s.iz||1}"></label><label>Mover ↔<input type="range" data-k="ix" id="f-ix" min="-1" max="1" step="0.05" value="${s.ix||0}"></label><label>Mover ↕<input type="range" data-k="iy" id="f-iy" min="-1" max="1" step="0.05" value="${s.iy||0}"></label></div>`+
   (s.t=='q'?`<label>Efecto mientras corre el tiempo<select data-k="fx" id="f-fx">${Object.entries(FX).map(([k,v])=>`<option value="${k}" ${(s.fx||'none')==k?'selected':''}>${v}</option>`).join('')}</select></label>`:'')+
   `<label>Emoji (se ve si no hay imagen)<input type="text" data-k="em" id="f-em" value="${esc(s.em||'')}"></label>`+bgSel(s);
- $('form').innerHTML=h;
+ $('form').innerHTML=h+vForm(s);
  $('file').onchange=e=>setImgFile(e.target.files[0])}
 $('form').oninput=e=>{const el=e.target,k=el.dataset.k,s=S()[sel];if(!k)return;
  if(k[0]=='o'&&k.length==2)s.o[+k[1]]=el.value;else if(k=='c')s.c=+el.value;else if(k=='secs'){s.secs=+el.value;$('secV').textContent=el.value+'s'}
@@ -2275,7 +2394,7 @@ $('form').oninput=e=>{const el=e.target,k=el.dataset.k,s=S()[sel];if(!k)return;
  if(k=='bg'){const o=tl()[sel];t=o.a+.7}
  if(k=='fx'){const o=tl()[sel];stop();t=o.a+.4;render();dirty();play();return}
  changed()};
-$('form').onclick=e=>{const a=e.target.dataset.act,s=S()[sel];if(!a)return;
+$('form').onclick=e=>{const a=e.target.dataset.act,s=S()[sel];if(!a)return;if(a[0]=='v'&&a.includes('-'))return vAct(a,s);
  if(a=='pick'){$('file').click();return}
  if(a=='addo'&&s.o.length<4)s.o.push(({en:'Option ',pt:'Opção '}[P.lang]||'Opción ')+LET[s.o.length]);
  if(a=='delo'&&s.o.length>2){s.o.pop();if(s.c>=s.o.length)s.c=0}
@@ -2391,7 +2510,7 @@ $('tick').innerHTML=Object.entries(TICKS).map(([k,v])=>`<option value="${k}">${v
 $('ding').innerHTML=Object.entries(DINGS).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
 function musicUI(){$('mus').innerHTML=Object.entries(MUS).map(([k,[e,n]])=>`<button data-m="${k}" class="${P.music==k?'on':''}" aria-pressed="${P.music==k}"><i>${e}</i>${k=='custom'&&P.musicName?esc(P.musicName).slice(0,18):n}</button>`).join('');
  $('custBox').hidden=P.music!='custom';$('mv').value=P.musicVol;$('mvV').textContent=Math.round(P.musicVol*100)+'%';$('sv').value=P.sfxVol;$('svV').textContent=Math.round(P.sfxVol*100)+'%';
- $('tick').value=P.tick;$('ding').value=P.ding;$('whoosh').checked=P.whoosh}
+ $('tick').value=P.tick;$('ding').value=P.ding;$('whoosh').checked=P.whoosh;narrUI()}
 let prevSrc=null;
 function playBuf(a){try{prevSrc&&prevSrc.stop()}catch(e){}stop();ac=ac||new AudioContext();ac.resume();const b=ac.createBuffer(1,a.length,48000);b.copyToChannel(a,0);prevSrc=ac.createBufferSource();prevSrc.buffer=b;prevSrc.connect(ac.destination);prevSrc.start()}
 $('mus').onclick=e=>{const b=e.target.closest('button');if(!b)return;P.music=b.dataset.m;if(P.music=='custom'&&!P.musicData)setTimeout(()=>$('musFile').click(),50);musicUI();dirty()};
@@ -2451,6 +2570,7 @@ async function exportVideo(base){
  if(!window.VideoEncoder||!window.Mp4Muxer){msg('Este dispositivo no puede exportar video. Actualiza «Android System WebView» y Chrome desde Google Play e inténtalo de nuevo.');return false}
  stop();$('exp').disabled=true;$('pg').hidden=false;let ok=false;
  try{
+  if(vHas())await prepVoice((i,n)=>msg(trf('Preparando la voz… {a}/{b}',{a:i+1,b:n})));
   const W=+$('res').value,H=W*16/9,fps=+$('fps').value,N=Math.round(tot()*fps),sr=48000;
   msg('Cargando letras, imágenes y música…');await decodeCustom();for(const f of[bf(700,30),bf(600,30),tf(700,30)])await document.fonts.load(f);await preload();
   const cv=document.createElement('canvas');cv.width=W;cv.height=H;const c=cv.getContext('2d');
@@ -2504,7 +2624,7 @@ async function saveNow(){clearTimeout(svT);if(!CUR)return;const now=Date.now();i
  catch(e){if(!dbWarned){dbWarned=true;toast('No se pudo guardar en este dispositivo. Usa ☰ → Guardar como archivo.')}}}
 function persist(){saveNow()}
 function loadP(data,id){stop();P=Object.assign(example(),data);if(!P.name)P.name='Mi quiz';CUR=id;CUST=null;thumbCache='';decodeCustom();H=[clone(P)];hi=0;histUI();sel=S().length>2?1:0;refreshAll();pick(sel)}
-async function newProject(data){loadP(data,uid());await saveNow();enterEditor();toast('Proyecto creado ✨')}
+async function newProject(data,fresh=true){loadP(data,uid());if(fresh&&NSYN())VO().on=true;await saveNow();enterEditor();toast('Proyecto creado ✨')}
 async function openProject(id){try{const r=await DB.get(id);if(!r)return;loadP(r.data,r.id);enterEditor()}catch(e){toast('No se pudo abrir el proyecto.')}}
 async function renderHome(){try{brainCardsUI()}catch(e){}let L=[];try{L=await DB.all()||[]}catch(e){}
  L.sort((a,b)=>b.updated-a.updated);$('pCount').textContent=L.length?`· ${L.length}`:'';
@@ -2549,7 +2669,7 @@ function ask(text,yes){$('dlgTx').textContent=text;$('dlgYes').textContent=yes;r
 $('dlgYes').onclick=()=>{const r=dlgRes;dlgRes=null;r&&r(true);closeTop()};$('dlgNo').onclick=closeTop;
 
 /* ---------- menú y hojas ---------- */
-const SHT={lang:'Idioma de la app',th:'Diseño del video',don:'Apoyar el proyecto',tpl:'Elige una plantilla',bg:'Fondos animados',mu:'Música y sonidos',st:'Estilo, textos e idioma',ex:'Exportar video',help:'Cómo se usa',about:'Acerca de'};
+const SHT={lang:'Idioma de la app',mu:'Música, voz y sonidos',th:'Diseño del video',don:'Apoyar el proyecto',tpl:'Elige una plantilla',bg:'Fondos animados',st:'Estilo, textos e idioma',ex:'Exportar video',help:'Cómo se usa',about:'Acerca de'};
 function openSheet(k,title){SHEET=k;$('shTitle').textContent=tr(title||SHT[k]);if(k=='lang')langUI();document.querySelectorAll('.sbody>div').forEach(d=>d.hidden=d.id!='tab-'+k);$('sheet').querySelector('.sbody').scrollTop=0;
  if(k=='th'){thUI();requestAnimationFrame(thLoop)}if(k=='bg'){bgMenu();requestAnimationFrame(thumbLoop)}if(k=='mu')musicUI();if(k=='st')styleUI();
  if(LAYERS[LAYERS.length-1]=='sheet')return;openLayer('sheet')}
@@ -2565,7 +2685,7 @@ $('drawer').onclick=e=>{const b=e.target.closest('button.di');if(!b)return;if(b.
  if(a=='uiLang')return openSheet('lang')};
 $('openF').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
  try{const j=JSON.parse(await f.text());if(!Array.isArray(j.slides))throw 0;if(!j.name)j.name=f.name.replace(/(\.quiz)?\.json$/i,'');
-  if(VIEW=='editor')history.go(-LAYERS.length);else if(LAYERS.length)history.back();setTimeout(()=>newProject(j),120)}
+  if(VIEW=='editor')history.go(-LAYERS.length);else if(LAYERS.length)history.back();setTimeout(()=>newProject(j,false),120)}
  catch(x){toast('Ese archivo no es un proyecto de Quiz Video Studio.')}};
 const THEME0=document.documentElement.getAttribute('data-theme'),THM={auto:'Automática',light:'Clara',dark:'Oscura'};
 let theme='auto';try{theme=localStorage.getItem('qvs-theme')||'auto'}catch(e){}
@@ -3013,6 +3133,49 @@ $('langs').onclick=e=>{const b=e.target.closest('button');if(!b)return;const l=b
  document.body.classList.add('relang');const k=LAYERS.length;if(k)history.go(-k);setTimeout(()=>location.reload(),k?260:60)};
 $('uiLangV').textContent=LANGN[UIL];
 
+
+/* ---------- narrador: ajustes, grabar tu voz y escuchar ---------- */
+function vUI(i,n){const m=$('vMsg');if(m)m.textContent=n?trf('Preparando la voz… {a}/{b}',{a:i+1,b:n}):'';
+ const b=$('vBtnT');if(b)b.textContent=vHas()?tr('Voz ✓'):tr('Voz')}
+function narrUI(){const V=VO(),ok=NSYN();$('vNote').textContent=ok?'':tr('La voz automática se graba en el video solo en la app Android. Aquí puedes usar tu propia voz con el micrófono, desde cada pregunta.');$('vNote').hidden=ok;
+ $('vOn').checked=V.on&&ok;$('vOn').disabled=!ok;$('vOpts').hidden=!(V.on&&ok);
+ document.querySelectorAll('[data-vp]').forEach(x=>x.checked=!!V.parts[x.dataset.vp]);
+ $('vRate').value=String(V.rate);$('vVol').value=V.vol??1;$('vVolV').textContent=Math.round((V.vol??1)*100)+'%';$('vDuck').checked=V.duck!==false;vUI()}
+const vSet=()=>{narrUI();changed();vNeed()};
+$('vOn').onchange=e=>{VO().on=e.target.checked;vSet();if(VO().on)toast(tr('Narrador activado 🎙️'))};
+document.querySelectorAll('[data-vp]').forEach(x=>x.onchange=()=>{VO().parts[x.dataset.vp]=x.checked;vSet()});
+$('vRate').onchange=e=>{VO().rate=+e.target.value;vSet()};
+$('vVol').oninput=e=>{VO().vol=+e.target.value;$('vVolV').textContent=Math.round(VO().vol*100)+'%';dirty()};
+$('vDuck').onchange=e=>{VO().duck=e.target.checked;dirty()};
+$('vTest').onclick=async()=>{const s=S()[sel]&&S()[sel].t=='q'?S()[sel]:S().find(x=>x.t=='q');if(!s)return;
+ if(!vHas())return toast(tr(NSYN()?'Activa el narrador o graba tu voz para escucharla.':'La voz automática se graba en el video solo en la app Android.'));
+ toast(tr('Preparando la voz…'));await prepVoice();const v=vInfo(s);if(!v.lead&&!v.ans)return toast(tr('Esta parte no tiene voz.'));
+ vPlayPcm(v.lead?v.lead.pcm:v.ans.pcm)};
+$('vBtn').onclick=()=>{openSheet('mu');setTimeout(()=>{const h=$('vSec');h&&h.scrollIntoView({block:'start',behavior:RMQ.matches?'auto':'smooth'})},380)};
+let vSrc=null;
+function vPlayPcm(p){try{vSrc&&vSrc.stop()}catch(e){}try{ac=ac||new AudioContext();ac.resume();const b=ac.createBuffer(1,p.length,VSR);b.copyToChannel(p,0);vSrc=ac.createBufferSource();vSrc.buffer=b;
+ const g=ac.createGain();g.gain.value=VO().vol??1;vSrc.connect(g);g.connect(ac.destination);vSrc.start()}catch(e){}}
+/* tu propia voz con el micrófono */
+let REC=null;
+function vRow(s,f,label){const has=!!s[f],rec=REC&&REC.s===s&&REC.f==f,slot=f=='rec'?'lead':'ans',auto=vOn()&&vSlots({...s,[f]:''})[slot];
+ return`<div class="vrow"><span class="vl"><b>${tr(label)}</b><small>${has?tr('🎤 Tu voz'):auto?tr('🤖 Voz automática'):tr('Sin voz')}</small></span><span class="vbt">${(has||auto)&&!rec?`<button class="sm" data-act="vplay-${slot}" aria-label="${tr('Escuchar')}">▶</button>`:''}<button class="sm${rec?' on':''}" data-act="vrec-${slot}">${rec?'⏹ '+tr('Detener'):'🎤 '+tr(has?'Grabar otra vez':'Grabar mi voz')}</button>${has&&!rec?`<button class="sm warn" data-act="vdel-${slot}" aria-label="${tr('Borrar grabación')}">🗑</button>`:''}</span></div>`}
+function vForm(s){if(!s||!(s.t=='q'||s.t=='cover'||s.t=='final'))return'';
+ return`<div class="vbox"><label>🎙️ ${tr('Voz de esta diapositiva')}</label>${s.t=='q'?vRow(s,'rec','Pregunta')+vRow(s,'recA','Respuesta'):vRow(s,'rec',s.t=='cover'?'Portada':'Final')}</div>`}
+async function vAct(a,s){const [act,slot]=a.split('-'),f=slot=='lead'?'rec':'recA';
+ if(act=='vdel'){delete s[f];form();changed();toast(tr('Grabación borrada'));return}
+ if(act=='vrec')return vRec(s,f);
+ if(act=='vplay'){stop();if(vRun||!vInfo(s)[slot]){toast(tr('Preparando la voz…'));await prepVoice()}const v=vInfo(s)[slot];if(!v)return toast(tr('Esta parte no tiene voz.'));vPlayPcm(v.pcm)}}
+async function vRec(s,f){if(REC){if(REC.s===s&&REC.f==f){REC.mr.stop();return}REC.mr.stop();return}
+ if(!navigator.mediaDevices||!window.MediaRecorder)return toast(tr('Este dispositivo no permite grabar audio aquí.'));
+ let st;try{st=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}})}catch(e){return toast(tr('No se pudo usar el micrófono. Revisa el permiso en los ajustes del teléfono.'))}
+ stop();try{vSrc&&vSrc.stop()}catch(e){}
+ const mt=['audio/webm;codecs=opus','audio/webm','audio/mp4','audio/ogg'].find(x=>MediaRecorder.isTypeSupported(x))||'',mr=new MediaRecorder(st,mt?{mimeType:mt}:{}),ch=[];
+ REC={mr,f,s,t0:Date.now(),iv:0};mr.ondataavailable=e=>{if(e.data&&e.data.size)ch.push(e.data)};
+ mr.onstop=()=>{st.getTracks().forEach(t=>t.stop());clearInterval(REC&&REC.iv);const b=new Blob(ch,{type:mr.mimeType||mt||'audio/webm'});REC=null;
+  if(b.size<900){toast(tr('La grabación quedó vacía. Inténtalo otra vez.'));form();return}
+  const fr=new FileReader();fr.onload=async()=>{s[f]=fr.result;form();changed();toast(tr('Voz grabada 🎤'));await prepVoice();const v=vInfo(s)[f=='rec'?'lead':'ans'];if(v)vPlayPcm(v.pcm)};fr.readAsDataURL(b)};
+ mr.start(250);form();toast(tr('Grabando… habla ahora 🎤'));
+ REC.iv=setInterval(()=>{if(!REC)return;const sec=Math.floor((Date.now()-REC.t0)/1000),el=document.querySelector(`[data-act="vrec-${REC.f=='rec'?'lead':'ans'}"]`);if(el)el.textContent='⏹ '+tr('Detener')+' · '+sec+'s';if(sec>=30)REC.mr.stop()},250)}
 
 /* textos originales de Aprende leyendo.
  #id|categoría|nivel|emoji|título en inglés|título en español|título en portugués
