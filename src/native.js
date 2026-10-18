@@ -27,7 +27,7 @@ async function saveFile(blob, filename) {
 }
 
 // Voz del teléfono (motor de texto a voz de Android): gratis y sin internet
-async function speak(text, lang) { await TextToSpeech.speak({ text, lang, rate: 1.0, pitch: 1.0, volume: 1.0, category: 'ambient', queueStrategy: 0 }); }
+async function speak(text, lang, rate) { await TextToSpeech.speak({ text, lang, rate: rate || 1.0, pitch: 1.0, volume: 1.0, category: 'ambient', queueStrategy: 0 }); }
 async function stopSpeak() { try { await TextToSpeech.stop(); } catch (e) { } }
 async function hasLang(lang) { try { return (await TextToSpeech.isLanguageSupported({ lang })).supported; } catch (e) { return true; } }
 async function installVoices() { try { await TextToSpeech.openInstall(); } catch (e) { } }
