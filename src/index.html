@@ -654,13 +654,13 @@ const LET='ABCD';
 let VIEW='home',SHEET='',LAYERS=[],FS=false;
 const LBL={
  es:{q:(a,b)=>`Pregunta ${a} de ${b}`,res:'Resultado',start:'Empieza en',ans:'¡Respuesta!',fact:'💡 DATO CURIOSO',t:'Verdadero',f:'Falso',up:'Sube una imagen',
-  play:'Empezar',next:'Siguiente',seeRes:'Ver resultado',again:'Jugar otra vez',exit:'Salir',ok:'¡Correcto! 🎉',bad:'¡Casi! 😅',timeup:'¡Se acabó el tiempo! ⏰',timed:'Con tiempo',qs:'preguntas',done:'¡Terminaste!',sub:'Suscríbete'},
+  play:'Empezar',next:'Siguiente',seeRes:'Ver resultado',again:'Jugar otra vez',exit:'Salir',ok:'¡Correcto! 🎉',bad:'¡Casi! 😅',timeup:'¡Se acabó el tiempo! ⏰',timed:'Con tiempo',qs:'preguntas',done:'¡Terminaste!',sub:'Suscríbete',ansIs:'La respuesta correcta es',got:(a,b)=>`Acertaste ${a} de ${b}`,voice:'Leer en voz alta',go:'¡Comencemos!'},
  en:{q:(a,b)=>`Question ${a} of ${b}`,res:'Results',start:'Starts in',ans:'Answer!',fact:'💡 FUN FACT',t:'True',f:'False',up:'Upload an image',
-  play:'Start',next:'Next',seeRes:'See results',again:'Play again',exit:'Exit',ok:'Correct! 🎉',bad:'Not quite! 😅',timeup:"Time's up! ⏰",timed:'With timer',qs:'questions',done:'Well done!',sub:'Subscribe'},
+  play:'Start',next:'Next',seeRes:'See results',again:'Play again',exit:'Exit',ok:'Correct! 🎉',bad:'Not quite! 😅',timeup:"Time's up! ⏰",timed:'With timer',qs:'questions',done:'Well done!',sub:'Subscribe',ansIs:'The correct answer is',got:(a,b)=>`You got ${a} out of ${b}`,voice:'Read aloud',go:"Let's go!"},
  pt:{q:(a,b)=>`Pergunta ${a} de ${b}`,res:'Resultado',start:'Começa em',ans:'Resposta!',fact:'💡 CURIOSIDADE',t:'Verdadeiro',f:'Falso',up:'Envie uma imagem',
-  play:'Começar',next:'Próxima',seeRes:'Ver resultado',again:'Jogar de novo',exit:'Sair',ok:'Correto! 🎉',bad:'Quase! 😅',timeup:'Acabou o tempo! ⏰',timed:'Com tempo',qs:'perguntas',done:'Muito bem!',sub:'Inscreva-se'},
+  play:'Começar',next:'Próxima',seeRes:'Ver resultado',again:'Jogar de novo',exit:'Sair',ok:'Correto! 🎉',bad:'Quase! 😅',timeup:'Acabou o tempo! ⏰',timed:'Com tempo',qs:'perguntas',done:'Muito bem!',sub:'Inscreva-se',ansIs:'A resposta correta é',got:(a,b)=>`Você acertou ${a} de ${b}`,voice:'Ler em voz alta',go:'Vamos lá!'},
  fr:{q:(a,b)=>`Question ${a} sur ${b}`,res:'Résultat',start:'Début dans',ans:'Réponse !',fact:'💡 LE SAVIEZ-VOUS ?',t:'Vrai',f:'Faux',up:'Ajoute une image',
-  play:'Commencer',next:'Suivante',seeRes:'Voir le résultat',again:'Rejouer',exit:'Quitter',ok:'Bravo ! 🎉',bad:'Presque ! 😅',timeup:'Temps écoulé ! ⏰',timed:'Avec chrono',qs:'questions',done:'Bien joué !',sub:'Abonne-toi'}};
+  play:'Commencer',next:'Suivante',seeRes:'Voir le résultat',again:'Rejouer',exit:'Quitter',ok:'Bravo ! 🎉',bad:'Presque ! 😅',timeup:'Temps écoulé ! ⏰',timed:'Avec chrono',qs:'questions',done:'Bien joué !',sub:'Abonne-toi',ansIs:'La bonne réponse est',got:(a,b)=>`Tu as ${a} sur ${b}`,voice:'Lire à voix haute',go:'C’est parti !'}};
 let LBO=null;const LB=()=>LBL[LBO||P.lang]||LBL.es;
 const LANGN={es:'Español',en:'English',pt:'Português',fr:'Français'};
 
@@ -1452,26 +1452,46 @@ function burst(x,y,n){if(RMQ.matches)return;const C=P.colors,cols=[C.hi,C.ac,'#f
  if(!partOn){partOn=true;pfx.hidden=false;const f=()=>{const W=pfx.width=innerWidth,Hh=pfx.height=innerHeight;pcx.clearRect(0,0,W,Hh);PARTS=PARTS.filter(p=>p.l>0&&p.y<Hh+20);
   for(const p of PARTS){p.vy+=.28;p.x+=p.vx;p.y+=p.vy;p.vx*=.99;p.r+=.15;p.l-=.011;pcx.save();pcx.globalAlpha=Math.max(0,p.l);pcx.translate(p.x,p.y);pcx.rotate(p.r);pcx.fillStyle=p.c;pcx.fillRect(-p.s/2,-p.s/3,p.s,p.s*.66);pcx.restore()}
   if(PARTS.length)requestAnimationFrame(f);else{partOn=false;pfx.hidden=true}};requestAnimationFrame(f)}}
-const SPK='speechSynthesis' in window;
-function say(tx){if(!SPK){toast('Este dispositivo no tiene voz disponible.');return}try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(tx);u.lang={es:'es-ES',en:'en-US',pt:'pt-BR',fr:'fr-FR'}[P.lang]||'es-ES';u.rate=.92;speechSynthesis.speak(u)}catch(e){toast('Este dispositivo no tiene voz disponible.')}}
+const SPK='speechSynthesis' in window,NATV=()=>!!(window.NativeApp&&NativeApp.isNative&&NativeApp.speak),canVoice=()=>NATV()||SPK;
+const LANGC={es:'es-ES',en:'en-US',pt:'pt-BR',fr:'fr-FR'};
+let VOICE=true;try{VOICE=localStorage.getItem('qvs-voice')!=='0'}catch(e){}
+const setVoice=v=>{VOICE=v;try{localStorage.setItem('qvs-voice',v?'1':'0')}catch(e){}voiceBtn()};
+function voiceBtn(){const b=$('pgSpeak');b.hidden=!canVoice();b.textContent=VOICE?'🔊':'🔇';b.setAttribute('aria-pressed',VOICE);b.setAttribute('aria-label',VOICE?'Voz activada: tocar para silenciar':'Voz apagada: tocar para activar')}
+const curLang=()=>LBO||P.lang||'es';
+function cleanTx(t,lg){t=String(t||'').replace(/[\u{1F1E6}-\u{1F1FF}]/gu,'').replace(/\p{Extended_Pictographic}|\uFE0F|\u200D|[«»“”"]/gu,' ');
+ const W=lg=='en'?[['×',' times '],['÷',' divided by '],['−',' minus '],['+',' plus '],['²',' squared'],['%',' percent']]:lg=='pt'?[['×',' vezes '],['÷',' dividido por '],['−',' menos '],['+',' mais '],['²',' ao quadrado'],['%',' por cento']]:lg=='fr'?[['×',' fois '],['÷',' divisé par '],['−',' moins '],['+',' plus '],['²',' au carré'],['%',' pour cent']]:[['×',' por '],['÷',' entre '],['−',' menos '],['+',' más '],['²',' al cuadrado'],['%',' por ciento']];
+ for(const [a,b] of W)t=t.split(a).join(b);return t.replace(/\s+/g,' ').trim()}
+let spkId=0;
+function speakOne(t,lg){t=cleanTx(t,lg);if(!t)return Promise.resolve();const L=LANGC[lg]||'es-ES',guard=new Promise(r=>setTimeout(r,1500+t.length*110));
+ if(NATV())return Promise.race([NativeApp.speak(t,L).catch(()=>{}),guard]);
+ if(!SPK)return Promise.resolve();return Promise.race([new Promise(res=>{try{const u=new SpeechSynthesisUtterance(t);u.lang=L;u.rate=.95;u.onend=u.onerror=()=>res();speechSynthesis.speak(u)}catch(e){res()}}),guard])}
+async function speakSeq(parts){const my=++spkId;for(const p of parts){if(my!=spkId)return false;await speakOne(p.t,p.l)}return my==spkId}
+function stopVoice(){spkId++;try{if(NATV())NativeApp.stopSpeak();else if(SPK)speechSynthesis.cancel()}catch(e){}}
+function say(tx){if(!canVoice()){toast('Este dispositivo no tiene voz disponible.');return}speakSeq([{t:tx,l:curLang()}])}
+let voiceChecked={};
+async function checkVoice(){if(!NATV())return;const L=LANGC[curLang()]||'es-ES';if(voiceChecked[L])return;voiceChecked[L]=1;
+ if(!(await NativeApp.hasLang(L))){toast('Falta la voz en '+(LANGN[curLang()]||'español')+'. Te abro los ajustes para instalarla gratis.');setTimeout(()=>NativeApp.installVoices(),1800)}}
 function openPlayer(){const q=S().filter(s=>s.t=='q');if(!q.length)return toast('Agrega al menos una pregunta.');openLayer('player')}
 function pgShow(){stop();const cfg=PGC,C=cfg?cfg.colors:P.colors,el=$('player');LBO=cfg?'es':null;el.style.setProperty('--b1',C.b1);el.style.setProperty('--b2',C.b2);el.style.setProperty('--ac',C.ac);el.style.setProperty('--hi',C.hi);
- G={i:-1,score:0,pts:0,combo:0,cfg,qs:cfg?cfg.qs:S().filter(s=>s.t=='q'),useTime:G?G.useTime:true,ans:false,raf:0};el.hidden=false;$('pgSpeak').hidden=!SPK;reqFS(el);pgIntro()}
-function pgHide(){if(G)cancelAnimationFrame(G.raf);try{SPK&&speechSynthesis.cancel()}catch(e){}$('player').hidden=true;exitFS();if(G)G={useTime:G.useTime};PGC=null;LBO=null}
+ voiceBtn();G={i:-1,score:0,pts:0,combo:0,cfg,qs:cfg?cfg.qs:S().filter(s=>s.t=='q'),useTime:G?G.useTime:true,ans:false,raf:0};el.hidden=false;voiceBtn();reqFS(el);pgIntro()}
+function pgHide(){if(G)cancelAnimationFrame(G.raf);stopVoice();$('player').hidden=true;exitFS();if(G)G={useTime:G.useTime};PGC=null;LBO=null}
 function pgTop(){const L=LB(),n=G.qs.length;$('pgCount').textContent=G.i>=0&&G.i<n?L.q(G.i+1,n):(G.cfg?G.cfg.title:(P.name||'Quiz'));$('pgScore').textContent='⭐ '+(G.cfg?fmtN(G.pts):G.score)}
 const pgMedia=(s,cls='')=>s.img?`<img src="${s.img}" alt="">`:`<span class="pem ${cls}">${esc(s.em||'❓')}</span>`;
 function pgIntro(){if(G.cfg)return pgIntroB();const L=LB(),c=S()[0]&&S()[0].t=='cover'?S()[0]:null;G.i=-1;G.score=0;pgTop();$('pgTimer').hidden=true;
  $('pgMain').innerHTML=`<div class="pcard pintro">${c&&c.img?`<div class="pimg" style="height:clamp(120px,24vh,240px);margin-bottom:12px">${pgMedia(c)}</div>`:`<span class="pem big">${esc(c&&c.em||'🧠')}</span>`}
   <h2>${esc(c?c.title:P.name).replace(/\n/g,'<br>')}</h2>${c&&c.sub?`<p>${esc(c.sub)}</p>`:''}<p class="pmeta">${G.qs.length} ${L.qs}</p></div>
-  <label class="ptog"><input type="checkbox" id="pgUseT" ${G.useTime?'checked':''}> ⏱ ${L.timed}</label>
+  <div class="prow"><label class="ptog"><input type="checkbox" id="pgUseT" ${G.useTime?'checked':''}> ⏱ ${L.timed}</label>${canVoice()?`<label class="ptog"><input type="checkbox" id="pgUseV" ${VOICE?'checked':''}> 🔊 ${L.voice}</label>`:''}</div>
   <button class="pnext" data-act="start">▶ ${L.play}</button>`}
 function pgQ(){G.i++;G.ans=false;if(G.i>=G.qs.length)return pgEnd();const s=G.qs[G.i],fx=s.fx&&s.fx!='none'?s.fx:'';pgTop();
  $('pgMain').innerHTML=`<div class="pcard"><h2>${esc(s.title)}</h2>${s.img||s.em?`<div class="pimg ${fx?'fx-'+fx:''} ${s.mini?'mini':''}" id="pgImg">${pgMedia(s)}${fx=='hide'?'<b class="qm">?</b>':''}</div>`:''}</div>
   <div class="popts">${s.o.map((o,j)=>`<button class="popt" style="--i:${j}" data-j="${j}"><b>${LET[j]}</b><span>${esc(o)}</span></button>`).join('')}</div><div id="pgFoot"></div>`;
- G.qT0=performance.now()+300;cancelAnimationFrame(G.raf);const bar=$('pgTime'),box=$('pgTimer');box.hidden=!G.useTime;box.classList.remove('hurry');bar.style.transform='scaleX(1)';if(!G.useTime)return;
+ cancelAnimationFrame(G.raf);const bar=$('pgTime'),box=$('pgTimer');box.hidden=!G.useTime;box.classList.remove('hurry');bar.style.transform='scaleX(1)';G.qT0=performance.now()+300;
+ const idx=G.i,go=()=>{if(G&&!G.ans&&G.i==idx)pgTimer(s)};
+ if(VOICE&&canVoice()){const L=LB(),cl=curLang(),tl=s.tl||cl,ol=s.ol||cl;speakSeq([{t:L.q(G.i+1,G.qs.length)+'.',l:cl},{t:s.title,l:tl},...s.o.map((o,j)=>({t:LET[j]+'. '+o+'.',l:ol}))]).then(go)}else go()}
+function pgTimer(s){G.qT0=performance.now()+300;if(!G.useTime)return;const bar=$('pgTime'),box=$('pgTimer');
  const t0=performance.now()+300,D=s.secs*1000;let last=-1;const f=now=>{if(!G||G.ans)return;const el=Math.max(0,now-t0),rem=Math.ceil((D-el)/1000);bar.style.transform=`scaleX(${Math.max(0,1-el/D)})`;
   if(rem!=last&&rem>0&&el>0){last=rem;box.classList.toggle('hurry',rem<=3);sfx(rem<=3?'tick3':'tick')}if(el>=D)return pgAnswer(-1);G.raf=requestAnimationFrame(f)};G.raf=requestAnimationFrame(f)}
-function pgAnswer(j){if(!G||G.ans||G.i<0||G.i>=G.qs.length)return;G.ans=true;cancelAnimationFrame(G.raf);const L=LB(),s=G.qs[G.i],ok=j==s.c;if(ok)G.score++;
+function pgAnswer(j){if(!G||G.ans||G.i<0||G.i>=G.qs.length)return;G.ans=true;cancelAnimationFrame(G.raf);stopVoice();const L=LB(),s=G.qs[G.i],ok=j==s.c;if(ok)G.score++;
  let gain=0;if(G.cfg){if(ok){G.combo++;const L2=LVL[G.cfg.lv],fr=G.useTime?Math.max(0,1-(performance.now()-G.qT0)/(s.secs*1000)):.5;gain=L2.pts+Math.round(L2.pts*fr)+(G.combo>=3?5*(G.combo-2):0);G.pts+=gain}else G.combo=0}
  document.querySelectorAll('.popt').forEach((b,k)=>{b.disabled=true;b.classList.add(k==s.c?'ok':k==j?'bad':'dim')});
  const im=$('pgImg');im&&im.classList.add('rev');sfx(ok?'ding':'bad');
@@ -1480,19 +1500,22 @@ function pgAnswer(j){if(!G||G.ans||G.i<0||G.i>=G.qs.length)return;G.ans=true;can
  if(gain){const r=sc.getBoundingClientRect(),f=document.createElement('div');f.className='fly';f.textContent='+'+gain;f.style.left=(r.left+r.width/2-20)+'px';f.style.top=(r.bottom+4)+'px';document.body.appendChild(f);setTimeout(()=>f.remove(),1200)}
  $('pgFoot').innerHTML=`<p class="pfeed">${j<0?L.timeup:ok?L.ok:L.bad}${G.cfg&&ok&&G.combo>=3?' 🔥 x'+G.combo:''}</p>${s.fact?`<div class="pfact"><b>${esc(G.cfg?L.fact:(P.factLabel||L.fact))}</b><span>${esc(s.fact)}</span></div>`:''}
   <button class="pnext" data-act="next">${G.i+1<G.qs.length?L.next+' →':L.seeRes+' 🏆'}</button>`;
+ if(VOICE&&canVoice()){const cl=curLang(),ol=s.ol||cl,P2=ok?[{t:L.ok,l:cl},{t:s.o[s.c],l:ol}]:[{t:j<0?L.timeup:L.bad,l:cl},{t:L.ansIs,l:cl},{t:s.o[s.c],l:ol}];if(s.fact)P2.push({t:s.fact,l:cl});speakSeq(P2)}
  const nx=$('pgFoot').querySelector('.pnext');nx.focus({preventScroll:true});nx.scrollIntoView({block:'nearest',behavior:RMQ.matches?'auto':'smooth'})}
 function tierFor(sc){for(const line of String(P.tiers).split('\n')){const [r,n]=line.split('|').map(x=>x&&x.trim());if(!r)continue;const m=r.match(/(\d+)\s*(?:-|–|a)\s*(\d+)/),lo=m?+m[1]:parseInt(r,10),hi=m?+m[2]:lo;if(sc>=lo&&sc<=hi)return n||''}return''}
 function pgEnd(){if(G.cfg)return pgEndB();const L=LB(),n=G.qs.length,f=S().find(s=>s.t=='final');G.i=n;pgTop();$('pgTimer').hidden=true;
  $('pgMain').innerHTML=`<div class="pcard pend"><span class="pem big">${esc(f&&f.em||'🏆')}</span><p class="pbig">${G.score}<small>/${n}</small></p><h2>${esc(tierFor(G.score)||L.done)}</h2>${f&&f.sub?`<p class="pmeta">${esc(f.sub)}</p>`:''}</div>
   <div class="prow"><button class="pnext" data-act="again">↺ ${L.again}</button><button class="pexit" data-act="exit">${L.exit}</button></div>`;
+ if(VOICE&&canVoice())setTimeout(()=>speakSeq([{t:L.got(G.score,n)+'. '+(tierFor(G.score)||L.done),l:curLang()}]),700);
  sfx('fan');if(G.score>=n/2){burst(innerWidth*.25,innerHeight*.35,60);setTimeout(()=>burst(innerWidth*.75,innerHeight*.35,60),250);setTimeout(()=>burst(innerWidth*.5,innerHeight*.2,80),500)}}
 $('pgMain').onclick=e=>{const b=e.target.closest('button');if(!b||!G)return;if(b.dataset.j!=null)return pgAnswer(+b.dataset.j);const a=b.dataset.act;
- if(a=='start'){G.useTime=$('pgUseT').checked;try{ac=ac||new AudioContext();ac.resume()}catch(x){}pgQ()}
+ if(a=='start'){G.useTime=$('pgUseT').checked;const v=$('pgUseV');if(v)setVoice(v.checked);try{ac=ac||new AudioContext();ac.resume()}catch(x){}if(VOICE)checkVoice();pgQ()}
+ if(a=='next'||a=='again'||a=='bagain'||a=='exit'||a=='bvideo')stopVoice();
  if(a=='next')pgQ();if(a=='again')pgIntro();if(a=='exit')closeTop();
  if(a=='bagain'){G.cfg.qs=G.qs=makeGame(G.cfg.cat,G.cfg.lv);pgIntro()}if(a=='bvideo')brainToVideo()};
 function pgIntroB(){const L=LB(),g=G.cfg,V=LVL[g.lv];G.i=-1;G.score=0;G.pts=0;G.combo=0;pgTop();$('pgTimer').hidden=true;
  $('pgMain').innerHTML=`<div class="pcard pintro"><span class="pem big">${g.em}</span><h2>${esc(g.title)}</h2><p>${V.em} Nivel ${V.n} · ${G.qs.length} preguntas</p><p class="pmeta">Responde rápido para ganar más puntos</p></div>
-  <label class="ptog"><input type="checkbox" id="pgUseT" ${G.useTime?'checked':''}> ⏱ ${L.timed}</label>
+  <div class="prow"><label class="ptog"><input type="checkbox" id="pgUseT" ${G.useTime?'checked':''}> ⏱ ${L.timed}</label>${canVoice()?`<label class="ptog"><input type="checkbox" id="pgUseV" ${VOICE?'checked':''}> 🔊 ${L.voice}</label>`:''}</div>
   <button class="pnext" data-act="start">▶ ${L.play}</button>`}
 function pgEndB(){const n=G.qs.length,r=brainFinish(),h=brainHome();G.i=n;pgTop();$('pgTimer').hidden=true;
  $('pgMain').innerHTML=`<div class="pcard pend"><span class="pem big">${G.score>=n*.8?'🏆':G.score>=n*.5?'🎉':'💪'}</span>${r.rec?'<br><span class="pbadge">⭐ ¡Nuevo récord!</span>':''}
@@ -1500,10 +1523,11 @@ function pgEndB(){const n=G.qs.length,r=brainFinish(),h=brainHome();G.i=n;pgTop(
   <p class="pmeta">${h.re} Nivel ${h.l} · ${h.rn}${r.up?' · ¡Subiste de nivel! 🎊':''}</p><span class="bcbar"><i style="width:0"></i></span><p class="pmeta">${h.st?'🔥 Racha de '+h.st+(h.st==1?' día':' días'):''}</p></div>
   <div class="prow"><button class="pnext" data-act="bagain">↺ Otra partida</button><button class="pexit" data-act="bvideo">🎬 Convertir en video</button><button class="pexit" data-act="exit">Salir</button></div>`;
  requestAnimationFrame(()=>{const b=$('pgMain').querySelector('.pend .bcbar i');if(b)b.style.width=Math.round(h.p*100)+'%'});
+ if(VOICE&&canVoice())setTimeout(()=>speakSeq([{t:LB().got(G.score,n)+'. '+fmtN(G.pts)+' puntos.'+(r.rec?' ¡Nuevo récord!':''),l:'es'}]),700);
  sfx('fan');if(G.score>=n/2){burst(innerWidth*.25,innerHeight*.35,60);setTimeout(()=>burst(innerWidth*.75,innerHeight*.35,60),250);setTimeout(()=>burst(innerWidth*.5,innerHeight*.2,80),500)}}
 $('pgClose').onclick=closeTop;
-$('pgSpeak').onclick=()=>{if(!G)return;const s=G.qs[G.i];if(!s){const c=S()[0];return say(String(c&&c.title||P.name).replace(/\n/g,' '))}
- say(G.ans?s.o[s.c]+'. '+(s.fact||''):s.title+'. '+s.o.map((o,j)=>LET[j]+': '+o).join('. '))};
+$('pgSpeak').onclick=()=>{if(!G)return;setVoice(!VOICE);const v=$('pgUseV');if(v)v.checked=VOICE;if(!VOICE){stopVoice();toast('Voz apagada 🔇');return}toast('Voz activada 🔊');checkVoice();const s=G.qs[G.i];if(!s)return;const cl=curLang(),ol=s.ol||cl;
+ speakSeq(G.ans?[{t:s.o[s.c],l:ol},...(s.fact?[{t:s.fact,l:cl}]:[])]:[{t:s.title,l:s.tl||cl},...s.o.map((o,j)=>({t:LET[j]+'. '+o+'.',l:ol}))])};
 document.addEventListener('keydown',e=>{if(LAYERS[LAYERS.length-1]!='player'||!G)return;const k=e.key.toLowerCase(),j='1234'.indexOf(k)>=0?'1234'.indexOf(k):'abcd'.indexOf(k);
  if(j>=0&&G.i>=0&&G.i<G.qs.length&&!G.ans&&j<G.qs[G.i].o.length){e.preventDefault();pgAnswer(j)}
  else if((k=='enter'||k==' ')&&!/BUTTON|INPUT/.test(e.target.tagName)){const b=document.querySelector('#pgMain .pnext');if(b){e.preventDefault();b.click()}}});
@@ -1753,10 +1777,11 @@ function genEng(lv){const k=LVL[lv].k,pool=VOC.filter(w=>lv=='e'?!w.h:true),w=pi
  if(lv=='e'||(lv=='n'&&r<.5))return mkQ('What is this?',w.en,wr.slice(0,k-1).map(x=>x.en),w.e,`${w.en[0].toUpperCase()+w.en.slice(1)} = ${w.es}`,lv);
  if(lv=='n')return mkQ(`¿Cómo se dice «${w.es}» en inglés?`,w.en,wr.slice(0,k-1).map(x=>x.en),w.e,'',lv);
  return r<.5?mkQ(`¿Qué significa «${w.en}»?`,w.es,wr.slice(0,k-1).map(x=>x.es),'','',lv,1):mkQ(`¿Cómo se dice «${w.es}» en inglés?`,w.en,wr.slice(0,k-1).map(x=>x.en),'','',lv,1)}
-const GENS={banderas:genFlag,capitales:genCap,mates:genMath,ingles:genEng};
+const genEngV=lv=>{const q=genEng(lv);if(/^What/.test(q.title)){q.tl='en';q.ol='en'}else if(/en inglés\?$/.test(q.title))q.ol='en';return q};
+const GENS={banderas:genFlag,capitales:genCap,mates:genMath,ingles:genEngV};
 function uniq(gen,lv,n){const out=[],seen=new Set();let g=0;while(out.length<n&&g++<n*20){const q=gen(lv);if(!seen.has(q.title+q.o[q.c])){seen.add(q.title+q.o[q.c]);out.push(q)}}return out}
 function makeGame(cat,lv,n=10){if(GENS[cat])return uniq(GENS[cat],lv,n);
- if(cat=='mix'){const banks=Object.keys(BANK),qs=[...shuf(banks).slice(0,6).flatMap(b=>fromBank(b,lv,1)),...uniq(genFlag,lv,1),...uniq(genCap,lv,1),...uniq(genMath,lv,1),...uniq(genEng,lv,1)];return shuf(qs).slice(0,n)}
+ if(cat=='mix'){const banks=Object.keys(BANK),qs=[...shuf(banks).slice(0,6).flatMap(b=>fromBank(b,lv,1)),...uniq(genFlag,lv,1),...uniq(genCap,lv,1),...uniq(genMath,lv,1),...uniq(genEngV,lv,1)];return shuf(qs).slice(0,n)}
  const own=fromBank(cat,lv,8),others=['e','n','d'].filter(x=>x!=lv);let extra=fromBank(cat,pickR(others),2);if(cat=='geografia')extra=[...uniq(genCap,lv,1),...uniq(genFlag,lv,1)];return shuf([...own,...extra]).slice(0,n)}
 
 /* progreso del jugador (solo en este dispositivo) */

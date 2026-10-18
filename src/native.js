@@ -2,6 +2,7 @@
 import { Capacitor } from '@capacitor/core';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { Share } from '@capacitor/share';
+import { TextToSpeech } from '@capacitor-community/text-to-speech';
 
 const CHUNK = 3 * 1024 * 1024; // múltiplo de 3 para que cada trozo en base64 sea válido
 function toB64(u8) { let s = ''; for (let i = 0; i < u8.length; i += 0x8000) s += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000)); return btoa(s); }
@@ -25,4 +26,10 @@ async function saveFile(blob, filename) {
   return savedTo;
 }
 
-window.NativeApp = { isNative: Capacitor.isNativePlatform(), platform: Capacitor.getPlatform(), saveFile };
+// Voz del teléfono (motor de texto a voz de Android): gratis y sin internet
+async function speak(text, lang) { await TextToSpeech.speak({ text, lang, rate: 1.0, pitch: 1.0, volume: 1.0, category: 'ambient', queueStrategy: 0 }); }
+async function stopSpeak() { try { await TextToSpeech.stop(); } catch (e) { } }
+async function hasLang(lang) { try { return (await TextToSpeech.isLanguageSupported({ lang })).supported; } catch (e) { return true; } }
+async function installVoices() { try { await TextToSpeech.openInstall(); } catch (e) { } }
+
+window.NativeApp = { isNative: Capacitor.isNativePlatform(), platform: Capacitor.getPlatform(), saveFile, speak, stopSpeak, hasLang, installVoices };
