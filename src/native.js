@@ -41,4 +41,8 @@ async function synth(text, lang, rate) {
   return u8.buffer;
 }
 
-window.NativeApp = { isNative: Capacitor.isNativePlatform(), platform: Capacitor.getPlatform(), saveFile, speak, stopSpeak, hasLang, installVoices, synth };
+// Bloquea capturas y grabación de pantalla mientras se ven los textos de la app
+const Proteccion = registerPlugin('Proteccion');
+async function secure(on) { try { await Proteccion.set({ on: !!on }); } catch (e) { } }
+
+window.NativeApp = { isNative: Capacitor.isNativePlatform(), platform: Capacitor.getPlatform(), saveFile, speak, stopSpeak, hasLang, installVoices, synth, secure };

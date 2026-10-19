@@ -448,6 +448,21 @@ button.rcard:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ln)
 .rvprev{position:relative;width:min(220px,58vw);margin:2px auto 0}
 .rvprev canvas{width:100%;aspect-ratio:9/16;display:block;border:3px solid var(--ln);border-radius:20px;box-shadow:5px 5px 0 var(--ln);background:#0A1840;cursor:pointer}
 .rvplay{position:absolute;right:-12px;bottom:-12px;background:var(--pk);color:#fff;box-shadow:3px 3px 0 var(--ln)}
+.myhead{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:22px}.myhead .sec{margin:0}.myhead .gap{flex:1}
+.myempty{border:2.5px dashed var(--ln);border-radius:16px;padding:12px 14px;margin:0}
+#myList:empty{display:none}
+.rlock{margin:10px auto 0;max-width:40ch}
+.locked,.locked *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.wpop .wstar{width:40px;height:40px;background:transparent;color:var(--yl);border-color:var(--yl);font-size:22px}
+.wpop .wstar.on{background:var(--yl);color:#000}
+.mtwords{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;max-height:220px;overflow-y:auto;padding:2px}
+.mtwords button{padding:4px 10px;font-size:14px;border-width:2px}
+.mtw{min-width:90px;color:var(--pk)}
+.wlist{display:grid;gap:8px}
+.wrow{display:flex;align-items:center;gap:10px;background:var(--pn);border:2.5px solid var(--ln);border-radius:16px;padding:8px 10px}
+.wrow .vl{flex:1}
+.rvfs canvas{cursor:pointer}
+.rvfs .fsbar{width:min(420px,100%)}
 body.relang{opacity:.35;pointer-events:none;transition:opacity .2s}
 </style>
 </head>
@@ -531,6 +546,8 @@ body.relang{opacity:.35;pointer-events:none;transition:opacity .2s}
    <div class="bsl"><b><span id="lStatN">0</span> / <span id="lStatT">36</span> 📖</b><span class="bcbar"><i id="lStatBar"></i></span><small>Lee textos en inglés, toca las palabras que no conozcas y responde las preguntas al final.</small></div>
    <div class="bsn two"><span><b id="lStatA">—</b><small>🎯 Aciertos</small></span><span><b>3</b><small>🎚️ Niveles</small></span></div>
   </div>
+  <div class="myhead"><h2 class="sec">✍️ Mis textos</h2><span class="gap"></span><button class="sm" id="wordsBtn">⭐ Mis palabras <b id="wordsN">0</b></button><button class="sm on" id="myNew">+ Crear mi texto</button></div>
+  <div class="rlist" id="myList"></div>
   <h2 class="sec">Elige el nivel</h2>
   <div class="seg four" id="rLevel"><button data-lv="all">📚 Todos</button><button data-lv="e">🟢 Fácil</button><button data-lv="n">🟡 Normal</button><button data-lv="d">🔴 Difícil</button></div>
   <h2 class="sec">Categoría</h2>
@@ -557,7 +574,8 @@ body.relang{opacity:.35;pointer-events:none;transition:opacity .2s}
   <button class="go rgo" id="rGo"></button>
  </div>
 </section>
-<div id="wPop" class="wpop" hidden role="status"><button class="ib wsay" id="wpSay" aria-label="Escuchar">🔊</button><div><b id="wpW" lang="en"></b><small id="wpL"></small><span id="wpT" data-nt></span></div></div>
+<div id="wPop" class="wpop" hidden role="status"><button class="ib wsay" id="wpSay" aria-label="Escuchar">🔊</button><div><b id="wpW" lang="en"></b><small id="wpL"></small><span id="wpT" data-nt></span></div><button class="ib wstar" id="wpStar" aria-label="Guardar en mis palabras">☆</button></div>
+<div id="rvFs" class="fs rvfs" hidden role="dialog" aria-label="Vista en pantalla completa"><canvas id="rvFsCv" width="540" height="960"></canvas><div class="fsbar"><button class="ib" id="rvFsPlay" aria-label="Reproducir">▶</button><span class="gap"></span><button class="ib" id="rvFsClose" aria-label="Salir de pantalla completa">✕</button></div></div>
 
 <section id="editor" class="view" hidden>
  <header class="top"><div class="in">
@@ -621,6 +639,7 @@ body.relang{opacity:.35;pointer-events:none;transition:opacity .2s}
  <button class="di don" data-sheet="don" style="--i:8"><i>💛</i>Apoyar el proyecto</button>
  <button class="di" data-act="home" style="--i:8"><i>🏠</i>Inicio</button>
  <button class="di" data-act="openFile" style="--i:9"><i>📂</i>Abrir archivo de proyecto</button>
+ <button class="di" data-sheet="backup" style="--i:10"><i>🗂️</i>Copia de seguridad</button>
  <button class="di" data-sheet="help" style="--i:10"><i>❓</i>Cómo se usa</button>
  <button class="di" data-act="theme" style="--i:11"><i>🌓</i>Apariencia<b id="themeV">Automática</b></button>
  <button class="di" data-sheet="about" style="--i:12"><i>ℹ️</i>Acerca de</button>
@@ -639,6 +658,8 @@ body.relang{opacity:.35;pointer-events:none;transition:opacity .2s}
   <div id="tab-rvid" hidden>
    <div class="rvprev"><canvas id="rvCv" width="432" height="768" aria-label="Vista previa del video"></canvas><button class="ib rvplay" id="rvPlay" aria-label="Reproducir">▶</button></div>
    <p class="hint" id="rvInfo" style="text-align:center" role="status"></p>
+   <div class="row" style="justify-content:center;margin-top:8px"><button class="sm" id="rvFsBtn">⛶ Ver en pantalla completa</button></div>
+   <p class="hint vnote" id="rvLock">🔒 Los textos de la app solo se pueden ver dentro de la app. Para guardar un video MP4, crea tu propio texto en ✍️ Mis textos.</p>
    <h3>🎵 Música de fondo</h3>
    <div class="mus" id="rvMus"></div>
    <div id="rvCustBox" hidden><label>Tu canción (MP3, WAV, M4A…)<input type="file" id="rvFile" accept="audio/*"></label><p class="hint">Usa música con permiso o libre de derechos: TikTok e Instagram pueden silenciar canciones con copyright.</p></div>
@@ -651,9 +672,42 @@ body.relang{opacity:.35;pointer-events:none;transition:opacity .2s}
    <label class="sw"><input type="checkbox" id="rvTr"> Mostrar la traducción</label>
    <label class="sw"><input type="checkbox" id="rvQs"> Agregar las preguntas al final</label>
    <label>Fondo</label><div class="rcats" id="rvBgs"></div>
+   <div id="rvExpBox">
    <div class="two"><label style="margin-top:4px">Tu @ (marca de agua)<input type="text" id="rvHandle" placeholder="@tucuenta"></label><label style="margin-top:4px">Calidad<select id="rvRes"><option value="1080">1080×1920 (TikTok / Reels / Shorts)</option><option value="720">720×1280 (más liviano)</option></select></label></div>
    <div style="margin-top:14px"><button class="go" id="rvExp">🎬 Guardar video MP4</button></div>
    <progress id="rvPg" max="1" value="0" hidden></progress><p id="rvMsg" role="status" class="hint"></p>
+   </div>
+  </div>
+  <div id="tab-mytx" hidden>
+   <p class="hint" style="margin-top:0">Escribe o pega un texto en inglés. Después marca las palabras que quieras resaltar y, si quieres, agrega la traducción y preguntas.</p>
+   <label>Título<input type="text" id="mtTitle" maxlength="80" placeholder="My trip to the beach"></label>
+   <div class="two"><label>Título traducido (opcional)<input type="text" id="mtTitleTr" maxlength="80"></label><label>Emoji<input type="text" id="mtEm" maxlength="8" placeholder="📝"></label></div>
+   <label>Nivel<select id="mtLv"><option value="e">🟢 Fácil</option><option value="n">🟡 Normal</option><option value="d">🔴 Difícil</option></select></label>
+   <label>Texto en inglés <span class="hint">(deja una línea vacía para empezar otro párrafo)</span><textarea id="mtText" rows="7" placeholder="Last summer I went to the beach with my family. The water was warm and blue."></textarea></label>
+   <label>Traducción (opcional) <span class="hint">(una frase por línea, en el mismo orden)</span><textarea id="mtTr" rows="5"></textarea></label>
+   <p class="hint" id="mtCount"></p>
+   <h3>✨ Palabras resaltadas</h3>
+   <p class="hint">Toca las palabras que quieras resaltar. Debajo puedes escribir qué significan.</p>
+   <div class="mtwords" id="mtWords"></div>
+   <div id="mtMeans"></div>
+   <h3>❓ Preguntas (opcional)</h3>
+   <p class="hint">Una por línea, con un asterisco en la correcta: <code>Pregunta | *Correcta | Incorrecta | Incorrecta</code></p>
+   <textarea id="mtQs" rows="4" placeholder="Where did they go? | *To the beach | To school | To the park"></textarea>
+   <div style="margin-top:14px"><button class="go" id="mtSave">💾 Guardar mi texto</button></div>
+   <div class="row" style="margin-top:10px"><button class="sm warn" id="mtDel" hidden>🗑 Eliminar este texto</button></div>
+   <p class="hint" id="mtMsg" role="status"></p>
+  </div>
+  <div id="tab-words" hidden>
+   <p class="hint" style="margin-top:0">Las palabras que guardas con ☆ mientras lees aparecen aquí. Practícalas en un minijuego.</p>
+   <div class="wlist" id="wList"></div>
+   <div style="margin-top:14px"><button class="go" id="wPractice">🎯 Practicar mis palabras</button></div>
+  </div>
+  <div id="tab-backup" hidden>
+   <p class="hint" style="margin-top:0">Guarda en un archivo todos tus proyectos, tu progreso, tus textos y tus palabras. Sirve para pasarlos a otro teléfono o recuperarlos si borras la app.</p>
+   <div style="margin-top:10px"><button class="go" id="bkSave">💾 Descargar copia de seguridad</button></div>
+   <div class="row" style="margin-top:10px"><button id="bkLoad">📂 Restaurar una copia</button></div>
+   <input type="file" id="bkFile" accept=".json,application/json" hidden>
+   <p class="hint" id="bkMsg" role="status"></p>
   </div>
   <div id="tab-tpl" hidden><div class="tlist" id="tplList"></div></div>
 
@@ -816,7 +870,56 @@ const UIL=(()=>{let l='';try{l=localStorage.getItem('qvs-ui')||''}catch(e){}if(!
 const UIX=UILS.indexOf(UIL)-1;
 document.documentElement.lang=UIL;
 /* cada línea: español || inglés || portugués */
-const DICT_TX=`Guardar como video||Save as video||Salvar como vídeo
+const DICT_TX=`Mis textos||My texts||Meus textos
+✍️ Mis textos||✍️ My texts||✍️ Meus textos
+⭐ Mis palabras||⭐ My words||⭐ Minhas palavras
+Mis palabras||My words||Minhas palavras
++ Crear mi texto||+ Create my text||+ Criar meu texto
+Crear mi texto||Create my text||Criar meu texto
+Editar mi texto||Edit my text||Editar meu texto
+Escribe o pega un texto en inglés. Después marca las palabras que quieras resaltar y, si quieres, agrega la traducción y preguntas.||Write or paste a text in English. Then mark the words you want to highlight and, if you like, add the translation and questions.||Escreva ou cole um texto em inglês. Depois marque as palavras que quer destacar e, se quiser, adicione a tradução e perguntas.
+Título traducido (opcional)||Translated title (optional)||Título traduzido (opcional)
+Nivel||Level||Nível
+Texto en inglés||Text in English||Texto em inglês
+(deja una línea vacía para empezar otro párrafo)||(leave an empty line to start a new paragraph)||(deixe uma linha vazia para começar outro parágrafo)
+Traducción (opcional)||Translation (optional)||Tradução (opcional)
+(una frase por línea, en el mismo orden)||(one sentence per line, in the same order)||(uma frase por linha, na mesma ordem)
+✨ Palabras resaltadas||✨ Highlighted words||✨ Palavras destacadas
+Toca las palabras que quieras resaltar. Debajo puedes escribir qué significan.||Tap the words you want to highlight. Below you can write what they mean.||Toque nas palavras que quer destacar. Embaixo você pode escrever o que significam.
+❓ Preguntas (opcional)||❓ Questions (optional)||❓ Perguntas (opcional)
+Una por línea, con un asterisco en la correcta:||One per line, with an asterisk on the correct one:||Uma por linha, com um asterisco na correta:
+💾 Guardar mi texto||💾 Save my text||💾 Salvar meu texto
+🗑 Eliminar este texto||🗑 Delete this text||🗑 Excluir este texto
+Significado (opcional)||Meaning (optional)||Significado (opcional)
+Escribe tu texto arriba para elegir palabras.||Write your text above to pick words.||Escreva seu texto acima para escolher palavras.
+⚠️ Revisa que haya una traducción por frase||⚠️ Check there is one translation per sentence||⚠️ Confira se há uma tradução por frase
+Escribe un título.||Write a title.||Escreva um título.
+Escribe tu texto en inglés.||Write your text in English.||Escreva seu texto em inglês.
+Texto guardado ✨||Text saved ✨||Texto salvo ✨
+Texto eliminado||Text deleted||Texto excluído
+Crea tu propio texto en inglés para leerlo con voz, practicar y guardarlo como video.||Create your own English text to read it with voice, practice and save it as a video.||Crie seu próprio texto em inglês para ler com voz, praticar e salvar como vídeo.
+🔒 Los textos de la app solo se pueden ver dentro de la app. Para guardar un video MP4, crea tu propio texto en ✍️ Mis textos.||🔒 The app's texts can only be watched inside the app. To save an MP4 video, create your own text in ✍️ My texts.||🔒 Os textos do app só podem ser vistos dentro do app. Para salvar um vídeo MP4, crie seu próprio texto em ✍️ Meus textos.
+Texto de la app: solo para leer y ver aquí.||App text: for reading and watching here only.||Texto do app: só para ler e ver aqui.
+⛶ Ver en pantalla completa||⛶ Watch in full screen||⛶ Ver em tela cheia
+Ver o guardar como video||Watch or save as video||Ver ou salvar como vídeo
+Guardar en mis palabras||Save to my words||Salvar nas minhas palavras
+Quitar de mis palabras||Remove from my words||Tirar das minhas palavras
+Palabra quitada||Word removed||Palavra removida
+Guardada en ⭐ Mis palabras||Saved to ⭐ My words||Salva em ⭐ Minhas palavras
+Las palabras que guardas con ☆ mientras lees aparecen aquí. Practícalas en un minijuego.||The words you save with ☆ while reading appear here. Practice them in a mini game.||As palavras que você salva com ☆ enquanto lê aparecem aqui. Pratique com um minijogo.
+🎯 Practicar mis palabras||🎯 Practice my words||🎯 Praticar minhas palavras
+Toca una palabra subrayada al leer y luego la ☆ para guardarla aquí.||Tap an underlined word while reading, then the ☆ to save it here.||Toque em uma palavra sublinhada ao ler e depois na ☆ para salvá-la aqui.
+Guarda al menos 3 palabras con significado para practicar.||Save at least 3 words with a meaning to practice.||Salve pelo menos 3 palavras com significado para praticar.
+Copia de seguridad||Backup||Cópia de segurança
+Guarda en un archivo todos tus proyectos, tu progreso, tus textos y tus palabras. Sirve para pasarlos a otro teléfono o recuperarlos si borras la app.||Save all your projects, progress, texts and words to a file. Use it to move them to another phone or recover them if you delete the app.||Salve em um arquivo todos os seus projetos, progresso, textos e palavras. Serve para levar a outro celular ou recuperar se você apagar o app.
+💾 Descargar copia de seguridad||💾 Download backup||💾 Baixar cópia de segurança
+📂 Restaurar una copia||📂 Restore a backup||📂 Restaurar uma cópia
+Preparando la copia…||Preparing the backup…||Preparando a cópia…
+¿Restaurar esta copia? Se agregarán sus proyectos y se reemplazará tu progreso actual.||Restore this backup? Its projects will be added and your current progress will be replaced.||Restaurar esta cópia? Os projetos dela serão adicionados e seu progresso atual será substituído.
+Restaurar||Restore||Restaurar
+Copia restaurada ✅||Backup restored ✅||Cópia restaurada ✅
+Ese archivo no es una copia de seguridad de Quiz Video Studio.||That file isn't a Quiz Video Studio backup.||Esse arquivo não é uma cópia de segurança do Quiz Video Studio.
+Guardar como video||Save as video||Salvar como vídeo
 Video||Video||Vídeo
 🎵 Música de fondo||🎵 Background music||🎵 Música de fundo
 🎙️ Voz||🎙️ Voice||🎙️ Voz
@@ -1320,6 +1423,9 @@ const PATS_TX=[
  [/^Preparando la voz… (\d+)\/(\d+)$/,'Preparing the voice… $1/$2','Preparando a voz… $1/$2'],
  [/^⏹ Detener · (\d+)s$/,'⏹ Stop · $1s','⏹ Parar · $1s'],
  [/^Duración: (.+)$/,'Length: $1','Duração: $1'],
+ [/^(\d+) frases · (\d+) traducciones(.*)$/,'$1 sentences · $2 translations$3','$1 frases · $2 traduções$3'],
+ [/^(\d+) frases$/,'$1 sentences','$1 frases'],
+ [/^(.+) · (\d+) proyectos$/,'$1 · $2 projects','$1 · $2 projetos'],
  [/^(.+) \(copia\)$/,'$1 (copy)','$1 (cópia)'],
  [/^(\d+) de (\d+) leídos$/,'$1 of $2 read','$1 de $2 lidos'],
 ];
@@ -2727,7 +2833,7 @@ $('projects').onclick=async e=>{const b=e.target.closest('button');if(!b)return;
  if(b.dataset.del){const r=await DB.get(b.dataset.del);if(r&&await ask(`¿Eliminar «${r.name}»? No se puede deshacer.`,'Eliminar')){await DB.del(r.id);renderHome();toast('Proyecto eliminado')}}};
 
 /* ---------- navegación: vistas y capas (funciona con el botón atrás de Android) ---------- */
-function showView(v,dir){if(VIEW==v)return;if(VIEW=='editor')saveNow();if(VIEW=='reader'){rdStop();wpHide()}stop();$(VIEW).hidden=true;const b=$(v);b.hidden=false;b.classList.remove('in-r','in-l','go');void b.offsetWidth;b.classList.add(dir<0?'in-l':'in-r');VIEW=v;window.scrollTo(0,0);
+function showView(v,dir){if(VIEW==v)return;if(VIEW=='editor')saveNow();if(VIEW=='reader'){rdStop();wpHide();appSecure(false)}stop();$(VIEW).hidden=true;const b=$(v);b.hidden=false;b.classList.remove('in-r','in-l','go');void b.offsetWidth;b.classList.add(dir<0?'in-l':'in-r');VIEW=v;window.scrollTo(0,0);
  if(v=='home'){saveNow();renderHome();heroLoop()}else if(v=='brain')brainUI();else if(v=='learn')learnUI();else if(v=='reader'){}else render()}
 const VIEWS=['editor','brain','learn','reader'];const prevView=()=>[...LAYERS].reverse().find(x=>VIEWS.includes(x))||'home';
 function enterEditor(){if(VIEW=='editor'){const k=LAYERS.length-1;if(k>0)history.go(-k);return}openLayer('editor')}
@@ -2738,6 +2844,7 @@ function showLayer(n){
  if(n=='sheet'){$('scrim').hidden=false;$('sheet').hidden=false;requestAnimationFrame(()=>{$('scrim').classList.add('open');$('sheet').classList.add('open')});return}
  if(n=='fs')return fsShow();
  if(n=='player')return pgShow();
+ if(n=='rvfs')return rvFsShow();
  if(n=='dlg'){$('dlg').hidden=false;$('dlgYes').focus()}}
 function hideLayer(n){
  if(VIEWS.includes(n))return showView(prevView(),-1);
@@ -2745,6 +2852,7 @@ function hideLayer(n){
   setTimeout(()=>{if(!el.classList.contains('open'))el.hidden=true;if(!$('scrim').classList.contains('open'))$('scrim').hidden=true},340);if(n=='sheet'){SHEET='';try{prevSrc&&prevSrc.stop()}catch(e){}}return}
  if(n=='fs')return fsHide();
  if(n=='player')return pgHide();
+ if(n=='rvfs')return rvFsHide();
  if(n=='dlg'){$('dlg').hidden=true;if(dlgRes){dlgRes(false);dlgRes=null}}}
 function openLayer(n){const top=LAYERS[LAYERS.length-1];
  if(n!='dlg'&&['drawer','sheet','fs','player'].includes(top)){hideLayer(LAYERS.pop());LAYERS.push(n);history.replaceState({d:LAYERS.length},'')}
@@ -2758,7 +2866,7 @@ function ask(text,yes){$('dlgTx').textContent=text;$('dlgYes').textContent=yes;r
 $('dlgYes').onclick=()=>{const r=dlgRes;dlgRes=null;r&&r(true);closeTop()};$('dlgNo').onclick=closeTop;
 
 /* ---------- menú y hojas ---------- */
-const SHT={rvid:'Guardar como video',lang:'Idioma de la app',mu:'Música, voz y sonidos',th:'Diseño del video',don:'Apoyar el proyecto',tpl:'Elige una plantilla',bg:'Fondos animados',st:'Estilo, textos e idioma',ex:'Exportar video',help:'Cómo se usa',about:'Acerca de'};
+const SHT={rvid:'Ver o guardar como video',mytx:'Crear mi texto',words:'⭐ Mis palabras',backup:'Copia de seguridad',lang:'Idioma de la app',mu:'Música, voz y sonidos',th:'Diseño del video',don:'Apoyar el proyecto',tpl:'Elige una plantilla',bg:'Fondos animados',st:'Estilo, textos e idioma',ex:'Exportar video',help:'Cómo se usa',about:'Acerca de'};
 function openSheet(k,title){SHEET=k;$('shTitle').textContent=tr(title||SHT[k]);if(k=='lang')langUI();document.querySelectorAll('.sbody>div').forEach(d=>d.hidden=d.id!='tab-'+k);$('sheet').querySelector('.sbody').scrollTop=0;
  if(k=='th'){thUI();requestAnimationFrame(thLoop)}if(k=='bg'){bgMenu();requestAnimationFrame(thumbLoop)}if(k=='mu')musicUI();if(k=='st')styleUI();
  if(LAYERS[LAYERS.length-1]=='sheet')return;openLayer('sheet')}
@@ -2907,7 +3015,7 @@ $('pgMain').onclick=e=>{const b=e.target.closest('button');if(!b||!G)return;if(b
  if(a=='next'||a=='again'||a=='bagain'||a=='exit'||a=='bvideo'||a=='rback'||a=='rnext')stopVoice();
  if(a=='rback')return closeTop();if(a=='rnext'){const nx=rdNext(G.cfg.id);closeTop();setTimeout(()=>rdOpen(nx),80);return}
  if(a=='next')pgQ();if(a=='again')pgIntro();if(a=='exit')closeTop();
- if(a=='bagain'){if(!G.cfg.read)G.cfg.qs=G.qs=makeGame(G.cfg.cat,G.cfg.lv);pgIntro()}if(a=='bvideo')brainToVideo()};
+ if(a=='bagain'){if(!G.cfg.read)G.cfg.qs=G.qs=G.cfg.gen?G.cfg.gen():makeGame(G.cfg.cat,G.cfg.lv);pgIntro()}if(a=='bvideo')brainToVideo()};
 function pgIntroB(){const L=LB(),g=G.cfg,V=LVL[g.lv];G.i=-1;G.score=0;G.pts=0;G.combo=0;pgTop();$('pgTimer').hidden=true;
  $('pgMain').innerHTML=`<div class="pcard pintro"><span class="pem big">${g.em}</span><h2>${esc(g.title)}</h2><p>${V.em} ${tr(V.n)} · ${trf('{n} preguntas',{n:G.qs.length})}</p><p class="pmeta">${tr(g.read?'Responde según lo que leíste':'Responde rápido para ganar más puntos')}</p></div>
   <div class="prow"><label class="ptog"><input type="checkbox" id="pgUseT" ${G.useTime?'checked':''}> ⏱ ${L.timed}</label>${canVoice()?`<label class="ptog"><input type="checkbox" id="pgUseV" ${VOICE?'checked':''}> 🔊 ${L.voice}</label>`:''}</div>
@@ -2916,7 +3024,7 @@ function pgEndB(){const n=G.qs.length,r=brainFinish(),h=brainHome(),rd=G.cfg.rea
  $('pgMain').innerHTML=`<div class="pcard pend"><span class="pem big">${G.score>=n*.8?'🏆':G.score>=n*.5?'🎉':'💪'}</span>${r.rec?`<br><span class="pbadge">${tr('⭐ ¡Nuevo récord!')}</span>`:''}
   <p class="pbig">${fmtN(G.pts)}<small> pts</small></p><h2>${trf('{a} de {b} correctas',{a:G.score,b:n})}</h2>
   <p class="pmeta"><span>${h.re} ${trf('Nivel {n}',{n:h.l})} · ${tr(h.rn)}</span>${r.up?`<span> · ${tr('¡Subiste de nivel! 🎊')}</span>`:''}</p><span class="bcbar"><i style="width:0"></i></span><p class="pmeta">${h.st?trf(h.st==1?'🔥 Racha de {n} día':'🔥 Racha de {n} días',{n:h.st}):''}</p></div>
-  <div class="prow">${rd?`<button class="pnext" data-act="rnext">${tr('➡️ Siguiente texto')}</button><button class="pexit" data-act="bagain">${tr('↺ Responder otra vez')}</button><button class="pexit" data-act="rback">${tr('📖 Volver al texto')}</button>`:`<button class="pnext" data-act="bagain">${tr('↺ Otra partida')}</button><button class="pexit" data-act="bvideo">${tr('🎬 Convertir en video')}</button><button class="pexit" data-act="exit">${tr('Salir')}</button>`}</div>`;
+  <div class="prow">${rd?`<button class="pnext" data-act="rnext">${tr('➡️ Siguiente texto')}</button><button class="pexit" data-act="bagain">${tr('↺ Responder otra vez')}</button><button class="pexit" data-act="rback">${tr('📖 Volver al texto')}</button>`:`<button class="pnext" data-act="bagain">${tr('↺ Otra partida')}</button>${G.cfg.gen?'':`<button class="pexit" data-act="bvideo">${tr('🎬 Convertir en video')}</button>`}<button class="pexit" data-act="exit">${tr('Salir')}</button>`}</div>`;
  requestAnimationFrame(()=>{const b=$('pgMain').querySelector('.pend .bcbar i');if(b)b.style.width=Math.round(h.p*100)+'%'});
  if(VOICE&&canVoice())setTimeout(()=>speakSeq([{t:LB().got(G.score,n)+'. '+fmtN(G.pts)+' '+tr('puntos')+'.'+(r.rec?' '+tr('¡Nuevo récord!'):''),l:UIL}]),700);
  sfx('fan');if(G.score>=n/2){burst(innerWidth*.25,innerHeight*.35,60);setTimeout(()=>burst(innerWidth*.75,innerHeight*.35,60),250);setTimeout(()=>burst(innerWidth*.5,innerHeight*.2,80),500)}}
@@ -4277,7 +4385,7 @@ const RD=(()=>{const out=[];let cur=null;
   const [en,es,pt]=l.split('|');cur.p[cur.p.length-1].push([en,es,pt])}
  out.forEach(t=>{t.p=t.p.filter(x=>x.length);t.s=t.p.flat();t.words=t.s.reduce((n,s)=>n+s[0].split(/\s+/).length,0)});return out})();
 const RCATS=[{k:'all',n:'Todas',em:'📚'},{k:'stories',n:'Historias',em:'📕',c1:'#E11D48',c2:'#881337'},{k:'daily',n:'Vida diaria',em:'☕',c1:'#D97706',c2:'#78350F'},{k:'animals',n:'Animales',em:'🐾',c1:'#EA580C',c2:'#9A3412'},
- {k:'science',n:'Ciencia',em:'🔬',c1:'#059669',c2:'#064E3B'},{k:'travel',n:'Viajes',em:'✈️',c1:'#0284C7',c2:'#0C4A6E'},{k:'tech',n:'Tecnología',em:'💻',c1:'#4F46E5',c2:'#312E81'},{k:'history',n:'Historia',em:'🏛️',c1:'#B45309',c2:'#713F12'},{k:'mystery',n:'Misterios',em:'🔎',c1:'#7C3AED',c2:'#3B0764'}];
+ {k:'science',n:'Ciencia',em:'🔬',c1:'#059669',c2:'#064E3B'},{k:'travel',n:'Viajes',em:'✈️',c1:'#0284C7',c2:'#0C4A6E'},{k:'tech',n:'Tecnología',em:'💻',c1:'#4F46E5',c2:'#312E81'},{k:'history',n:'Historia',em:'🏛️',c1:'#B45309',c2:'#713F12'},{k:'mystery',n:'Misterios',em:'🔎',c1:'#7C3AED',c2:'#3B0764'},{k:'mine',n:'Mis textos',em:'✍️',c1:'#DB2777',c2:'#831843',hide:1}];
 const RTI=UIL=='pt'?2:1;/* idioma de las traducciones: portugués para la app en portugués, español en los demás */
 let RDP={};try{RDP=JSON.parse(localStorage.getItem('qvs-read')||'{}')||{}}catch(e){}
 const saveRDP=()=>{try{localStorage.setItem('qvs-read',JSON.stringify(RDP))}catch(e){}};
@@ -4289,11 +4397,11 @@ function learnCardUI(){const n=rdDone();$('lcProg').textContent=trf('{a} de {b} 
 function learnUI(){learnCardUI();const n=rdDone();$('lStatN').textContent=n;$('lStatT').textContent=RD.length;$('lStatBar').style.width=Math.round(n/RD.length*100)+'%';
  const sc=RD.filter(t=>RDP[t.id]),avg=sc.length?Math.round(sc.reduce((a,t)=>a+RDP[t.id].s/RDP[t.id].n,0)/sc.length*100):0;$('lStatA').textContent=sc.length?avg+'%':'—';
  document.querySelectorAll('#rLevel button').forEach(b=>{b.classList.toggle('on',b.dataset.lv==RF.lv);b.setAttribute('aria-pressed',b.dataset.lv==RF.lv)});
- $('rCats').innerHTML=RCATS.map(c=>`<button data-c="${c.k}" class="${RF.c==c.k?'on':''}" aria-pressed="${RF.c==c.k}"><i aria-hidden="true">${c.em}</i>${c.n}</button>`).join('');
+ $('rCats').innerHTML=RCATS.filter(c=>!c.hide).map(c=>`<button data-c="${c.k}" class="${RF.c==c.k?'on':''}" aria-pressed="${RF.c==c.k}"><i aria-hidden="true">${c.em}</i>${c.n}</button>`).join('');
  const L=RD.filter(t=>(RF.lv=='all'||t.lv==RF.lv)&&(RF.c=='all'||t.c==RF.c));
  $('rList').innerHTML=L.length?L.map((t,i)=>{const C=RCATS.find(c=>c.k==t.c),V=LVL[t.lv],d=RDP[t.id];
   return`<button class="rcard${d?' done':''}" data-id="${t.id}" style="--i:${Math.min(i,10)};--c1:${C.c1};--c2:${C.c2}"><span class="rem" aria-hidden="true">${t.em}</span><span class="rtx"><b data-nt>${esc(t.t[0])}</b><small data-nt>${esc(UIL=='en'?'':t.t[RTI])}</small><span class="rmeta"><span>${V.em} ${tr(V.n)}</span><span>${C.em} ${tr(C.n)}</span><span>⏱ ${rdMin(t)} min</span></span></span>${d?`<i class="rok">✅ ${d.s}/${d.n}</i>`:''}</button>`}).join('')
-  :`<div class="empty"><span>📭</span><p>No hay textos con estos filtros.</p></div>`}
+  :`<div class="empty"><span>📭</span><p>No hay textos con estos filtros.</p></div>`;myListUI()}
 $('rLevel').onclick=e=>{const b=e.target.closest('button');if(!b)return;RF.lv=b.dataset.lv;saveRF();learnUI()};
 $('rCats').onclick=e=>{const b=e.target.closest('button');if(!b)return;RF.c=b.dataset.c;saveRF();learnUI();b.scrollIntoView&&$('rCats').querySelector('.on').scrollIntoView({block:'nearest',inline:'center',behavior:RMQ.matches?'auto':'smooth'})};
 $('rList').onclick=e=>{const b=e.target.closest('button.rcard');if(b)rdOpen(b.dataset.id)};
@@ -4303,9 +4411,10 @@ $('learnCard').onclick=()=>openLayer('learn');$('lBack').onclick=closeTop;$('men
 let RCUR=null,rdIdx=-1,rdPlaying=false;
 const wNorm=w=>w.toLowerCase().replace(/^[^a-z0-9]+|[^a-z0-9']+$/g,'').replace(/'s$/,s=>s);
 function rdTok(s,k){return s.split(/(\s+)/).map(x=>{if(/^\s+$/.test(x)||!x)return x;const m=x.match(/^([^A-Za-z0-9]*)(.*?)([^A-Za-z0-9]*)$/);if(!m[2])return esc(x);const n=wNorm(m[2]),kw=k[n]||k[n.replace(/'s$/,'')];return`${esc(m[1])}<span class="w${kw?' kw':''}" data-w="${esc(n)}">${esc(m[2])}</span>${esc(m[3])}`}).join('')}
-function rdRender(){const t=RD.find(x=>x.id==RCUR);if(!t)return;const C=RCATS.find(c=>c.k==t.c),V=LVL[t.lv];let si=0;
+function rdRender(){const t=rdGet(RCUR);if(!t)return;const C=RCATS.find(c=>c.k==t.c),V=LVL[t.lv];let si=0;
  $('rTitle').textContent=t.t[0];$('reader').style.setProperty('--c1',C.c1);$('reader').style.setProperty('--c2',C.c2);
- $('rHead').innerHTML=`<span class="rbig" aria-hidden="true">${t.em}</span><h1 data-nt>${esc(t.t[0])}</h1>${UIL=='en'?'':`<p class="rsub" data-nt>${esc(t.t[RTI])}</p>`}<p class="rmeta"><span>${V.em} ${tr(V.n)}</span><span>${C.em} ${tr(C.n)}</span><span>⏱ ${rdMin(t)} min</span><span>${t.words} words</span></p>`;
+ $('rHead').innerHTML=`<span class="rbig" aria-hidden="true">${t.em}</span><h1 data-nt>${esc(t.t[0])}</h1>${UIL=='en'?'':`<p class="rsub" data-nt>${esc(t.t[RTI])}</p>`}<p class="rmeta"><span>${V.em} ${tr(V.n)}</span><span>${C.em} ${tr(C.n)}</span><span>⏱ ${rdMin(t)} min</span><span>${t.words} words</span></p>${t.own?`<button class="sm" id="rEdit">✏️ ${tr('Editar mi texto')}</button>`:`<p class="hint rlock">🔒 ${tr('Texto de la app: solo para leer y ver aquí.')}</p>`}`;
+ $('rText').classList.toggle('locked',!t.own);$('rVoc').classList.toggle('locked',!t.own);appSecure(!t.own);$('rGo').hidden=!t.q.length;
  $('rText').innerHTML=t.p.map(p=>`<p>${p.map(s=>`<span class="sn" data-i="${si++}"><span class="se">${rdTok(s[0],t.k)}</span><span class="st" data-nt>${esc(s[RTI])}</span></span>`).join(' ')}</p>`).join('');
  $('rVoc').innerHTML=Object.entries(t.k).map(([w,v])=>`<button data-w="${esc(w)}"><b data-nt>${esc(w)}</b><span data-nt>${esc(v[RTI-1])}</span></button>`).join('');
  $('rGo').textContent=trf('✅ Terminé · Responder {n} preguntas',{n:t.q.length});
@@ -4314,7 +4423,7 @@ function rdTools(){$('reader').classList.toggle('showtr',RF.tr);$('rTr').classLi
  $('rText').style.fontSize=[17,20,23][RF.fs]+'px';$('rPlay').innerHTML=rdPlaying?'⏸ <span>Pausar</span>':'▶ <span>Escuchar</span>';$('rPlay').classList.toggle('on',rdPlaying);$('rPlay').hidden=!canVoice()}
 function rdHi(){document.querySelectorAll('#rText .sn').forEach(el=>el.classList.toggle('on',+el.dataset.i==rdIdx))}
 function rdOpen(id){stopVoice();rdPlaying=false;RCUR=id;wpHide();rdRender();if(VIEW=='reader'){window.scrollTo(0,0);return}openLayer('reader')}
-async function rdPlay(){const t=RD.find(x=>x.id==RCUR);if(!t)return;if(rdPlaying){rdStop();return}
+async function rdPlay(){const t=rdGet(RCUR);if(!t)return;if(rdPlaying){rdStop();return}
  if(!canVoice())return toast(tr('Este dispositivo no tiene voz disponible.'));rdPlaying=true;rdTools();checkVoice('en');const my=++spkId;
  let i=rdIdx>=0&&rdIdx<t.s.length-1?rdIdx:0;for(;i<t.s.length;i++){if(my!=spkId||!rdPlaying)return;rdIdx=i;rdHi();const el=document.querySelector(`#rText .sn[data-i="${i}"]`);el&&el.scrollIntoView({block:'center',behavior:RMQ.matches?'auto':'smooth'});await speakOne(t.s[i][0],'en',RF.slow?.7:1)}
  if(my==spkId){rdPlaying=false;rdIdx=-1;rdHi();rdTools()}}
@@ -4323,13 +4432,13 @@ $('rPlay').onclick=rdPlay;
 $('rSlow').onclick=()=>{RF.slow=!RF.slow;saveRF();if(rdPlaying){rdStop();rdPlay()}else rdTools()};
 $('rTr').onclick=()=>{RF.tr=!RF.tr;saveRF();rdTools()};
 $('rSize').onclick=()=>{RF.fs=(RF.fs+1)%3;saveRF();rdTools()};
-$('rBack').onclick=closeTop;$('menuR').onclick=()=>openLayer('drawer');
+$('rBack').onclick=closeTop;$('rHead').onclick=e=>{if(e.target.closest('#rEdit'))mtOpen(RCUR)};$('menuR').onclick=()=>openLayer('drawer');
 /* tocar una palabra: significado y pronunciación */
 let wpWord='';
 function wpHide(){$('wPop').hidden=true;document.querySelectorAll('#rText .w.sel').forEach(x=>x.classList.remove('sel'))}
-function wpShow(el,word,mean,isKey){wpHide();wpWord=word;el.classList.add('sel');$('wpW').textContent=word;$('wpT').textContent=mean;$('wPop').classList.toggle('key',isKey);$('wpL').textContent=isKey?'':tr('Frase completa')+':';
+function wpShow(el,word,mean,isKey){wpHide();wpWord=word;el.classList.add('sel');$('wpW').textContent=word;$('wpT').textContent=mean;$('wPop').classList.toggle('key',isKey);$('wpL').textContent=isKey?'':tr('Frase completa')+':';$('wpStar').hidden=!isKey;wStarUI();
  const p=$('wPop');p.hidden=false;const r=el.getBoundingClientRect(),pw=p.offsetWidth,ph=p.offsetHeight;let x=Math.min(innerWidth-pw-10,Math.max(10,r.left+r.width/2-pw/2)),y=r.top-ph-10;if(y<70)y=r.bottom+10;p.style.left=x+'px';p.style.top=y+'px'}
-$('rText').onclick=e=>{const w=e.target.closest('.w');if(!w){wpHide();return}const t=RD.find(x=>x.id==RCUR),word=w.dataset.w,k=t.k[word]||t.k[word.replace(/'s$/,'')],sn=w.closest('.sn'),s=t.s[+sn.dataset.i];
+$('rText').onclick=e=>{const w=e.target.closest('.w');if(!w){wpHide();return}const t=rdGet(RCUR),word=w.dataset.w,k=t.k[word]||t.k[word.replace(/'s$/,'')],sn=w.closest('.sn'),s=t.s[+sn.dataset.i];
  if(rdPlaying)rdStop();wpShow(w,w.textContent,k?k[RTI-1]:s[RTI],!!k);if(VOICE&&canVoice())speakSeq([{t:word,l:'en'}])};
 $('wpSay').onclick=e=>{e.stopPropagation();if(canVoice())speakSeq([{t:wpWord,l:'en'}])};
 $('rVoc').onclick=e=>{const b=e.target.closest('button');if(b&&canVoice())speakSeq([{t:b.dataset.w,l:'en'}])};
@@ -4337,12 +4446,101 @@ addEventListener('scroll',()=>{if(!$('wPop').hidden)wpHide()},{passive:true});
 document.addEventListener('pointerdown',e=>{if(!$('wPop').hidden&&!e.target.closest('#wPop,#rText .w'))wpHide()});
 /* preguntas sobre el texto */
 let RDT=false;try{RDT=localStorage.getItem('qvs-rdt')=='1'}catch(e){}
-$('rGo').onclick=()=>{const t=RD.find(x=>x.id==RCUR);if(!t)return;rdStop();wpHide();const C=RCATS.find(c=>c.k==t.c);
+$('rGo').onclick=()=>{const t=rdGet(RCUR);if(!t)return;rdStop();wpHide();const C=RCATS.find(c=>c.k==t.c);
  const qs=t.q.map(x=>{const q=mkQ(x.q,x.c,[...x.w],'','',t.lv,1);q.tl='en';q.ol='en';return q});
  PGC={brain:1,read:1,id:t.id,cat:'rd_'+t.id,lv:t.lv,qs,title:t.t[0],em:t.em,colors:{b1:C.c1,b2:C.c2,ac:C.c1,hi:'#FFD600'}};openLayer('player')};
-function rdNext(id){const i=RD.findIndex(t=>t.id==id),t0=RD[i],rest=[...RD.slice(i+1),...RD.slice(0,i)];
+function rdNext(id){const A=String(id)[0]=='u'&&MYT.length>1?MYT:RD,i=Math.max(0,A.findIndex(t=>t.id==id)),t0=A[i]||RD[0],rest=[...A.slice(i+1),...A.slice(0,i)];if(!rest.length)return id;
  return(rest.find(t=>t.lv==t0.lv&&!RDP[t.id])||rest.find(t=>!RDP[t.id])||rest[0]).id}
 function rdFinish(){const g=G.cfg,p=RDP[g.id];if(!p||G.score>=p.s)RDP[g.id]={s:G.score,n:G.qs.length};saveRDP()}
+
+/* ---------- Mis textos: cada persona escribe sus propios textos en inglés ---------- */
+let MYT=[];try{MYT=JSON.parse(localStorage.getItem('qvs-mytx')||'[]')||[]}catch(e){}
+const saveMYT=()=>{try{localStorage.setItem('qvs-mytx',JSON.stringify(MYT))}catch(e){toast(tr('No se pudo guardar en este dispositivo. Usa ☰ → Guardar como archivo.'))}};
+const rdGet=id=>RD.find(x=>x.id==id)||MYT.find(x=>x.id==id);
+/* protección: los textos de la app no se copian ni se graban; los tuyos sí se pueden exportar */
+const appSecure=on=>{try{window.NativeApp&&NativeApp.isNative&&NativeApp.secure&&NativeApp.secure(on)}catch(e){}};
+['copy','cut','contextmenu','dragstart'].forEach(ev=>document.addEventListener(ev,e=>{if(VIEW=='reader'&&e.target.closest&&e.target.closest('.locked')){e.preventDefault()}}));
+/* separar frases sin partir abreviaturas comunes */
+function splitSent(p){const ab=/\b(Mr|Mrs|Ms|Dr|St|Jr|Sr|vs|etc|e\.g|i\.e|U\.S)\.$/i,raw=p.replace(/\s+/g,' ').trim().split(/(?<=[.!?…]["”’)]?)\s+(?=["“‘(]?[A-Z0-9¿¡])/),out=[];
+ for(const s of raw){if(out.length&&ab.test(out[out.length-1]))out[out.length-1]+=' '+s;else out.push(s)}return out.filter(Boolean)}
+function mtParse(){const tx=$('mtText').value.replace(/\r/g,''),paras=tx.split(/\n\s*\n/).map(p=>splitSent(p)).filter(p=>p.length),trs=$('mtTr').value.replace(/\r/g,'').split('\n').map(x=>x.trim()).filter(Boolean);
+ let i=0;return{paras:paras.map(p=>p.map(s=>{const t=trs[i++]||'';return[s,t,t]})),nSent:paras.flat().length,nTr:trs.length}}
+let MT=null;/* texto que se está editando: {id, sel:{palabra:significado}} */
+function mtWordsUI(){const {paras,nSent,nTr}=mtParse(),ws=[],seen=new Set();
+ for(const s of paras.flat())for(const w of s[0].split(/\s+/)){const n=wNorm(w);if(n&&n.length>1&&!seen.has(n)){seen.add(n);ws.push(n)}}
+ $('mtCount').textContent=nSent?trf('{a} frases · {b} traducciones',{a:nSent,b:nTr})+(nTr&&nTr!=nSent?' · '+tr('⚠️ Revisa que haya una traducción por frase'):''):'';
+ $('mtWords').innerHTML=ws.slice(0,400).map(w=>`<button data-w="${esc(w)}" class="${w in MT.sel?'on':''}" aria-pressed="${w in MT.sel}" data-nt>${esc(w)}</button>`).join('')||`<p class="hint">${tr('Escribe tu texto arriba para elegir palabras.')}</p>`;
+ for(const w in MT.sel)if(!seen.has(w))delete MT.sel[w];
+ $('mtMeans').innerHTML=Object.keys(MT.sel).map(w=>`<div class="opt"><b class="mtw" data-nt>${esc(w)}</b><input type="text" data-mw="${esc(w)}" value="${esc(MT.sel[w])}" placeholder="${tr('Significado (opcional)')}" maxlength="60"></div>`).join('')}
+let mtT=0;$('mtText').oninput=()=>{clearTimeout(mtT);mtT=setTimeout(mtWordsUI,300)};$('mtTr').oninput=$('mtText').oninput;
+$('mtWords').onclick=e=>{const b=e.target.closest('button');if(!b)return;const w=b.dataset.w;if(w in MT.sel)delete MT.sel[w];else MT.sel[w]='';mtWordsUI()};
+$('mtMeans').oninput=e=>{const w=e.target.dataset.mw;if(w!=null)MT.sel[w]=e.target.value};
+function mtOpen(id){const t=id?MYT.find(x=>x.id==id):null;MT={id:t?t.id:'u'+uid(),sel:{}};
+ $('mtTitle').value=t?t.t[0]:'';$('mtTitleTr').value=t?t.t[RTI]||'':'';$('mtEm').value=t?t.em:'';$('mtLv').value=t?t.lv:'e';
+ $('mtText').value=t?t.p.map(p=>p.map(s=>s[0]).join(' ')).join('\n\n'):'';$('mtTr').value=t?t.s.map(s=>s[RTI]||'').join('\n').trim():'';
+ if(t)for(const w in t.k)MT.sel[w]=t.k[w][RTI-1]||'';
+ $('mtQs').value=t?t.q.map(q=>[q.q,'*'+q.c,...q.w].join(' | ')).join('\n'):'';$('mtDel').hidden=!t;$('mtMsg').textContent='';mtWordsUI();openSheet('mytx',tr(t?'Editar mi texto':'Crear mi texto'))}
+function mtQs(){const out=[];for(const l of $('mtQs').value.split('\n')){const p=l.split('|').map(x=>x.trim()).filter(Boolean);if(p.length<3)continue;const q=p[0],o=p.slice(1,5);let c=o.findIndex(x=>x.startsWith('*'));if(c<0)c=0;
+ const op=o.map(x=>x.replace(/^\*\s*/,''));out.push({q,c:op[c],w:op.filter((x,i)=>i!=c)})}return out}
+$('mtSave').onclick=()=>{const title=$('mtTitle').value.trim(),{paras}=mtParse();if(!title){$('mtMsg').textContent=tr('Escribe un título.');$('mtTitle').focus();return}
+ if(!paras.length){$('mtMsg').textContent=tr('Escribe tu texto en inglés.');$('mtText').focus();return}
+ const tt=$('mtTitleTr').value.trim(),k={};for(const w in MT.sel){const m=MT.sel[w].trim();k[w]=[m,m]}
+ const t={id:MT.id,own:1,c:'mine',lv:$('mtLv').value,em:$('mtEm').value.trim()||'📝',t:[title,tt,tt],p:paras,k,q:mtQs(),upd:Date.now()};t.s=t.p.flat();t.words=t.s.reduce((n,s)=>n+s[0].split(/\s+/).length,0);
+ const i=MYT.findIndex(x=>x.id==t.id);if(i>=0)MYT[i]=t;else MYT.unshift(t);saveMYT();toast(tr('Texto guardado ✨'));closeTop();
+ setTimeout(()=>{if(VIEW=='reader'&&RCUR==t.id)rdRender();else rdOpen(t.id)},380)};
+$('mtDel').onclick=async()=>{const t=MYT.find(x=>x.id==MT.id);if(!t)return;if(!(await ask(trf('¿Eliminar «{n}»? No se puede deshacer.',{n:t.t[0]}),tr('Eliminar'))))return;
+ MYT=MYT.filter(x=>x.id!=t.id);delete RDP[t.id];saveMYT();saveRDP();toast(tr('Texto eliminado'));setTimeout(()=>{if(LAYERS.includes('sheet'))closeTop();setTimeout(()=>{if(VIEW=='reader')closeTop();else learnUI()},380)},60)};
+$('myNew').onclick=()=>mtOpen(null);
+function myListUI(){MYT.forEach(t=>{t.s=t.s||t.p.flat()});
+ $('myList').innerHTML=MYT.length?MYT.map((t,i)=>{const V=LVL[t.lv],d=RDP[t.id];return`<button class="rcard mine${d?' done':''}" data-id="${t.id}" style="--i:${Math.min(i,10)};--c1:#DB2777;--c2:#831843"><span class="rem" aria-hidden="true">${esc(t.em)}</span><span class="rtx"><b data-nt>${esc(t.t[0])}</b><small data-nt>${esc(t.t[RTI]||'')}</small><span class="rmeta"><span>${V.em} ${tr(V.n)}</span><span>📝 ${trf('{n} frases',{n:t.s.length})}</span><span>🎬 MP4</span></span></span>${d?`<i class="rok">✅ ${d.s}/${d.n}</i>`:''}</button>`}).join('')
+  :`<p class="hint myempty">${tr('Crea tu propio texto en inglés para leerlo con voz, practicar y guardarlo como video.')}</p>`;
+ $('wordsN').textContent=WORDS.length}
+$('myList').onclick=e=>{const b=e.target.closest('button.rcard');if(b)rdOpen(b.dataset.id)};
+/* ⭐ Mis palabras */
+let WORDS=[];try{WORDS=JSON.parse(localStorage.getItem('qvs-words')||'[]')||[]}catch(e){}
+const saveWORDS=()=>{try{localStorage.setItem('qvs-words',JSON.stringify(WORDS))}catch(e){}};
+const wHas=w=>WORDS.some(x=>x.w==w);
+function wStarUI(){const b=$('wpStar');if(!b)return;const on=wHas(wpWord.toLowerCase());b.textContent=on?'★':'☆';b.classList.toggle('on',on);b.setAttribute('aria-label',tr(on?'Quitar de mis palabras':'Guardar en mis palabras'))}
+$('wpStar').onclick=e=>{e.stopPropagation();const w=wpWord.toLowerCase(),t=rdGet(RCUR);if(!w||!t)return;
+ if(wHas(w)){WORDS=WORDS.filter(x=>x.w!=w);toast(tr('Palabra quitada'))}else{const k=t.k[w]||t.k[w.replace(/'s$/,'')]||[];WORDS.unshift({w,m:k[RTI-1]||'',from:t.t[0],at:Date.now()});toast(tr('Guardada en ⭐ Mis palabras'))}
+ saveWORDS();wStarUI()};
+function wordsUI(){$('wList').innerHTML=WORDS.length?WORDS.map((x,i)=>`<div class="wrow"><button class="ib" data-say="${i}" aria-label="${tr('Escuchar')}">🔊</button><span class="vl"><b data-nt>${esc(x.w)}</b><small data-nt>${esc(x.m||'—')}${x.from?' · '+esc(x.from):''}</small></span><button class="ib warn" data-rm="${i}" aria-label="${tr('Quitar de mis palabras')}">🗑</button></div>`).join('')
+  :`<div class="empty"><span>⭐</span><p>${tr('Toca una palabra subrayada al leer y luego la ☆ para guardarla aquí.')}</p></div>`;
+ $('wPractice').disabled=WORDS.filter(x=>x.m).length<3}
+$('wordsBtn').onclick=()=>{wordsUI();openSheet('words')};
+$('wList').onclick=e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.say!=null){const x=WORDS[+b.dataset.say];if(x&&canVoice())speakSeq([{t:x.w,l:'en'}])}
+ if(b.dataset.rm!=null){WORDS.splice(+b.dataset.rm,1);saveWORDS();wordsUI();myListUI()}};
+function wordsGame(){const pool=WORDS.filter(x=>x.m),all=[...new Set([...pool.map(x=>x.m),...RD.flatMap(t=>Object.values(t.k).map(v=>v[RTI-1]))])].filter(Boolean),lv=pool.length>=4?'n':'e';
+ return shuf(pool).slice(0,10).map(x=>{const own=shuf(pool.map(y=>y.m).filter(m=>m!=x.m)),wr=[...new Set([...own,...shuf(all.filter(m=>m!=x.m))])].slice(0,LVL[lv].k-1),q=mkQ((UIL=='en'?'What does “{w}” mean?':UIL=='pt'?'O que significa “{w}”?':'¿Qué significa «{w}»?').replace('{w}',x.w),x.m,wr,'⭐','',lv,1);q.secs=15;return q})}
+$('wPractice').onclick=()=>{const qs=wordsGame();if(qs.length<3)return toast(tr('Guarda al menos 3 palabras con significado para practicar.'));
+ PGC={brain:1,cat:'mywords',lv:qs[0].o.length>3?'n':'e',qs,gen:wordsGame,title:tr('Mis palabras'),em:'⭐',colors:{b1:'#F59E0B',b2:'#B45309',ac:'#F59E0B',hi:'#FFD600'}};openLayer('player')};
+/* ⛶ ver el video de lectura en pantalla completa (solo ver) */
+let RVF={src:null,t0:0,off:0,playing:false,raf:0,buf:null};
+function rvFsShow(){const el=$('rvFs');el.hidden=false;reqFS(el);RVF.off=0;RVF.buf=null;rvFsSize();rvFsPlay()}
+function rvFsHide(){rvFsPause();$('rvFs').hidden=true;exitFS()}
+function rvFsSize(){const cv=$('rvFsCv'),w=Math.min(1080,Math.max(270,Math.round(cv.getBoundingClientRect().width*(devicePixelRatio||1))));if(cv.width!=w){cv.width=w;cv.height=Math.round(w*16/9)}}
+function rvFsPause(){if(RVF.playing)RVF.off+=(performance.now()-RVF.t0)/1000;RVF.playing=false;cancelAnimationFrame(RVF.raf);try{RVF.src&&RVF.src.stop()}catch(e){}RVF.src=null;$('rvFsPlay').textContent='▶'}
+async function rvFsPlay(){const pl=RVPL||await rvPrepare();if(!pl)return;if(RVF.off>=pl.dur-.05)RVF.off=0;
+ try{ac=ac||new AudioContext();ac.resume();if(!RVF.buf||RVF.pl!==pl){const a=rvAudio(pl,VSR);RVF.buf=ac.createBuffer(1,a.length,VSR);RVF.buf.copyToChannel(a,0);RVF.pl=pl}
+  RVF.src=ac.createBufferSource();RVF.src.buffer=RVF.buf;RVF.src.connect(ac.destination);RVF.src.start(0,RVF.off)}catch(e){}
+ RVF.playing=true;RVF.t0=performance.now();$('rvFsPlay').textContent='⏸';const cv=$('rvFsCv'),c=cv.getContext('2d');
+ const f=()=>{if(!RVF.playing)return;const tt=RVF.off+(performance.now()-RVF.t0)/1000;if(tt>=pl.dur){rvFsPause();RVF.off=pl.dur;rvDraw(c,cv.width,pl.dur-.01,pl);return}rvFsSize();rvDraw(c,cv.width,tt,pl);RVF.raf=requestAnimationFrame(f)};RVF.raf=requestAnimationFrame(f)}
+$('rvFsBtn').onclick=()=>{rvStopPrev();openLayer('rvfs')};
+$('rvFsPlay').onclick=()=>RVF.playing?rvFsPause():rvFsPlay();$('rvFsCv').onclick=$('rvFsPlay').onclick;$('rvFsClose').onclick=closeTop;
+/* 🗂️ copia de seguridad de todo */
+const LSK=['qvs-brain','qvs-read','qvs-mytx','qvs-words','qvs-rv','qvs-rf','qvs-ui','qvs-theme','qvs-voice','qvs-blv','qvs-rdt'];
+$('bkSave').onclick=async()=>{const m=$('bkMsg');m.textContent=tr('Preparando la copia…');let projects=[];try{projects=await DB.all()||[]}catch(e){}
+ const ls={};for(const k of LSK){try{const v=localStorage.getItem(k);if(v!=null)ls[k]=v}catch(e){}}
+ const data={app:'quizvideostudio',v:1,date:new Date().toISOString(),projects,ls},d=new Date(),name='quiz-video-studio-copia-'+d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+'.json';
+ save(new Blob([JSON.stringify(data)],{type:'application/json'}),name,x=>{m.textContent=x+' · '+trf('{n} proyectos',{n:projects.length})})};
+$('bkLoad').onclick=()=>$('bkFile').click();
+$('bkFile').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;const m=$('bkMsg');
+ try{const j=JSON.parse(await f.text());if(j.app!='quizvideostudio'||!j.ls)throw 0;
+  if(!(await ask(tr('¿Restaurar esta copia? Se agregarán sus proyectos y se reemplazará tu progreso actual.'),tr('Restaurar'))))return;
+  for(const p of j.projects||[])try{await DB.put(p)}catch(x){}
+  for(const k in j.ls)if(LSK.includes(k))try{localStorage.setItem(k,j.ls[k])}catch(x){}
+  m.textContent=tr('Copia restaurada ✅');toast(tr('Copia restaurada ✅'));setTimeout(()=>{const k=LAYERS.length;if(k)history.go(-k);setTimeout(()=>location.reload(),k?260:60)},900)}
+ catch(x){m.textContent=tr('Ese archivo no es una copia de seguridad de Quiz Video Studio.')}};
 
 /* ---------- Aprende leyendo: guardar el texto como video (voz, karaoke, traducción, preguntas y música) ---------- */
 let RV={music:'piano',mvol:.35,vvol:1,rate:1,voice:true,tr:true,qs:true,bg:'aurora',res:'1080',handle:''};
@@ -4426,7 +4624,7 @@ function rvSettingsUI(){const ok=NSYN();$('rvVNote').hidden=ok;$('rvVNote').text
  $('rvCustBox').hidden=RV.music!='custom';
  $('rvBgs').innerHTML=RVBG.filter(k=>BGS[k]).map(k=>`<button data-bg="${k}" class="${RV.bg==k?'on':''}" aria-pressed="${RV.bg==k}">${BGS[k].n}</button>`).join('')}
 let rvBT=0;function rvRebuild(){clearTimeout(rvBT);rvBT=setTimeout(rvPrepare,250)}
-async function rvPrepare(){const t=RD.find(x=>x.id==RCUR);if(!t)return null;const my=++rvBusy;rvStopPrev();
+async function rvPrepare(){const t=rdGet(RCUR);if(!t)return null;const my=++rvBusy;rvStopPrev();
  $('rvInfo').textContent=rvVoiceOn()?tr('Preparando la voz…'):'';
  const pl=await rvBuild(t,(i,n)=>{if(my==rvBusy)$('rvInfo').textContent=trf('Preparando la voz… {a}/{b}',{a:i+1,b:n})});if(my!=rvBusy)return null;
  RVPL=pl;$('rvInfo').textContent=trf('Duración: {d}',{d:fm(pl.dur)})+(pl.voice?' · 🎙️':'');rvDraw(rvCx,432,Math.min(1.2,pl.dur),pl);return pl}
@@ -4436,7 +4634,7 @@ async function rvPlayPrev(){if(rvPlaying)return rvStopPrev();const pl=RVPL||awai
  try{ac=ac||new AudioContext();ac.resume();const a=rvAudio(pl,VSR),b=ac.createBuffer(1,a.length,VSR);b.copyToChannel(a,0);rvPrevSrc=ac.createBufferSource();rvPrevSrc.buffer=b;rvPrevSrc.connect(ac.destination);rvPrevSrc.start()}catch(e){}
  $('rvInfo').textContent=trf('Duración: {d}',{d:fm(pl.dur)})+(pl.voice?' · 🎙️':'');
  rvPlaying=true;rvT0=performance.now();$('rvPlay').textContent='⏸';const f=()=>{if(!rvPlaying||SHEET!='rvid'){rvStopPrev();return}const tt=(performance.now()-rvT0)/1000;if(tt>=pl.dur){rvStopPrev();return}rvDraw(rvCx,432,tt,pl);rvRaf=requestAnimationFrame(f)};rvRaf=requestAnimationFrame(f)}
-$('rVid').onclick=()=>{rdStop();wpHide();rvSettingsUI();openSheet('rvid');rvPrepare()};
+$('rVid').onclick=()=>{rdStop();wpHide();rvSettingsUI();const t=rdGet(RCUR),own=!!(t&&t.own);$('rvExpBox').hidden=!own;$('rvLock').hidden=own;openSheet('rvid');rvPrepare()};
 $('rvPlay').onclick=rvPlayPrev;$('rvCv').onclick=rvPlayPrev;
 $('rvMus').onclick=e=>{const b=e.target.closest('button');if(!b)return;RV.music=b.dataset.m;saveRV();if(RV.music=='custom'&&!RVC)setTimeout(()=>$('rvFile').click(),50);rvSettingsUI();rvStopPrev()};
 $('rvFile').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;if(f.size>25e6)return toast(tr('El archivo es muy grande (máximo 25 MB).'));
