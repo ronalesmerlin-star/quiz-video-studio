@@ -658,6 +658,9 @@ body.ovp .scrim{z-index:110}body.ovp .sheet{z-index:120}
 .pgrid i{font-style:normal;display:grid;place-items:center;font-size:clamp(18px,calc(52vw / var(--g)),48px);position:relative;line-height:1}
 .pgrid small{position:absolute;left:2px;top:1px;font-size:10px;font-weight:700;color:rgba(10,24,64,.5);font-family:var(--fb)}
 .pimg:has(.pgrid){height:auto!important;padding:6px}
+#fmtSeg button,#qkFmt button{display:grid;gap:2px;justify-items:center}#fmtSeg small{font-size:11px;opacity:.75;font-weight:400}
+.fmtpv{width:100%;aspect-ratio:16/9;height:auto;border-radius:14px;border:1px solid var(--ln);margin-top:10px;display:block;background:#000}.fmtpv[hidden]{display:none}
+.vgseg{margin-top:4px}
 
 </style>
 </head>
@@ -764,6 +767,7 @@ body.ovp .scrim{z-index:110}body.ovp .sheet{z-index:120}
   <div class="setlist" id="setlist">
    <button data-act="uiLang"><span data-ic="globe"></span>Idioma de la app<b id="uiLangV2" data-nt></b></button>
    <button data-act="theme"><span data-ic="moon"></span>Apariencia<b id="themeV2"></b></button>
+   <button data-act="vg"><span data-ic="mic"></span>Voz del narrador<b id="vgV" data-nt></b></button>
    <button data-sheet="backup"><span data-ic="archive"></span>Copia de seguridad</button>
    <button data-sheet="help"><span data-ic="help"></span>Cómo se usa</button>
    <button data-sheet="don"><span data-ic="heart"></span>Apoyar el proyecto</button>
@@ -901,13 +905,15 @@ body.ovp .scrim{z-index:110}body.ovp .sheet{z-index:120}
    <h3>🎙️ Voz</h3>
    <p class="hint vnote" id="rvVNote" hidden></p>
    <label class="sw"><input type="checkbox" id="rvVoice"> Narrador que lee el texto</label>
+   <label>Tipo de voz</label><div class="seg vgseg" data-lang="en"><button data-g="f">👩 Femenina</button><button data-g="m">👨 Masculina</button></div>
    <div class="two"><label>Velocidad de la voz<select id="rvRate"><option value="0.8">🐢 Lenta</option><option value="1">Normal</option><option value="1.15">🐇 Rápida</option></select></label><label>Volumen de la voz: <b id="rvVvV"></b><input type="range" id="rvVv" min="0.3" max="1.6" step="0.05"></label></div>
    <h3>🎨 Video</h3>
    <label class="sw"><input type="checkbox" id="rvTr"> Mostrar la traducción</label>
    <label class="sw"><input type="checkbox" id="rvQs"> Agregar las preguntas al final</label>
    <label>Fondo</label><div class="rcats" id="rvBgs"></div>
    <div id="rvExpBox">
-   <div class="two"><label style="margin-top:4px">Tu @ (marca de agua)<input type="text" id="rvHandle" placeholder="@tucuenta"></label><label style="margin-top:4px">Calidad<select id="rvRes"><option value="1080">1080×1920 (TikTok / Reels / Shorts)</option><option value="720">720×1280 (más liviano)</option></select></label></div>
+   <div class="two"><label style="margin-top:4px">Tu @ (marca de agua)<input type="text" id="rvHandle" placeholder="@tucuenta"></label><label style="margin-top:4px">Calidad<select id="rvRes"><option value="1080">Alta calidad (1080p)</option><option value="720">Más liviano (720p)</option></select></label></div>
+   <label>Formato del video</label><div class="seg" id="rvFmtSeg"><button data-f="v">📱 Vertical 9:16</button><button data-f="h">🖥️ Horizontal 16:9</button></div>
    <label class="sw" style="margin-top:10px"><input type="checkbox" id="rvSign"> Firma QuizClip al final (2 s)</label>
    <div style="margin-top:14px"><button class="go" id="rvExp">🎬 Guardar video MP4</button></div>
    <progress id="rvPg" max="1" value="0" hidden></progress><p id="rvMsg" role="status" class="hint"></p>
@@ -984,6 +990,7 @@ body.ovp .scrim{z-index:110}body.ovp .sheet{z-index:120}
    <div id="vOpts">
     <p class="hint" style="margin-top:8px">¿Qué se lee?</p>
     <div class="vchk"><label><input type="checkbox" data-vp="cover"> Portada y final</label><label><input type="checkbox" data-vp="q"> Pregunta</label><label><input type="checkbox" data-vp="o"> Opciones</label><label><input type="checkbox" data-vp="ans"> Respuesta</label><label><input type="checkbox" data-vp="fact"> Dato curioso</label></div>
+    <label>Tipo de voz</label><div class="seg vgseg"><button data-g="f">👩 Femenina</button><button data-g="m">👨 Masculina</button></div>
     <label>Velocidad de la voz<select id="vRate"><option value="0.85">🐢 Lenta</option><option value="1">Normal</option><option value="1.15">🐇 Rápida</option></select></label>
    </div>
    <label>Volumen de la voz: <b id="vVolV"></b><input type="range" id="vVol" min="0.3" max="1.6" step="0.05"></label>
@@ -1023,8 +1030,10 @@ body.ovp .scrim{z-index:110}body.ovp .sheet{z-index:120}
   </div>
 
   <div id="tab-ex" hidden>
+   <label style="margin-top:0">Formato del video</label><div class="seg" id="fmtSeg"><button data-f="v">📱 Vertical 9:16<small>TikTok · Reels · Shorts</small></button><button data-f="h">🖥️ Horizontal 16:9<small>YouTube · Facebook</small></button></div>
+   <canvas id="fmtPv" class="fmtpv" width="640" height="360" hidden></canvas>
    <div class="two">
-    <label style="margin-top:4px">Calidad<select id="res"><option value="1080">1080×1920 (TikTok / Reels / Shorts)</option><option value="720">720×1280 (más liviano)</option></select></label>
+    <label style="margin-top:4px">Calidad<select id="res"><option value="1080">Alta calidad (1080p)</option><option value="720">Más liviano (720p)</option></select></label>
     <label style="margin-top:4px">Cuadros por segundo<select id="fps"><option value="30">30 fps</option><option value="60">60 fps (más fluido)</option></select></label>
    </div>
    <label class="sw" style="margin-top:14px"><input type="checkbox" id="snd" checked> Incluir música y sonidos</label>
@@ -1048,6 +1057,8 @@ body.ovp .scrim{z-index:110}body.ovp .sheet{z-index:120}
    <h3>Nivel</h3><div class="seg" id="qkLv"><button data-lv="e">🟢 Fácil</button><button data-lv="n">🟡 Normal</button><button data-lv="d">🔴 Difícil</button></div>
    <h3>Preguntas</h3><div class="seg four" id="qkN"><button data-n="5">5</button><button data-n="8">8</button><button data-n="10">10</button><button data-n="15">15</button></div>
    <h3>Diseño</h3><div class="chipset" id="qkTh"></div>
+   <h3>Formato</h3><div class="seg" id="qkFmt"><button data-f="v">📱 Vertical</button><button data-f="h">🖥️ Horizontal</button></div>
+   <h3>Voz del narrador</h3><div class="seg vgseg"><button data-g="f">👩 Femenina</button><button data-g="m">👨 Masculina</button></div>
    <label class="sw" id="qkVrow"><input type="checkbox" id="qkV"> 🎙️ Narrador: una voz lee las preguntas</label>
    <button class="go" id="qkGo">⚡ Crear video</button></div></div>
   <div id="tab-av" hidden><div class="avgrid" id="avGrid"></div></div>
@@ -1194,6 +1205,20 @@ Diseño||Design||Design
 🎙️ Narrador: una voz lee las preguntas||🎙️ Narrator: a voice reads the questions||🎙️ Narrador: uma voz lê as perguntas
 ⚡ Crear video||⚡ Create video||⚡ Criar vídeo
 Video en 1 toque||One-tap video||Vídeo em 1 toque
+Tipo de voz||Voice type||Tipo de voz
+👩 Femenina||👩 Female||👩 Feminina
+👨 Masculina||👨 Male||👨 Masculina
+Formato||Format||Formato
+📱 Vertical||📱 Vertical||📱 Vertical
+🖥️ Horizontal||🖥️ Horizontal||🖥️ Horizontal
+Voz del narrador||Narrator voice||Voz do narrador
+Formato del video||Video format||Formato do vídeo
+📱 Vertical 9:16||📱 Vertical 9:16||📱 Vertical 9:16
+🖥️ Horizontal 16:9||🖥️ Horizontal 16:9||🖥️ Horizontal 16:9
+TikTok · Reels · Shorts||TikTok · Reels · Shorts||TikTok · Reels · Shorts
+YouTube · Facebook||YouTube · Facebook||YouTube · Facebook
+Alta calidad (1080p)||High quality (1080p)||Alta qualidade (1080p)
+Más liviano (720p)||Lighter (720p)||Mais leve (720p)
 Mis textos||My texts||Meus textos
 ✍️ Mis textos||✍️ My texts||✍️ Meus textos
 ⭐ Mis palabras||⭐ My words||⭐ Minhas palavras
@@ -2448,7 +2473,7 @@ function trimPCM(a){let s=0,e=a.length-1;while(s<e&&Math.abs(a[s])<.004)s++;whil
 async function decodePCM(ab){vDec=vDec||new OfflineAudioContext(1,1,VSR);const b=await vDec.decodeAudioData(ab),n=b.numberOfChannels;let m=b.getChannelData(0);
  if(n>1){const o=new Float32Array(m.length);for(let c=0;c<n;c++){const x=b.getChannelData(c);for(let i=0;i<o.length;i++)o[i]+=x[i]/n}m=o}return trimPCM(m)}
 const vClean=(t,l)=>cleanTx(String(t||'').replace(/\n+/g,' '),l);
-const pKey=p=>p.r?'r'+p.r.length+p.r.slice(-24):p.l+'|'+VO().rate+'|'+vClean(p.t,p.l);
+const pKey=p=>p.r?'r'+p.r.length+p.r.slice(-24):p.l+'|'+VO().rate+'|'+VG+'|'+vClean(p.t,p.l);
 function factParts(f,L){const FL=/ESPAÑOL/i.test(P.factLabel||'')?'es':/PORTUGU/i.test(P.factLabel||'')?'pt':L,m=f.match(/^(.+?)\s=\s(.+)$/);
  return m&&FL!=L?[{t:m[1],l:L},{t:m[2],l:FL}]:[{t:f,l:FL}]}
 /* qué se lee en cada diapositiva: tu grabación tiene prioridad sobre la voz automática */
@@ -2461,7 +2486,7 @@ function vSlots(s){const V=VO(),A=V.on&&NSYN(),L=P.lang||'es',out={};
 function slotPCM(parts){const cl=[];for(const p of parts){const c=CL.get(pKey(p));if(c===undefined)return null;if(c!=='x'&&c.length)cl.push(c)}if(!cl.length)return 0;
  const g=Math.round(.22*VSR);let n=g*(cl.length-1);cl.forEach(c=>n+=c.length);const o=new Float32Array(n);let at=0;cl.forEach(c=>{o.set(c,at);at+=c.length+g});return o}
 let vSigC='',vSigT=0;
-function vSig(){const now=performance.now();if(now-vSigT>30){vSigT=now;vSigC=JSON.stringify(VO())+P.lang+'|'+(P.factLabel||'')+NSYN()}return vSigC}
+function vSig(){const now=performance.now();if(now-vSigT>30){vSigT=now;vSigC=JSON.stringify(VO())+P.lang+'|'+(P.factLabel||'')+NSYN()+VG}return vSigC}
 function vInfo(s){if(!s||(s.t!='q'&&s.t!='cover'&&s.t!='final'))return NOV;
  const raw=vSig()+'|'+s.t+'|'+s.title+'|'+(s.sub||'')+'|'+(s.o?s.o.join('¦')+s.c:'')+'|'+(s.fact||'')+'|'+(s.rec?s.rec.length:0)+'|'+(s.recA?s.recA.length:0);
  const m=VI.get(s);if(m&&m.raw==raw&&(m.done||m.v==CLV))return m.info;
@@ -3090,7 +3115,7 @@ async function exportVideo(base){
  stop();$('exp').disabled=true;$('pg').hidden=false;let ok=false;
  try{
   if(vHas())await prepVoice((i,n)=>msg(trf('Preparando la voz… {a}/{b}',{a:i+1,b:n})));
-  const W=+$('res').value,H=W*16/9,fps=+$('fps').value,N=Math.round((tot()+(P.sign?2:0))*fps),sr=48000;
+  const R0=+$('res').value,HZf=P.fmt=='h',W=HZf?Math.round(R0*16/9):R0,H=HZf?R0:Math.round(R0*16/9),fps=+$('fps').value,N=Math.round((tot()+(P.sign?2:0))*fps),sr=48000;
   msg('Cargando letras, imágenes y música…');await decodeCustom();for(const f of[bf(700,30),bf(600,30),tf(700,30)])await document.fonts.load(f);await preload();
   const cv=document.createElement('canvas');cv.width=W;cv.height=H;const c=cv.getContext('2d');
   let ac2=null,am='aac';
@@ -3101,7 +3126,7 @@ async function exportVideo(base){
   if(!codec)throw Error('Tu navegador no tiene codificador H.264.');
   const mux=new Mp4Muxer.Muxer({target:new Mp4Muxer.ArrayBufferTarget(),fastStart:'in-memory',video:{codec:'avc',width:W,height:H,frameRate:fps},...(ac2?{audio:{codec:am,numberOfChannels:2,sampleRate:sr}}:{})});
   let err=null;const ve=new VideoEncoder({output:(ch,m)=>mux.addVideoChunk(ch,m),error:e=>err=e});ve.configure({...vc,codec});
-  for(let i=0;i<N;i++){if(err)throw err;if(i/fps>=tot())drawSign(c,W,i/fps-tot());else draw(c,W,i/fps);
+  for(let i=0;i<N;i++){if(err)throw err;{const fr=(cc,ww,tt)=>tt>=tot()?drawSign(cc,ww,tt-tot()):draw(cc,ww,tt);if(HZf)drawH(c,W,H,(o,vw)=>fr(o,vw,i/fps));else fr(c,W,i/fps)}
    const f=new VideoFrame(cv,{timestamp:Math.round(i*1e6/fps),duration:Math.round(1e6/fps)});ve.encode(f,{keyFrame:i%(fps*2)==0});f.close();
    if(i%6==0){$('pg').value=i/N*(ac2?.9:1);msg('Generando video… '+Math.round(i/N*100)+'%');await wait(0)}
    while(ve.encodeQueueSize>10)await wait(5)}
@@ -3119,7 +3144,7 @@ async function exportVideo(base){
  $('exp').disabled=false;$('pg').hidden=true;return ok}
 
 const hasUse=()=>typeof window.claude?.use=='function';
-$('png').onclick=async()=>{await preload();await document.fonts.load(tf(700,30));const cv=document.createElement('canvas');cv.width=1080;cv.height=1920;THUMB=true;draw(cv.getContext('2d'),1080,Math.min(1.5,tl()[0].d-.1));THUMB=false;cv.toBlob(b=>save(b,slug(String(S()[0].title).replace(/\n/g,' '))+'-portada.png',msg),'image/png')};
+$('png').onclick=async()=>{await preload();await document.fonts.load(tf(700,30));const cv=document.createElement('canvas');const HZf=P.fmt=='h';cv.width=HZf?1920:1080;cv.height=HZf?1080:1920;THUMB=true;if(HZf)drawH(cv.getContext('2d'),1920,1080,(o,vw)=>draw(o,vw,Math.min(1.5,tl()[0].d-.1)));else draw(cv.getContext('2d'),1080,Math.min(1.5,tl()[0].d-.1));THUMB=false;cv.toBlob(b=>save(b,slug(String(S()[0].title).replace(/\n/g,' '))+'-portada.png',msg),'image/png')};
 
 
 /* ---------- utilidades ---------- */
@@ -3289,7 +3314,7 @@ function cleanTx(t,lg){t=String(t||'').replace(/[\u{1F1E6}-\u{1F1FF}]/gu,'').rep
 let spkId=0;
 function speakOne(t,lg,rate=1){t=cleanTx(t,lg);if(!t)return Promise.resolve();const L=LANGC[lg]||'es-ES',guard=new Promise(r=>setTimeout(r,1500+t.length*110/rate));
  if(NATV())return Promise.race([NativeApp.speak(t,L,rate).catch(()=>{}),guard]);
- if(!SPK)return Promise.resolve();return Promise.race([new Promise(res=>{try{const u=new SpeechSynthesisUtterance(t);u.lang=L;u.rate=.95*rate;u.onend=u.onerror=()=>res();speechSynthesis.speak(u)}catch(e){res()}}),guard])}
+ if(!SPK)return Promise.resolve();return Promise.race([new Promise(res=>{try{const u=new SpeechSynthesisUtterance(t);u.lang=L;u.rate=.95*rate;try{vgApply(u,L)}catch(x){}u.onend=u.onerror=()=>res();speechSynthesis.speak(u)}catch(e){res()}}),guard])}
 async function speakSeq(parts){const my=++spkId;for(const p of parts){if(my!=spkId)return false;await speakOne(p.t,p.l)}return my==spkId}
 function stopVoice(){spkId++;try{if(NATV())NativeApp.stopSpeak();else if(SPK)speechSynthesis.cancel()}catch(e){}}
 function say(tx){if(!canVoice()){toast('Este dispositivo no tiene voz disponible.');return}speakSeq([{t:tx,l:curLang()}])}
@@ -4872,7 +4897,7 @@ const saveRV=()=>{try{localStorage.setItem('qvs-rv',JSON.stringify(RV))}catch(e)
 const RVBG=['aurora','burbujas','galaxia','ondas','rayos','confeti','puntos','retro'];
 let RVC=null;/* tu canción, solo en esta sesión */
 const rvVoiceOn=()=>RV.voice&&NSYN();
-const rKey=t=>'en|'+RV.rate+'|'+vClean(t,'en');
+const rKey=t=>'en|'+RV.rate+'|'+VG+'|'+vClean(t,'en');
 async function rvClip(t){const k=rKey(t);if(!CL.has(k)){try{const s=vClean(t,'en');if(!s)throw 0;CL.set(k,await decodePCM(await NativeApp.synth(s,'en-US',RV.rate)))}catch(e){CL.set(k,'x')}}const c=CL.get(k);return c&&c!=='x'&&c.length?c:null}
 const rvTxt=()=>({intro:tr('Escucha y lee en inglés'),quiz:tr('¿Entendiste el texto?'),end:tr('¿Cuántas acertaste?'),thanks:tr('¡Gracias por leer!'),follow:tr('Sigue para más textos en inglés'),badge:tr('Aprende inglés')});
 /* arma la línea de tiempo: con voz usa la duración real de cada frase */
@@ -4977,7 +5002,7 @@ const rvMsg=x=>$('rvMsg').textContent=x;
 $('rvExp').onclick=async()=>{if(!window.VideoEncoder||!window.Mp4Muxer){rvMsg(tr(window.NativeApp&&NativeApp.isNative?'Este dispositivo no puede exportar video. Actualiza «Android System WebView» y Chrome desde Google Play e inténtalo de nuevo.':'Este navegador no puede exportar video. Usa Chrome o Edge en computadora.'));return}
  rvStopPrev();const btn=$('rvExp');btn.disabled=true;$('rvPg').hidden=false;$('rvPg').value=0;
  try{const pl=await rvPrepare();if(!pl)throw Error('—');
-  const W=+RV.res,H=W*16/9,fps=30,N=Math.round((pl.dur+(RV.sign?2:0))*fps),sr=VSR;rvMsg(tr('Cargando letras, imágenes y música…'));for(const f of[bf(700,30),bf(600,30),tf(700,30)])await document.fonts.load(f);
+  const R0=+RV.res,HZf=RV.fmt=='h',W=HZf?Math.round(R0*16/9):R0,H=HZf?R0:Math.round(R0*16/9),fps=30,N=Math.round((pl.dur+(RV.sign?2:0))*fps),sr=VSR;rvMsg(tr('Cargando letras, imágenes y música…'));for(const f of[bf(700,30),bf(600,30),tf(700,30)])await document.fonts.load(f);
   const cv=document.createElement('canvas');cv.width=W;cv.height=H;const c=cv.getContext('2d');
   let ac2=null,am='aac';if(window.AudioEncoder){const cf=codec=>({codec,sampleRate:sr,numberOfChannels:2,bitrate:128000});
    if((await AudioEncoder.isConfigSupported(cf('mp4a.40.2'))).supported)ac2='mp4a.40.2';else if((await AudioEncoder.isConfigSupported(cf('opus'))).supported){ac2='opus';am='opus'}}
@@ -4986,7 +5011,7 @@ $('rvExp').onclick=async()=>{if(!window.VideoEncoder||!window.Mp4Muxer){rvMsg(tr
   if(!codec)throw Error(tr('Tu navegador no tiene codificador H.264.'));
   const mux=new Mp4Muxer.Muxer({target:new Mp4Muxer.ArrayBufferTarget(),fastStart:'in-memory',video:{codec:'avc',width:W,height:H,frameRate:fps},...(ac2?{audio:{codec:am,numberOfChannels:2,sampleRate:sr}}:{})});
   let err=null;const ve=new VideoEncoder({output:(ch,m)=>mux.addVideoChunk(ch,m),error:e=>err=e});ve.configure({...vc,codec});
-  for(let i=0;i<N;i++){if(err)throw err;if(i/fps>=pl.dur)drawSign(c,W,i/fps-pl.dur);else rvDraw(c,W,i/fps,pl);const f=new VideoFrame(cv,{timestamp:Math.round(i*1e6/fps),duration:Math.round(1e6/fps)});ve.encode(f,{keyFrame:i%(fps*2)==0});f.close();
+  for(let i=0;i<N;i++){if(err)throw err;{const fr=(cc,ww,tt)=>tt>=pl.dur?drawSign(cc,ww,tt-pl.dur):rvDraw(cc,ww,tt,pl);if(HZf)drawH(c,W,H,(o,vw)=>fr(o,vw,i/fps));else fr(c,W,i/fps)}const f=new VideoFrame(cv,{timestamp:Math.round(i*1e6/fps),duration:Math.round(1e6/fps)});ve.encode(f,{keyFrame:i%(fps*2)==0});f.close();
    if(i%6==0){$('rvPg').value=i/N*.9;rvMsg(trf('Generando video… {p}%',{p:Math.round(i/N*100)}));await wait(0)}while(ve.encodeQueueSize>10)await wait(5)}
   await ve.flush();
   if(ac2){rvMsg(tr('Generando audio…'));await wait(20);const pcm=rvAudio(pl,sr),ae=new AudioEncoder({output:(ch,m)=>mux.addAudioChunk(ch,m),error:e=>err=e});ae.configure({codec:ac2,sampleRate:sr,numberOfChannels:2,bitrate:128000});const st=4800;
@@ -5244,6 +5269,40 @@ function drawSign(c,W,t){const k=W/540;c.setTransform(k,0,0,k,0,0);c.globalAlpha
 const _osh=openSheet;openSheet=function(k,t){_osh(k,t);if(k=='ex')$('sign').checked=!!P.sign;if(k=='rvid')$('rvSign').checked=!!RV.sign};
 $('sign').onchange=e=>{P.sign=e.target.checked;try{persist()}catch(x){}};
 $('rvSign').onchange=e=>{RV.sign=e.target.checked;saveRV()};
+
+/* ---------- voz femenina o masculina, y videos verticales u horizontales ---------- */
+var VG='f';try{VG=localStorage.getItem('qvs-vg')||'f'}catch(e){}
+const VGN=()=>VG=='m'?L3('👨 Masculina','👨 Male','👨 Masculina'):L3('👩 Femenina','👩 Female','👩 Feminina');
+/* adivina si una voz es de hombre o de mujer por su nombre (navegador) */
+const VFEM=/female|mujer|helena|laura|sabina|paulina|monica|mónica|luciana|francisca|zira|samantha|victoria|karen|moira|tessa|fiona|joana|elvira|dalia|lucia|lucía|paloma|marisol|elena|camila|francisca|thalita|maria|maría|ana\b|susan|hazel|libby|sonia|aria|jenny|michelle|sara|google español|google us english|google português|isabela|yara|catalina|valentina|salome|ximena/i;
+const VMAS=/\bmale|hombre|pablo|raul|raúl|jorge|diego|juan|david|mark|daniel|alex\b|fred|thomas|felipe|alvaro|álvaro|gonzalo|carlos|antonio|enrique|tomas|tomás|guy|ryan|eric|christopher|george|james|brian|antonio|francisco|duarte|valerio|gerardo|emilio|uk english male/i;
+function webVoice(lang){let vs=[];try{vs=speechSynthesis.getVoices()||[]}catch(e){}const L2=lang.slice(0,2).toLowerCase();
+ const same=vs.filter(v=>String(v.lang).toLowerCase().replace('_','-').startsWith(L2));const ex=same.filter(v=>String(v.lang).toLowerCase().replace('_','-')==lang.toLowerCase());
+ const pool=[...ex,...same.filter(v=>!ex.includes(v))],want=VG=="m"?VMAS:VFEM,not=VG=="m"?VFEM:VMAS;
+ const hit=pool.find(v=>want.test(v.name)&&!(VG=='m'&&/female/i.test(v.name)));if(hit)return{v:hit,p:1};
+ const neutral=pool.find(v=>!not.test(v.name));return{v:neutral||pool[0]||null,p:VG=='m'?.78:1.12}}
+try{speechSynthesis&&speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=()=>{}}catch(e){}
+function vgApply(u,lang){const r=webVoice(lang);if(r.v)u.voice=r.v;u.pitch=r.p}
+function setVG(g){VG=g;try{localStorage.setItem('qvs-vg',g)}catch(e){}CL.clear();vgUI()}
+function vgUI(){document.querySelectorAll('.vgseg button').forEach(b=>{b.classList.toggle('on',b.dataset.g==VG);b.setAttribute('aria-pressed',b.dataset.g==VG)});const v=$('vgV');if(v)v.textContent=VGN()}
+document.addEventListener('click',e=>{const b=e.target.closest('.vgseg button[data-g]');if(b){setVG(b.dataset.g);const lg=b.closest('.vgseg').dataset.lang||P.lang||UIL;stopVoice();speakOne(VG=='m'?L3('Hola, soy la voz masculina de QuizClip.','Hi, I am the QuizClip male voice.','Olá, eu sou a voz masculina do QuizClip.'):L3('Hola, soy la voz femenina de QuizClip.','Hi, I am the QuizClip female voice.','Olá, eu sou a voz feminina do QuizClip.'),lg=='en'?'en':UIL)}});
+/* formato horizontal: el diseño vertical al centro y el fondo extendido y difuminado a los lados */
+const HZ={ov:null,sm:null};
+function drawH(c,W,H,fn){const vw=Math.round(H*9/16);if(!HZ.ov)HZ.ov=document.createElement('canvas');const o=HZ.ov;if(o.width!=vw||o.height!=H){o.width=vw;o.height=H}
+ const ox=o.getContext('2d');ox.setTransform(1,0,0,1,0,0);ox.globalAlpha=1;ox.filter='none';fn(ox,vw);
+ c.setTransform(1,0,0,1,0,0);c.globalAlpha=1;c.filter='none';const sw=Math.max(32,Math.round(W/16)),sh=Math.max(18,Math.round(sw*H/W));if(!HZ.sm)HZ.sm=document.createElement('canvas');const s=HZ.sm;if(s.width!=sw||s.height!=sh){s.width=sw;s.height=sh}
+ const sx=s.getContext('2d'),ch=vw*H/W;sx.drawImage(o,0,(H-ch)/2,vw,ch,0,0,sw,sh);c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';c.filter=`blur(${Math.round(H/36)}px)`;const m=H*.08;c.drawImage(s,-m,-m,W+2*m,H+2*m);c.filter='none';
+ c.fillStyle='rgba(5,8,18,.42)';c.fillRect(0,0,W,H);const x=Math.round((W-vw)/2);c.save();c.shadowColor='rgba(0,0,0,.55)';c.shadowBlur=H*.05;c.fillStyle='#000';c.fillRect(x,0,vw,H);c.restore();c.drawImage(o,x,0)}
+function fmtUI(){document.querySelectorAll('#fmtSeg button').forEach(b=>b.classList.toggle('on',b.dataset.f==(P.fmt||'v')));document.querySelectorAll('#rvFmtSeg button').forEach(b=>b.classList.toggle('on',b.dataset.f==(RV.fmt||'v')));document.querySelectorAll('#qkFmt button').forEach(b=>b.classList.toggle('on',b.dataset.f==(QK.fmt||'v')));
+ const pv=$('fmtPv');if(pv){pv.hidden=(P.fmt||'v')!='h';if(!pv.hidden){const c=pv.getContext('2d');try{drawH(c,pv.width,pv.height,(o,vw)=>draw(o,vw,Math.min(1.5,tl()[0].d-.1)))}catch(e){}}}}
+$('fmtSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;P.fmt=b.dataset.f;try{persist()}catch(x){}fmtUI()};
+$('rvFmtSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;RV.fmt=b.dataset.f;saveRV();fmtUI()};
+$('qkFmt').onclick=e=>{const b=e.target.closest('button');if(!b)return;QK.fmt=b.dataset.f;saveQK();fmtUI()};
+const _osh2=openSheet;openSheet=function(k,t){_osh2(k,t);if(k=='ex'||k=='rvid'||k=='quick')fmtUI();if(k=='mu'||k=='rvid'||k=='quick')vgUI()};
+const _mk=makeVideo;makeVideo=async function(d,voice){d.fmt=QK.fmt||'v';return _mk(d,voice)};
+SHT.vg='Voz del narrador';
+vgUI();
+$('setlist').addEventListener('click',e=>{const b=e.target.closest('button[data-act=vg]');if(!b)return;setVG(VG=='m'?'f':'m');stopVoice();speakOne(VG=='m'?L3('Hola, soy la voz masculina de QuizClip.','Hi, I am the QuizClip male voice.','Olá, eu sou a voz masculina do QuizClip.'):L3('Hola, soy la voz femenina de QuizClip.','Hi, I am the QuizClip female voice.','Olá, eu sou a voz feminina do QuizClip.'),UIL)});
 
 /* ---------- entrada y arranque ---------- */
 function hideSplash(){const s=$('splash');if(!s||s.classList.contains('bye'))return;s.classList.add('bye');setTimeout(()=>s.remove(),700);const h=$('home');h.classList.remove('go');void h.offsetWidth;h.classList.add('go')}

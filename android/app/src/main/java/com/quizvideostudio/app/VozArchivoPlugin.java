@@ -3,6 +3,7 @@ package com.quizvideostudio.app;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
+import android.speech.tts.Voice;
 import android.util.Base64;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
@@ -17,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Convierte texto en voz y la guarda como archivo de audio, para poder ponerla dentro del video MP4.
@@ -98,14 +100,23 @@ public class VozArchivoPlugin extends Plugin {
         final String lang = call.getString("lang", "es-ES");
         final Float rateObj = call.getFloat("rate", 1.0f);
         final float rate = rateObj == null ? 1.0f : rateObj;
+        final String voiceName = call.getString("voiceName", "");
+        final Float pitchObj = call.getFloat("pitch", 1.0f);
+        final float pitch = pitchObj == null ? 1.0f : pitchObj;
         Runnable job = () -> {
             if (!ready || tts == null) {
                 call.reject("El teléfono no tiene un motor de voz disponible");
                 return;
             }
             tts.setLanguage(Locale.forLanguageTag(lang));
+            if (voiceName != null && !voiceName.isEmpty()) {
+                try {
+                    Set<Voice> all = tts.getVoices();
+                    if (all != null) for (Voice v : all) if (voiceName.equals(v.getName())) { tts.setVoice(v); break; }
+                } catch (Exception e) { /* si la voz no está, se usa la del idioma */ }
+            }
             tts.setSpeechRate(rate);
-            tts.setPitch(1.0f);
+            tts.setPitch(pitch);
             String id = "voz" + System.nanoTime();
             File f = new File(getContext().getCacheDir(), id + ".wav");
             synchronized (calls) {
