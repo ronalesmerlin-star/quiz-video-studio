@@ -2481,7 +2481,7 @@ const vOn=()=>VO().on&&NSYN();
 const vHas=()=>S().some(s=>s.rec||s.recA)||vOn();
 /* tiempos: la cuenta atrás espera a que termine la voz */
 const tl=()=>{let a=0;return S().map(s=>{const v=vInfo(s);let d,L=0,FZ=0,T2=0;
- if(s.t=='cover'){FZ=.5;if(v.lead)L=Math.max(0,.35+v.lead.dur+.35-FZ);d=P.coverSecs+L}
+ if(s.t=='cover'){FZ=.9;if(v.lead)L=Math.max(0,.35+v.lead.dur+.35-FZ);d=P.coverSecs+L}
  else if(s.t=='final')d=v.lead?Math.max(5,.6+v.lead.dur+1.4):5;
  else{FZ=.9;if(v.lead)L=Math.max(0,.45+v.lead.dur+.4-FZ);if(v.ans)T2=Math.max(0,.4+v.ans.dur+.5-rev(s));d=L+s.secs+rev(s)+T2}
  const o={s,a,d,L,FZ,v};a+=d;return o})};
