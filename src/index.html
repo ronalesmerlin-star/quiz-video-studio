@@ -445,6 +445,9 @@ button.rcard:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ln)
 @keyframes recp{50%{box-shadow:0 0 0 6px rgba(255,30,138,.25)}}
 .vchk{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:6px}.vchk label{margin:0;display:flex;align-items:center;gap:6px;font-weight:600}.vchk input{width:18px;height:18px;accent-color:var(--pk)}
 .vnote{margin:6px 0 4px;padding:10px 12px;border:2px dashed var(--ln);border-radius:12px}
+.rvprev{position:relative;width:min(220px,58vw);margin:2px auto 0}
+.rvprev canvas{width:100%;aspect-ratio:9/16;display:block;border:3px solid var(--ln);border-radius:20px;box-shadow:5px 5px 0 var(--ln);background:#0A1840;cursor:pointer}
+.rvplay{position:absolute;right:-12px;bottom:-12px;background:var(--pk);color:#fff;box-shadow:3px 3px 0 var(--ln)}
 body.relang{opacity:.35;pointer-events:none;transition:opacity .2s}
 </style>
 </head>
@@ -546,7 +549,7 @@ body.relang{opacity:.35;pointer-events:none;transition:opacity .2s}
  </div></header>
  <div class="wrap rwrap">
   <div class="rhead" id="rHead"></div>
-  <div class="rtools"><button id="rPlay" class="rt">▶ <span>Escuchar</span></button><button id="rSlow" class="rt" aria-pressed="false">🐢 <span>Lento</span></button><button id="rTr" class="rt" aria-pressed="false">🌐 <span>Traducción</span></button></div>
+  <div class="rtools"><button id="rPlay" class="rt">▶ <span>Escuchar</span></button><button id="rSlow" class="rt" aria-pressed="false">🐢 <span>Lento</span></button><button id="rTr" class="rt" aria-pressed="false">🌐 <span>Traducción</span></button><button id="rVid" class="rt">🎬 <span>Video</span></button></div>
   <p class="hint rhint">👆 Toca una palabra para ver qué significa y cómo suena. Las palabras subrayadas son las más importantes.</p>
   <article class="rtext" id="rText" lang="en"></article>
   <h2 class="sec">Palabras clave</h2>
@@ -632,6 +635,25 @@ body.relang{opacity:.35;pointer-events:none;transition:opacity .2s}
    <p class="hint" style="margin-top:0">Elige el idioma de toda la app: menús, botones, avisos y juegos. Los videos que ya creaste no cambian.</p>
    <div class="langs" id="langs"></div>
    <p class="hint">Los videos nuevos se crean en el idioma de la app. En cada video puedes cambiarlo en ☰ → Estilo, textos e idioma.</p>
+  </div>
+  <div id="tab-rvid" hidden>
+   <div class="rvprev"><canvas id="rvCv" width="432" height="768" aria-label="Vista previa del video"></canvas><button class="ib rvplay" id="rvPlay" aria-label="Reproducir">▶</button></div>
+   <p class="hint" id="rvInfo" style="text-align:center" role="status"></p>
+   <h3>🎵 Música de fondo</h3>
+   <div class="mus" id="rvMus"></div>
+   <div id="rvCustBox" hidden><label>Tu canción (MP3, WAV, M4A…)<input type="file" id="rvFile" accept="audio/*"></label><p class="hint">Usa música con permiso o libre de derechos: TikTok e Instagram pueden silenciar canciones con copyright.</p></div>
+   <label>Volumen de la música: <b id="rvMvV"></b><input type="range" id="rvMv" min="0" max="1" step="0.05"></label>
+   <h3>🎙️ Voz</h3>
+   <p class="hint vnote" id="rvVNote" hidden></p>
+   <label class="sw"><input type="checkbox" id="rvVoice"> Narrador que lee el texto</label>
+   <div class="two"><label>Velocidad de la voz<select id="rvRate"><option value="0.8">🐢 Lenta</option><option value="1">Normal</option><option value="1.15">🐇 Rápida</option></select></label><label>Volumen de la voz: <b id="rvVvV"></b><input type="range" id="rvVv" min="0.3" max="1.6" step="0.05"></label></div>
+   <h3>🎨 Video</h3>
+   <label class="sw"><input type="checkbox" id="rvTr"> Mostrar la traducción</label>
+   <label class="sw"><input type="checkbox" id="rvQs"> Agregar las preguntas al final</label>
+   <label>Fondo</label><div class="rcats" id="rvBgs"></div>
+   <div class="two"><label style="margin-top:4px">Tu @ (marca de agua)<input type="text" id="rvHandle" placeholder="@tucuenta"></label><label style="margin-top:4px">Calidad<select id="rvRes"><option value="1080">1080×1920 (TikTok / Reels / Shorts)</option><option value="720">720×1280 (más liviano)</option></select></label></div>
+   <div style="margin-top:14px"><button class="go" id="rvExp">🎬 Guardar video MP4</button></div>
+   <progress id="rvPg" max="1" value="0" hidden></progress><p id="rvMsg" role="status" class="hint"></p>
   </div>
   <div id="tab-tpl" hidden><div class="tlist" id="tplList"></div></div>
 
@@ -794,7 +816,32 @@ const UIL=(()=>{let l='';try{l=localStorage.getItem('qvs-ui')||''}catch(e){}if(!
 const UIX=UILS.indexOf(UIL)-1;
 document.documentElement.lang=UIL;
 /* cada línea: español || inglés || portugués */
-const DICT_TX=`Música, voz y sonidos||Music, voice and sounds||Música, voz e sons
+const DICT_TX=`Guardar como video||Save as video||Salvar como vídeo
+Video||Video||Vídeo
+🎵 Música de fondo||🎵 Background music||🎵 Música de fundo
+🎙️ Voz||🎙️ Voice||🎙️ Voz
+Narrador que lee el texto||Narrator reads the text||Narrador lê o texto
+🎨 Video||🎨 Video||🎨 Vídeo
+Mostrar la traducción||Show the translation||Mostrar a tradução
+Agregar las preguntas al final||Add the questions at the end||Adicionar as perguntas no final
+Fondo||Background||Fundo
+Tu @ (marca de agua)||Your @ (watermark)||Seu @ (marca d'água)
+🎬 Guardar video MP4||🎬 Save MP4 video||🎬 Salvar vídeo MP4
+La voz se graba en el video solo en la app Android. Aquí el video sale con música y texto.||The voice can be recorded into the video only in the Android app. Here the video comes out with music and text.||A voz fica gravada no vídeo só no app Android. Aqui o vídeo sai com música e texto.
+Preparando la música…||Preparing the music…||Preparando a música…
+Escucha y lee en inglés||Listen and read in English||Ouça e leia em inglês
+¿Entendiste el texto?||Did you understand it?||Você entendeu o texto?
+¿Cuántas acertaste?||How many did you get?||Quantas você acertou?
+¡Gracias por leer!||Thanks for reading!||Obrigado por ler!
+Sigue para más textos en inglés||Follow for more English texts||Siga para mais textos em inglês
+Aprende inglés||Learn English||Aprenda inglês
+No se pudo exportar:||Couldn't export:||Não foi possível exportar:
+Piano tranquilo||Calm piano||Piano tranquilo
+Noche de nieve||Snowy night||Noite de neve
+Sueño lento||Slow dream||Sonho lento
+Lluvia y piano||Rain and piano||Chuva e piano
+Brisa acústica||Acoustic breeze||Brisa acústica
+Música, voz y sonidos||Music, voice and sounds||Música, voz e sons
 🎙️ Narrador||🎙️ Narrator||🎙️ Narrador
 Una voz lee el video y queda grabada dentro del MP4. La música baja sola mientras habla y la cuenta atrás espera a que termine de leer.||A voice reads the video and is recorded inside the MP4. The music lowers while it speaks, and the countdown waits until it finishes reading.||Uma voz lê o vídeo e fica gravada dentro do MP4. A música abaixa sozinha enquanto ela fala e a contagem espera a leitura terminar.
 Voz automática que lee el video||Automatic voice that reads the video||Voz automática que lê o vídeo
@@ -1272,6 +1319,7 @@ const PATS_TX=[
  [/^ · ¡Subiste de nivel! 🎊$/,' · Level up! 🎊',' · Você subiu de nível! 🎊'],
  [/^Preparando la voz… (\d+)\/(\d+)$/,'Preparing the voice… $1/$2','Preparando a voz… $1/$2'],
  [/^⏹ Detener · (\d+)s$/,'⏹ Stop · $1s','⏹ Parar · $1s'],
+ [/^Duración: (.+)$/,'Length: $1','Duração: $1'],
  [/^(.+) \(copia\)$/,'$1 (copy)','$1 (cópia)'],
  [/^(\d+) de (\d+) leídos$/,'$1 of $2 read','$1 de $2 lidos'],
 ];
@@ -2272,7 +2320,7 @@ function drawThemed(c,tt){const Th=THEMES[P.theme],C=P.colors,T=tl(),Z=T[T.lengt
 }
 
 /* ---------- audio: efectos + música creada aquí (libre de derechos) ---------- */
-const MUS={none:['🔇','Sin música'],pop:['🎉','Pop alegre'],lofi:['☕','Lo-fi relajado'],suspenso:['🕵️','Suspenso'],electro:['⚡','Electrónica'],arcade:['👾','Arcade 8-bit'],custom:['📁','Mi canción']};
+const MUS={none:['🔇','Sin música'],pop:['🎉','Pop alegre'],lofi:['☕','Lo-fi relajado'],suspenso:['🕵️','Suspenso'],electro:['⚡','Electrónica'],arcade:['👾','Arcade 8-bit'],piano:['🎹','Piano tranquilo'],noche:['❄️','Noche de nieve'],sueno:['🌙','Sueño lento'],lluvia:['🌧️','Lluvia y piano'],brisa:['🎸','Brisa acústica'],custom:['📁','Mi canción']};
 const TICKS={clasico:'Tic clásico',reloj:'Reloj',digital:'Bip digital',suave:'Suave',ninguno:'Sin sonido'};
 const DINGS={ding:'Ding',campana:'Campana',moneda:'Moneda arcade',tada:'¡Ta-da!',aplausos:'Aplausos',ninguno:'Sin sonido'};
 const NOTE=m=>440*2**((m-69)/12);
@@ -2290,7 +2338,48 @@ const SONGS={
  suspenso:{bpm:92,prog:[[57,60,64],[53,57,60],[50,53,57],[52,56,59]],bass:[45,41,38,40],pad:'sine',pulse:1,hat:16,soft:1},
  electro:{bpm:126,prog:[[57,60,64],[53,57,60],[48,52,55],[55,59,62]],bass:[45,41,36,43],lead:'saw',arp:16,kick:[0,1,2,3],offhat:1,offbass:1},
  arcade:{bpm:140,prog:[[60,64,67],[57,60,64],[53,57,60],[55,59,62]],bass:[48,45,41,43],lead:'sq',arp:8,chip:1,kick:[0,2],snare:1,hat:8}};
-function mkMusic(style,dur,sr){const a=new Float32Array(Math.ceil(dur*sr)),{osc,noise,kick}=synth(a,sr),S=SONGS[style];if(!S)return a;
+
+/* ---------- músicas tranquilas originales (piano, noche, sueño, lluvia, guitarra): se crean aquí, sin derechos de autor ---------- */
+const AMB={
+ piano:{bpm:72,prog:[[57,60,64],[53,57,60],[48,52,55],[55,59,62]],arp:[0,1,2,1,3,2,1,2],mel:[69,72,74,76,79],wet:.32,pad:.0},
+ noche:{bpm:54,prog:[[50,53,57],[46,50,53],[53,57,60],[48,52,55]],sparse:1,mel:[74,77,79,81,84,86],wet:.5,pad:.05,wind:1},
+ sueno:{bpm:58,prog:[[53,57,60,64],[52,55,59,62],[50,53,57,60],[48,52,55,59]],roll:1,mel:[72,74,76,79,81],wet:.48,pad:.035,vinyl:1,dark:1},
+ lluvia:{bpm:66,prog:[[48,52,55],[57,60,64],[53,57,60],[55,59,62]],sparse:1,mel:[67,69,72,74,76],wet:.38,pad:.025,rain:1},
+ brisa:{bpm:92,prog:[[48,52,55,60,64],[43,47,50,55,59],[45,52,57,60,64],[41,48,53,57,60]],strum:1,wet:.18,shaker:1}};
+function mkAmbient(style,dur,sr){const S=AMB[style],n=Math.ceil(dur*sr),a=new Float32Array(n),NC=new Map();let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+ const pianoNote=m=>{const k='p'+m;if(NC.has(k))return NC.get(k);const f=NOTE(m),L=Math.floor(sr*3.4),o=new Float32Array(L);
+  for(let h=1;h<=6;h++){const fh=f*h*(1+.0004*h*h);if(fh>sr/2.2)break;const amp=1/h**1.7,w=6.2832*fh/sr,c2=2*Math.cos(w),dm=Math.exp(-(1.5+h*.9)/sr);let s1=0,s0=-Math.sin(w),e=amp;
+   for(let i=0;i<L;i++){const v=c2*s1-s0;s0=s1;s1=v;o[i]+=v*e;e*=dm}}
+  const at=Math.floor(sr*.004);for(let i=0;i<L;i++)o[i]*=.32*(i<at?i/at:1)*(i>L-2000?(L-i)/2000:1);NC.set(k,o);return o};
+ const pluck=m=>{const k='g'+m;if(NC.has(k))return NC.get(k);const p=Math.max(2,Math.round(sr/NOTE(m))),L=Math.floor(sr*2.2),o=new Float32Array(L),buf=new Float32Array(p);
+  for(let i=0;i<p;i++)buf[i]=Math.random()*2-1;let j=0;for(let i=0;i<L;i++){const nx=(j+1)%p,v=buf[j];o[i]=v*.35*(i>L-2000?(L-i)/2000:1);buf[j]=(v+buf[nx])*.4985;j=nx}NC.set(k,o);return o};
+ const add=(src,at,g)=>{const i0=Math.floor(at*sr);for(let i=0;i<src.length;i++){const j=i0+i;if(j>=n)break;if(j>=0)a[j]+=src[i]*g}};
+ const pad=(m,at,du,g)=>{const i0=Math.floor(at*sr),L=Math.floor(du*sr),fs=[[NOTE(m),1],[NOTE(m)*1.003,.6],[NOTE(m)*2,.25]];
+  for(const [f,amp] of fs){const w=6.2832*f/sr,c2=2*Math.cos(w);let s1=0,s0=-Math.sin(w),e=0;for(let i=0;i<L;i++){const j=i0+i;if(j>=n)break;const v=c2*s1-s0;s0=s1;s1=v;if((i&127)==0){const x=i/L;e=Math.sin(Math.PI*x)**1.5*g*amp}if(j>=0)a[j]+=v*e}}};
+ const b=60/S.bpm,bar=b*4,bars=Math.ceil(dur/bar)+1;
+ for(let k=0;k<bars;k++){const t0=k*bar,ch=S.prog[k%S.prog.length];
+  if(S.pad)ch.slice(0,3).forEach(m=>pad(m-12,t0,bar*1.6,S.pad));
+  if(S.strum){[0,1.5,2,3].forEach((q,qi)=>ch.forEach((m,i)=>add(pluck(m),t0+q*b+(qi%2?(ch.length-i):i)*.016+rnd()*.004,(qi==0?.9:.55)*(.8+rnd()*.3))));add(pluck(ch[0]-12),t0,.8);add(pluck(ch[0]-12),t0+b*2,.6);continue}
+  add(pianoNote(ch[0]-12),t0,.75);
+  if(S.arp)S.arp.forEach((ix,i)=>add(pianoNote(ch[ix%ch.length]+(ix>=ch.length?12:0)),t0+i*b/2,.42+rnd()*.12));
+  if(S.roll){ch.forEach((m,i)=>add(pianoNote(m),t0+i*.045,.38));ch.forEach((m,i)=>add(pianoNote(m),t0+b*2+i*.05,.26))}
+  if(S.sparse&&!S.roll){ch.forEach((m,i)=>add(pianoNote(m),t0+i*.06,.3));if(k%2)ch.forEach((m,i)=>add(pianoNote(m+12),t0+b*2+i*.07,.16))}
+  if(S.mel){const cnt=S.sparse?2:3;for(let i=0;i<cnt;i++)if(rnd()<.72){const m=S.mel[Math.floor(rnd()*S.mel.length)];add(pianoNote(m),t0+(i*4/cnt+(rnd()<.5?0:.5))*b,.3+rnd()*.15)}}}
+ /* ambiente: lluvia, viento, disco viejo, maraca */
+ if(S.rain||S.wind||S.vinyl||S.shaker){let y=0,y2=0,lfo=.5;for(let i=0;i<n;i++){const w=Math.random()*2-1;
+  if(S.rain){y+=(w-y)*.35;a[i]+=(w-y)*.035;if(Math.random()<.0009)a[i]+=(Math.random()-.5)*.25}
+  if(S.wind){if((i&255)==0)lfo=.5+.5*Math.sin(i/sr*.21)*Math.sin(i/sr*.07+1);y2+=(w-y2)*(.006+.012*lfo);a[i]+=y2*.5*lfo}
+  if(S.vinyl&&Math.random()<.00035)a[i]+=(Math.random()-.5)*.3}
+  if(S.shaker)for(let k=0;k<bars*8;k++){const at=Math.floor(k*b/2*sr);for(let i=0;i<1400;i++){const j=at+i;if(j>=n)break;a[j]+=(Math.random()*2-1)*.05*Math.exp(-i/300)*(k%2?.6:1)}}}
+ if(S.dark){let y=0;for(let i=0;i<n;i++){y+=(a[i]-y)*.18;a[i]=y}}
+ /* reverberación (salas de eco) */
+ if(S.wet){const dry=a.slice(),cs=[1557,1617,1491,1422].map(d=>Math.round(d*sr/44100)),fb=.84,out=new Float32Array(n);
+  for(const d of cs){const bf=new Float32Array(d);let j=0,lp=0;for(let i=0;i<n;i++){const y=bf[j];lp=y*.7+lp*.3;bf[j]=dry[i]+lp*fb;out[i]+=y;j=(j+1)%d}}
+  for(const d of [225,556].map(x=>Math.round(x*sr/44100))){const bf=new Float32Array(d);let j=0;for(let i=0;i<n;i++){const y=bf[j],x=out[i];bf[j]=x+y*.5;out[i]=y-x*.5;j=(j+1)%d}}
+  for(let i=0;i<n;i++)a[i]=dry[i]*(1-S.wet*.5)+out[i]*S.wet*.25}
+ let mx=0;for(let i=0;i<n;i+=3)mx=Math.max(mx,Math.abs(a[i]));const g=mx>0?.8/mx:1,f=Math.min(n/2,sr*1.5);for(let i=0;i<n;i++)a[i]*=g*Math.min(1,i/f*2,(n-i)/f*2);return a}
+
+function mkMusic(style,dur,sr){if(AMB[style])return mkAmbient(style,dur,sr);const a=new Float32Array(Math.ceil(dur*sr)),{osc,noise,kick}=synth(a,sr),S=SONGS[style];if(!S)return a;
  const b=60/S.bpm,bar=b*4,bars=Math.ceil(dur/bar)+1,mel=[0,2,4,2,1,3,4,5];
  for(let k=0;k<bars;k++){const t0=k*bar,ch=S.prog[k%4],bs=S.bass[k%4];
   (S.kick||[]).forEach(q=>kick(t0+q*b,S.soft?.5:.75));
@@ -2669,7 +2758,7 @@ function ask(text,yes){$('dlgTx').textContent=text;$('dlgYes').textContent=yes;r
 $('dlgYes').onclick=()=>{const r=dlgRes;dlgRes=null;r&&r(true);closeTop()};$('dlgNo').onclick=closeTop;
 
 /* ---------- menú y hojas ---------- */
-const SHT={lang:'Idioma de la app',mu:'Música, voz y sonidos',th:'Diseño del video',don:'Apoyar el proyecto',tpl:'Elige una plantilla',bg:'Fondos animados',st:'Estilo, textos e idioma',ex:'Exportar video',help:'Cómo se usa',about:'Acerca de'};
+const SHT={rvid:'Guardar como video',lang:'Idioma de la app',mu:'Música, voz y sonidos',th:'Diseño del video',don:'Apoyar el proyecto',tpl:'Elige una plantilla',bg:'Fondos animados',st:'Estilo, textos e idioma',ex:'Exportar video',help:'Cómo se usa',about:'Acerca de'};
 function openSheet(k,title){SHEET=k;$('shTitle').textContent=tr(title||SHT[k]);if(k=='lang')langUI();document.querySelectorAll('.sbody>div').forEach(d=>d.hidden=d.id!='tab-'+k);$('sheet').querySelector('.sbody').scrollTop=0;
  if(k=='th'){thUI();requestAnimationFrame(thLoop)}if(k=='bg'){bgMenu();requestAnimationFrame(thumbLoop)}if(k=='mu')musicUI();if(k=='st')styleUI();
  if(LAYERS[LAYERS.length-1]=='sheet')return;openLayer('sheet')}
@@ -3774,9 +3863,412 @@ Today the manuscript is kept at Yale University, and anyone can view high-resolu
 ?Why is the hoax theory less convincing to many researchers?|The text follows patterns similar to real languages|The book is too short|Voynich confessed|The drawings are photographs
 ?Where is the manuscript kept today?|At Yale University|In the Vatican|In a museum in Rome|Nobody knows`;
 
+/* 24 textos más para Aprende leyendo (mismo formato que RD_TX) */
+const RD_TX2=`#s7|stories|e|🎂|The Birthday Cake|El pastel de cumpleaños|O bolo de aniversário
+Today is Dad's birthday.|Hoy es el cumpleaños de papá.|Hoje é o aniversário do papai.
+Lily and her brother want to make a cake for him.|Lily y su hermano quieren hacerle un pastel.|Lily e o irmão querem fazer um bolo para ele.
+They mix flour, eggs, sugar and milk in a big bowl.|Mezclan harina, huevos, azúcar y leche en un tazón grande.|Eles misturam farinha, ovos, açúcar e leite em uma tigela grande.
+Their mom puts the cake in the oven.|Su mamá pone el pastel en el horno.|A mãe coloca o bolo no forno.
+After forty minutes, the kitchen smells wonderful.|Después de cuarenta minutos, la cocina huele de maravilla.|Depois de quarenta minutos, a cozinha está com um cheiro maravilhoso.
+They put chocolate and candles on top.|Le ponen chocolate y velas encima.|Eles colocam chocolate e velas em cima.
+When Dad comes home, everyone sings "Happy Birthday."|Cuando papá llega a casa, todos cantan «Feliz cumpleaños».|Quando o papai chega em casa, todos cantam “Parabéns”.
+Dad is very happy and says it is the best cake in the world.|Papá está muy feliz y dice que es el mejor pastel del mundo.|O papai fica muito feliz e diz que é o melhor bolo do mundo.
+@birthday=cumpleaños=aniversário;brother=hermano=irmão;mix=mezclan=misturam;flour=harina=farinha;sugar=azúcar=açúcar;bowl=tazón=tigela;oven=horno=forno;smells=huele=tem cheiro;wonderful=maravilloso=maravilhoso;candles=velas=velas;sings=canta=canta
+?Whose birthday is it?|Dad's|Mom's|Lily's
+?What do they make?|A cake|A pizza|Cookies
+?Where does Mom put the cake?|In the oven|In the fridge|On the table
+?What do they put on top of the cake?|Chocolate and candles|Fruit|Ice cream
+?What does Dad say about the cake?|It is the best cake in the world|It is too sweet|It is very small
+
+#s8|stories|n|🎨|The Robot Who Wanted to Paint|El robot que quería pintar|O robô que queria pintar
+In a busy factory, a small robot named Bolt spent every day putting caps on bottles.|En una fábrica muy activa, un pequeño robot llamado Bolt pasaba todos los días poniendo tapas a botellas.|Em uma fábrica movimentada, um pequeno robô chamado Bolt passava todos os dias colocando tampas em garrafas.
+One afternoon, a worker left a box of paints next to Bolt's machine.|Una tarde, un trabajador dejó una caja de pinturas junto a la máquina de Bolt.|Uma tarde, um funcionário deixou uma caixa de tintas ao lado da máquina de Bolt.
+Curious, Bolt dipped one of its metal fingers into the blue paint and drew a circle on a piece of cardboard.|Curioso, Bolt mojó uno de sus dedos de metal en la pintura azul y dibujó un círculo en un trozo de cartón.|Curioso, Bolt mergulhou um dos dedos de metal na tinta azul e desenhou um círculo em um pedaço de papelão.
+
+That night, when the factory was quiet, Bolt painted a sky full of stars.|Esa noche, cuando la fábrica estaba en silencio, Bolt pintó un cielo lleno de estrellas.|Naquela noite, quando a fábrica estava em silêncio, Bolt pintou um céu cheio de estrelas.
+The next morning, the workers found dozens of colorful pictures hanging on the walls.|A la mañana siguiente, los trabajadores encontraron decenas de dibujos coloridos colgados en las paredes.|Na manhã seguinte, os funcionários encontraram dezenas de desenhos coloridos pendurados nas paredes.
+At first, the manager was angry, because the robot was supposed to work, not paint.|Al principio, el gerente se enojó, porque el robot debía trabajar, no pintar.|No começo, o gerente ficou bravo, porque o robô deveria trabalhar, não pintar.
+But when he looked closely, he smiled and decided to open a small art gallery at the entrance.|Pero cuando miró de cerca, sonrió y decidió abrir una pequeña galería de arte en la entrada.|Mas quando olhou de perto, sorriu e decidiu abrir uma pequena galeria de arte na entrada.
+Now Bolt works in the morning and paints in the evening.|Ahora Bolt trabaja por la mañana y pinta por la tarde.|Agora Bolt trabalha de manhã e pinta à tarde.
+@factory=fábrica=fábrica;caps=tapas=tampas;bottles=botellas=garrafas;paints=pinturas=tintas;curious=curioso=curioso;dipped=mojó=mergulhou;cardboard=cartón=papelão;quiet=en silencio=em silêncio;dozens=decenas=dezenas;colorful=coloridos=coloridos;manager=gerente=gerente;closely=de cerca=de perto;gallery=galería=galeria;entrance=entrada=entrada
+?What was Bolt's job?|Putting caps on bottles|Painting walls|Cleaning the floor|Driving trucks
+?What did a worker leave next to Bolt?|A box of paints|A bottle of water|A new battery|A book
+?What did Bolt paint that night?|A sky full of stars|A portrait of the manager|A big red car|A map of the city
+?How did the manager feel at first?|Angry|Happy|Scared|Bored
+?What did the manager decide to do?|Open a small art gallery|Sell the robot|Close the factory|Buy more paints
+
+#s9|stories|d|🗺️|The Map in the Library|El mapa de la biblioteca|O mapa da biblioteca
+While volunteering at the town library, Nadia discovered a folded map hidden inside an old atlas that nobody had borrowed in decades.|Mientras hacía voluntariado en la biblioteca del pueblo, Nadia descubrió un mapa doblado escondido dentro de un viejo atlas que nadie había pedido prestado en décadas.|Enquanto fazia trabalho voluntário na biblioteca da cidade, Nadia descobriu um mapa dobrado escondido dentro de um atlas antigo que ninguém pegava emprestado havia décadas.
+The paper was yellow and fragile, and in one corner someone had written a date: 1931.|El papel estaba amarillento y frágil, y en una esquina alguien había escrito una fecha: 1931.|O papel estava amarelado e frágil, e em um canto alguém tinha escrito uma data: 1931.
+A dotted line crossed the hills behind the town and ended at a small drawing of an oak tree.|Una línea punteada cruzaba las colinas detrás del pueblo y terminaba en un pequeño dibujo de un roble.|Uma linha pontilhada atravessava as colinas atrás da cidade e terminava em um pequeno desenho de um carvalho.
+
+Instead of keeping the discovery to herself, Nadia showed it to the librarian, who contacted the local history society.|En lugar de guardarse el descubrimiento, Nadia se lo mostró a la bibliotecaria, que contactó a la sociedad de historia local.|Em vez de guardar a descoberta só para si, Nadia mostrou o mapa à bibliotecária, que entrou em contato com a sociedade de história local.
+After weeks of research in old newspapers, they learned that the map had belonged to a schoolteacher who organized nature walks for her students.|Tras semanas investigando en periódicos antiguos, supieron que el mapa había pertenecido a una maestra que organizaba paseos por la naturaleza para sus alumnos.|Depois de semanas de pesquisa em jornais antigos, descobriram que o mapa tinha pertencido a uma professora que organizava caminhadas na natureza para os alunos.
+The oak tree marked the spot where the class had planted a time capsule.|El roble marcaba el lugar donde la clase había enterrado una cápsula del tiempo.|O carvalho marcava o lugar onde a turma tinha enterrado uma cápsula do tempo.
+
+With permission from the town council, volunteers carefully dug beneath the tree and found a metal box full of letters and drawings.|Con permiso del ayuntamiento, unos voluntarios cavaron con cuidado bajo el árbol y encontraron una caja de metal llena de cartas y dibujos.|Com permissão da prefeitura, voluntários cavaram com cuidado embaixo da árvore e encontraram uma caixa de metal cheia de cartas e desenhos.
+The children who wrote them had imagined a future with flying cars and robots, and now their words were finally being read.|Los niños que las escribieron habían imaginado un futuro con coches voladores y robots, y por fin alguien leía sus palabras.|As crianças que as escreveram tinham imaginado um futuro com carros voadores e robôs, e agora suas palavras finalmente estavam sendo lidas.
+The library now displays the letters in a glass case, right next to the old atlas.|Ahora la biblioteca exhibe las cartas en una vitrina, justo al lado del viejo atlas.|Hoje a biblioteca exibe as cartas em uma vitrine, bem ao lado do atlas antigo.
+@volunteering=haciendo voluntariado=fazendo trabalho voluntário;folded=doblado=dobrado;borrowed=pedido prestado=pegado emprestado;decades=décadas=décadas;fragile=frágil=frágil;dotted=punteada=pontilhada;oak=roble=carvalho;librarian=bibliotecaria=bibliotecária;research=investigación=pesquisa;newspapers=periódicos=jornais;capsule=cápsula=cápsula;council=ayuntamiento=prefeitura;dug=cavaron=cavaram;beneath=debajo de=embaixo de;displays=exhibe=exibe
+?Where did Nadia find the map?|Inside an old atlas at the library|Under a tree|In her grandmother's house|In a newspaper
+?What did Nadia do with the map?|She showed it to the librarian|She kept it secret|She sold it|She threw it away
+?Who did the map belong to?|A schoolteacher|A pirate|A soldier|The mayor
+?What was buried under the oak tree?|A time capsule|Gold coins|A treasure chest of jewels|An old car
+?Where are the letters displayed now?|In a glass case at the library|In a museum in another country|At the school|Nobody knows
+
+#d7|daily|e|👨‍👩‍👧|My Family|Mi familia|Minha família
+My name is Carlos, and I am ten years old.|Me llamo Carlos y tengo diez años.|Meu nome é Carlos e eu tenho dez anos.
+I live with my mom, my dad and my little sister, Sofia.|Vivo con mi mamá, mi papá y mi hermanita, Sofía.|Eu moro com a minha mãe, o meu pai e a minha irmãzinha, Sofia.
+My mom is a nurse, and my dad is a teacher.|Mi mamá es enfermera y mi papá es maestro.|Minha mãe é enfermeira e meu pai é professor.
+Sofia is five, and she loves dancing.|Sofía tiene cinco años y le encanta bailar.|Sofia tem cinco anos e adora dançar.
+On Sundays, we visit my grandparents.|Los domingos visitamos a mis abuelos.|Aos domingos, visitamos meus avós.
+My grandma cooks rice and chicken, and my grandpa tells funny stories.|Mi abuela cocina arroz con pollo y mi abuelo cuenta historias divertidas.|Minha avó cozinha arroz com frango e meu avô conta histórias engraçadas.
+I love my family very much.|Quiero mucho a mi familia.|Eu amo muito a minha família.
+@years=años=anos;live=vivo=moro;little=pequeña=pequena;sister=hermana=irmã;nurse=enfermera=enfermeira;teacher=maestro=professor;loves=le encanta=adora;dancing=bailar=dançar;grandparents=abuelos=avós;cooks=cocina=cozinha;funny=divertidas=engraçadas;stories=historias=histórias
+?How old is Carlos?|Ten|Five|Twelve
+?What is his mom's job?|Nurse|Teacher|Doctor
+?What does Sofia love?|Dancing|Swimming|Drawing
+?When do they visit the grandparents?|On Sundays|On Mondays|Every day
+?What does Grandpa do?|He tells funny stories|He cooks|He sings
+
+#d8|daily|n|🏙️|Moving to a New City|Mudarse a una ciudad nueva|Mudar para uma cidade nova
+Last year, Ana moved from a small village to a big city to study at the university.|El año pasado, Ana se mudó de un pueblo pequeño a una gran ciudad para estudiar en la universidad.|No ano passado, Ana se mudou de um vilarejo para uma cidade grande para estudar na universidade.
+Everything felt different: the noise, the traffic and the tall buildings.|Todo le parecía distinto: el ruido, el tráfico y los edificios altos.|Tudo parecia diferente: o barulho, o trânsito e os prédios altos.
+At first, she got lost almost every day, because all the streets looked the same.|Al principio, se perdía casi todos los días, porque todas las calles parecían iguales.|No começo, ela se perdia quase todo dia, porque todas as ruas pareciam iguais.
+
+To feel more at home, Ana made a list of small goals.|Para sentirse más en casa, Ana hizo una lista de pequeñas metas.|Para se sentir mais em casa, Ana fez uma lista de pequenas metas.
+She learned the bus routes, joined a running club and found a bakery that made bread like her grandmother's.|Aprendió las rutas de los autobuses, se unió a un club de corredores y encontró una panadería que hacía pan como el de su abuela.|Ela aprendeu as linhas de ônibus, entrou em um clube de corrida e encontrou uma padaria que fazia pão como o da avó.
+Little by little, the city stopped feeling strange.|Poco a poco, la ciudad dejó de parecerle extraña.|Pouco a pouco, a cidade deixou de parecer estranha.
+Now, when friends from her village visit, Ana is the one who shows them around.|Ahora, cuando la visitan amigos de su pueblo, es Ana quien les enseña la ciudad.|Agora, quando amigos do vilarejo vêm visitá-la, é Ana quem mostra a cidade para eles.
+@moved=se mudó=se mudou;village=pueblo=vilarejo;noise=ruido=barulho;traffic=tráfico=trânsito;buildings=edificios=prédios;lost=perdida=perdida;streets=calles=ruas;goals=metas=metas;routes=rutas=linhas;joined=se unió=entrou;bakery=panadería=padaria;strange=extraña=estranha;shows=enseña=mostra
+?Why did Ana move to the city?|To study at the university|To find a job|To live with her grandmother|To open a bakery
+?What was a problem at first?|She got lost almost every day|She had no money|She didn't like the food|She couldn't sleep
+?What did Ana make to feel more at home?|A list of small goals|A new website|A big party|A map of her village
+?Which of these did she do?|She joined a running club|She bought a car|She moved back home|She stopped studying
+?What happens now when friends visit?|Ana shows them around|Ana gets lost with them|They stay in the village|They don't visit
+
+#d9|daily|d|👂|The Art of Listening|El arte de escuchar|A arte de ouvir
+Most of us believe we are good listeners, yet during many conversations we are actually just waiting for our turn to speak.|La mayoría creemos que sabemos escuchar, pero en muchas conversaciones en realidad solo esperamos nuestro turno para hablar.|A maioria de nós acredita que sabe ouvir, mas em muitas conversas, na verdade, estamos só esperando a nossa vez de falar.
+Psychologists distinguish between hearing, which is automatic, and listening, which requires attention and intention.|Los psicólogos distinguen entre oír, que es automático, y escuchar, que requiere atención e intención.|Os psicólogos diferenciam ouvir, que é automático, de escutar, que exige atenção e intenção.
+
+Active listening involves giving the speaker your full attention, without checking your phone or planning your reply.|La escucha activa consiste en prestar toda tu atención a quien habla, sin mirar el teléfono ni planear tu respuesta.|A escuta ativa envolve dar toda a sua atenção a quem está falando, sem olhar o celular nem planejar a resposta.
+It also means asking questions that help the other person explain their ideas, and occasionally summarizing what you have heard to confirm that you understood.|También implica hacer preguntas que ayuden a la otra persona a explicar sus ideas y, de vez en cuando, resumir lo que has oído para confirmar que lo entendiste.|Também significa fazer perguntas que ajudem a outra pessoa a explicar suas ideias e, de vez em quando, resumir o que você ouviu para confirmar que entendeu.
+Surprisingly, silence can be one of the most powerful tools, because it gives people space to think and continue.|Sorprendentemente, el silencio puede ser una de las herramientas más poderosas, porque da a las personas espacio para pensar y continuar.|Surpreendentemente, o silêncio pode ser uma das ferramentas mais poderosas, porque dá às pessoas espaço para pensar e continuar.
+
+People who feel truly heard tend to trust more, share more honestly and solve conflicts more easily.|Las personas que se sienten realmente escuchadas suelen confiar más, compartir con más sinceridad y resolver conflictos con más facilidad.|Pessoas que se sentem realmente ouvidas tendem a confiar mais, a se abrir com mais sinceridade e a resolver conflitos com mais facilidade.
+For this reason, many companies now train their leaders to listen before they advise.|Por eso, muchas empresas ahora entrenan a sus líderes para escuchar antes de aconsejar.|Por isso, muitas empresas hoje treinam seus líderes para ouvir antes de aconselhar.
+Like any skill, listening improves with practice, and the next conversation you have is a perfect opportunity to start.|Como cualquier habilidad, escuchar mejora con la práctica, y tu próxima conversación es una oportunidad perfecta para empezar.|Como qualquer habilidade, ouvir melhora com a prática, e a sua próxima conversa é uma ótima oportunidade para começar.
+@listeners=oyentes=ouvintes;conversations=conversaciones=conversas;turn=turno=vez;psychologists=psicólogos=psicólogos;distinguish=distinguen=diferenciam;attention=atención=atenção;intention=intención=intenção;active=activa=ativa;reply=respuesta=resposta;summarizing=resumir=resumir;confirm=confirmar=confirmar;silence=silencio=silêncio;tools=herramientas=ferramentas;trust=confiar=confiar;conflicts=conflictos=conflitos;advise=aconsejar=aconselhar
+?What are we often doing during conversations, according to the text?|Waiting for our turn to speak|Taking notes|Thinking about food|Looking for a new topic
+?What is the difference between hearing and listening?|Listening requires attention and intention|Hearing is harder|They are exactly the same|Listening is automatic
+?Which of these is part of active listening?|Summarizing what you heard|Checking your phone|Planning your reply|Changing the subject
+?Why can silence be powerful?|It gives people space to think|It ends the conversation|It shows you are bored|It saves time
+?What do some companies train their leaders to do?|Listen before they advise|Speak more loudly|Avoid meetings|Answer quickly
+
+#a7|animals|e|🐜|The Busy Ant|La hormiga trabajadora|A formiga trabalhadora
+Ants are very small, but they are very strong.|Las hormigas son muy pequeñas, pero muy fuertes.|As formigas são muito pequenas, mas muito fortes.
+An ant can carry things much heavier than its body.|Una hormiga puede cargar cosas mucho más pesadas que su cuerpo.|Uma formiga consegue carregar coisas muito mais pesadas que o próprio corpo.
+Ants live together in big groups called colonies.|Las hormigas viven juntas en grandes grupos llamados colonias.|As formigas vivem juntas em grandes grupos chamados colônias.
+Each colony has a queen, and she lays the eggs.|Cada colonia tiene una reina, y ella pone los huevos.|Cada colônia tem uma rainha, e ela põe os ovos.
+The worker ants look for food and take care of the babies.|Las hormigas obreras buscan comida y cuidan a las crías.|As formigas operárias procuram comida e cuidam dos filhotes.
+Ants leave a special smell on the ground, so other ants can follow the path.|Las hormigas dejan un olor especial en el suelo, para que otras hormigas sigan el camino.|As formigas deixam um cheiro especial no chão, para que outras formigas sigam o caminho.
+@small=pequeñas=pequenas;strong=fuertes=fortes;carry=cargar=carregar;heavier=más pesadas=mais pesadas;groups=grupos=grupos;colonies=colonias=colônias;queen=reina=rainha;lays=pone=põe;worker=obrera=operária;smell=olor=cheiro;ground=suelo=chão;path=camino=caminho
+?What are ants like?|Small but strong|Big and slow|Weak and lazy
+?What are big groups of ants called?|Colonies|Herds|Schools
+?Who lays the eggs?|The queen|The worker ants|The babies
+?What do worker ants do?|Look for food and take care of babies|Sleep all day|Fly to other colonies
+?How do ants follow a path?|By a special smell|By looking at the stars|By singing
+
+#a8|animals|n|🐬|Dolphins|Los delfines|Os golfinhos
+Dolphins live in the ocean, but they are not fish.|Los delfines viven en el océano, pero no son peces.|Os golfinhos vivem no oceano, mas não são peixes.
+They are mammals, which means they breathe air and feed their babies with milk.|Son mamíferos, lo que significa que respiran aire y alimentan a sus crías con leche.|Eles são mamíferos, o que significa que respiram ar e alimentam os filhotes com leite.
+A dolphin breathes through a hole on the top of its head, called a blowhole.|Un delfín respira por un agujero en la parte de arriba de la cabeza, llamado espiráculo.|O golfinho respira por um buraco no alto da cabeça, chamado espiráculo.
+
+Dolphins are famous for their intelligence and their playful behavior.|Los delfines son famosos por su inteligencia y su comportamiento juguetón.|Os golfinhos são famosos pela inteligência e pelo comportamento brincalhão.
+They live in groups called pods and communicate with clicks and whistles.|Viven en grupos llamados manadas y se comunican con chasquidos y silbidos.|Eles vivem em grupos e se comunicam com estalos e assobios.
+Each dolphin even has its own special whistle, which works a bit like a name.|Cada delfín incluso tiene su propio silbido especial, que funciona un poco como un nombre.|Cada golfinho tem até o seu próprio assobio especial, que funciona mais ou menos como um nome.
+To find food in dark water, they use echolocation: they send out sounds and listen to the echoes.|Para encontrar comida en el agua oscura, usan la ecolocalización: emiten sonidos y escuchan los ecos.|Para encontrar comida na água escura, eles usam a ecolocalização: emitem sons e escutam os ecos.
+Amazingly, dolphins can rest one half of their brain at a time, so they never fully stop breathing.|Increíblemente, los delfines pueden descansar una mitad del cerebro a la vez, así nunca dejan de respirar del todo.|Incrivelmente, os golfinhos conseguem descansar uma metade do cérebro de cada vez, assim nunca param totalmente de respirar.
+@mammals=mamíferos=mamíferos;breathe=respiran=respiram;feed=alimentan=alimentam;blowhole=espiráculo=espiráculo;intelligence=inteligencia=inteligência;playful=juguetón=brincalhão;pods=manadas=grupos;communicate=se comunican=se comunicam;whistles=silbidos=assobios;echolocation=ecolocalización=ecolocalização;echoes=ecos=ecos;brain=cerebro=cérebro;rest=descansar=descansar
+?Are dolphins fish?|No, they are mammals|Yes, they are big fish|They are reptiles|They are birds
+?How does a dolphin breathe?|Through a blowhole on its head|Through gills|Through its skin|Through its mouth underwater
+?How do dolphins communicate?|With clicks and whistles|With colors|With their tails only|They don't communicate
+?What works a bit like a dolphin's name?|Its own special whistle|The color of its skin|The shape of its fin|Its age
+?How do dolphins rest?|One half of the brain at a time|They sleep on the beach|They never rest|They stop breathing for hours
+
+#a9|animals|d|🐦‍⬛|Clever Crows|Cuervos inteligentes|Corvos inteligentes
+Crows are often seen as ordinary city birds, but scientists rank them among the most intelligent animals on the planet.|A menudo se ve a los cuervos como simples aves de ciudad, pero los científicos los consideran entre los animales más inteligentes del planeta.|Os corvos costumam ser vistos como simples aves da cidade, mas os cientistas os colocam entre os animais mais inteligentes do planeta.
+Relative to their body size, their brains are remarkably large, comparable to those of some primates.|En proporción a su tamaño, su cerebro es notablemente grande, comparable al de algunos primates.|Em relação ao tamanho do corpo, o cérebro deles é notavelmente grande, comparável ao de alguns primatas.
+
+New Caledonian crows, for example, shape twigs and leaves into hooks to pull insects out of holes in trees.|Los cuervos de Nueva Caledonia, por ejemplo, dan forma a ramitas y hojas para hacer ganchos y sacar insectos de los agujeros de los árboles.|Os corvos da Nova Caledônia, por exemplo, moldam gravetos e folhas em forma de gancho para tirar insetos dos buracos das árvores.
+In laboratory experiments, some crows have solved puzzles that required several steps in the correct order.|En experimentos de laboratorio, algunos cuervos han resuelto rompecabezas que exigían varios pasos en el orden correcto.|Em experimentos de laboratório, alguns corvos resolveram quebra-cabeças que exigiam várias etapas na ordem certa.
+
+Perhaps most surprising is their memory for faces.|Quizá lo más sorprendente sea su memoria para las caras.|Talvez o mais surpreendente seja a memória deles para rostos.
+Researchers in the United States wore masks while capturing crows for a study, and for years afterward the birds scolded anyone wearing those masks.|Unos investigadores en Estados Unidos usaron máscaras mientras capturaban cuervos para un estudio, y durante años los pájaros regañaban a cualquiera que llevara esas máscaras.|Pesquisadores nos Estados Unidos usaram máscaras enquanto capturavam corvos para um estudo, e durante anos as aves atacavam com gritos qualquer pessoa que usasse aquelas máscaras.
+Even crows that had never been captured joined in, suggesting that the birds had shared the information with one another.|Incluso cuervos que nunca habían sido capturados se sumaron, lo que sugiere que las aves se habían pasado la información entre ellas.|Até corvos que nunca tinham sido capturados participaram, o que sugere que as aves compartilharam a informação entre si.
+@ordinary=simples=simples;rank=consideran=colocam;remarkably=notablemente=notavelmente;comparable=comparable=comparável;primates=primates=primatas;twigs=ramitas=gravetos;hooks=ganchos=ganchos;insects=insectos=insetos;laboratory=laboratorio=laboratório;puzzles=rompecabezas=quebra-cabeças;memory=memoria=memória;masks=máscaras=máscaras;capturing=capturaban=capturavam;scolded=regañaban=atacavam com gritos;shared=compartido=compartilhado
+?How do scientists rank crows?|Among the most intelligent animals|As the fastest birds|As dangerous animals|As the smallest birds
+?What do New Caledonian crows make with twigs and leaves?|Hooks to catch insects|Nests for other birds|Musical instruments|Umbrellas
+?What did some crows solve in experiments?|Puzzles with several steps|Math equations|Mazes for mice|Crosswords
+?What did the crows do to people wearing the masks?|They scolded them|They followed them home|They brought them gifts|They ignored them
+?What does it suggest that uncaptured crows also reacted?|The birds shared information|The masks were scary to all animals|The researchers were wrong|Crows cannot see well
+
+#c7|science|e|🌙|The Moon|La Luna|A Lua
+The Moon goes around the Earth.|La Luna gira alrededor de la Tierra.|A Lua gira em volta da Terra.
+It takes about one month to make a full trip.|Tarda más o menos un mes en dar una vuelta completa.|Ela leva mais ou menos um mês para dar uma volta completa.
+The Moon does not make its own light.|La Luna no tiene luz propia.|A Lua não tem luz própria.
+It shines because the Sun lights it up.|Brilla porque el Sol la ilumina.|Ela brilha porque o Sol a ilumina.
+There is no air and no water to drink on the Moon.|En la Luna no hay aire ni agua para beber.|Na Lua não há ar nem água para beber.
+Twelve astronauts have walked on its surface.|Doce astronautas han caminado sobre su superficie.|Doze astronautas já andaram na superfície dela.
+On some nights, the Moon looks round, and on others it looks like a smile.|Algunas noches la Luna se ve redonda, y otras parece una sonrisa.|Em algumas noites, a Lua parece redonda, e em outras parece um sorriso.
+@goes=gira=gira;around=alrededor de=em volta de;month=mes=mês;full=completa=completa;trip=vuelta=volta;own=propia=própria;shines=brilla=brilha;lights=ilumina=ilumina;air=aire=ar;astronauts=astronautas=astronautas;surface=superficie=superfície;round=redonda=redonda;smile=sonrisa=sorriso
+?What does the Moon go around?|The Earth|The Sun|Mars
+?How long does it take the Moon to go around the Earth?|About one month|One day|One year
+?Why does the Moon shine?|The Sun lights it up|It makes its own light|It has fire inside
+?Is there air on the Moon?|No|Yes|Only at night
+?How many astronauts have walked on the Moon?|Twelve|Two|One hundred
+
+#c8|science|n|🌋|Volcanoes|Los volcanes|Os vulcões
+Deep under the ground, the Earth is so hot that some rocks melt and become a liquid called magma.|En lo profundo del suelo, la Tierra está tan caliente que algunas rocas se derriten y se convierten en un líquido llamado magma.|Bem embaixo da terra, o planeta é tão quente que algumas rochas derretem e viram um líquido chamado magma.
+A volcano is an opening in the Earth's surface where this magma can escape.|Un volcán es una abertura en la superficie de la Tierra por donde puede salir ese magma.|Um vulcão é uma abertura na superfície da Terra por onde esse magma pode sair.
+When magma reaches the surface, we call it lava.|Cuando el magma llega a la superficie, lo llamamos lava.|Quando o magma chega à superfície, ele passa a se chamar lava.
+
+Some eruptions are calm, with rivers of lava flowing slowly down the mountain.|Algunas erupciones son tranquilas, con ríos de lava que bajan despacio por la montaña.|Algumas erupções são calmas, com rios de lava descendo devagar pela montanha.
+Others are explosive and throw ash high into the sky.|Otras son explosivas y lanzan ceniza muy alto en el cielo.|Outras são explosivas e lançam cinzas bem alto no céu.
+In the year 79, an eruption of Mount Vesuvius buried the Roman city of Pompeii under ash.|En el año 79, una erupción del monte Vesubio sepultó bajo la ceniza la ciudad romana de Pompeya.|No ano 79, uma erupção do monte Vesúvio soterrou a cidade romana de Pompeia sob as cinzas.
+Most of the world's active volcanoes are found around the Pacific Ocean, in an area called the Ring of Fire.|La mayoría de los volcanes activos del mundo están alrededor del océano Pacífico, en una zona llamada el Cinturón de Fuego.|A maioria dos vulcões ativos do mundo fica em volta do oceano Pacífico, em uma área chamada Círculo de Fogo.
+Although volcanoes can be dangerous, their ash makes the soil very fertile for farming.|Aunque los volcanes pueden ser peligrosos, su ceniza hace que la tierra sea muy fértil para cultivar.|Embora os vulcões possam ser perigosos, suas cinzas deixam o solo muito fértil para a agricultura.
+@deep=profundo=fundo;melt=se derriten=derretem;liquid=líquido=líquido;opening=abertura=abertura;escape=salir=sair;reaches=llega=chega;eruptions=erupciones=erupções;flowing=fluyendo=fluindo;explosive=explosivas=explosivas;ash=ceniza=cinzas;buried=sepultó=soterrou;active=activos=ativos;dangerous=peligrosos=perigosos;soil=tierra=solo;fertile=fértil=fértil
+?What is magma?|Melted rock under the ground|A type of cloud|Cold water|A mountain
+?What do we call magma when it reaches the surface?|Lava|Ash|Steam|Sand
+?What happened to Pompeii in the year 79?|It was buried under ash|It was flooded by the sea|It was built|It became the capital of Rome
+?Where are most active volcanoes?|Around the Pacific Ocean|In the middle of Africa|In Antarctica only|In the Atlantic Ocean
+?What is one benefit of volcanic ash?|It makes the soil fertile|It cleans the air|It makes water sweet|It stops earthquakes
+
+#c9|science|d|☀️|The Power of Sunlight|El poder de la luz solar|O poder da luz do sol
+Every hour, the Sun delivers more energy to the Earth's surface than humanity consumes in an entire year.|Cada hora, el Sol envía a la superficie de la Tierra más energía de la que la humanidad consume en un año entero.|A cada hora, o Sol entrega à superfície da Terra mais energia do que a humanidade consome em um ano inteiro.
+Capturing even a small fraction of it could transform the way we power our homes, factories and vehicles.|Captar aunque sea una pequeña parte podría transformar la forma en que damos energía a nuestras casas, fábricas y vehículos.|Captar mesmo uma pequena parte dela poderia transformar o jeito como abastecemos nossas casas, fábricas e veículos.
+
+Solar panels are made of photovoltaic cells, usually built from silicon.|Los paneles solares están hechos de células fotovoltaicas, normalmente fabricadas con silicio.|Os painéis solares são feitos de células fotovoltaicas, geralmente fabricadas com silício.
+When light hits these cells, it knocks electrons loose, creating an electric current without any moving parts or noise.|Cuando la luz golpea estas células, libera electrones y crea una corriente eléctrica sin piezas móviles ni ruido.|Quando a luz atinge essas células, ela solta elétrons e cria uma corrente elétrica sem peças móveis nem barulho.
+Over the last decade, the cost of solar electricity has fallen dramatically, making it one of the cheapest sources of new power in many countries.|En la última década, el costo de la electricidad solar ha bajado muchísimo, y se ha convertido en una de las fuentes de energía nueva más baratas en muchos países.|Na última década, o custo da eletricidade solar caiu muito, tornando-a uma das fontes de energia nova mais baratas em muitos países.
+
+Nevertheless, solar power has a fundamental limitation: the Sun does not shine at night, and clouds reduce production.|Sin embargo, la energía solar tiene una limitación fundamental: el Sol no brilla de noche y las nubes reducen la producción.|Mesmo assim, a energia solar tem uma limitação fundamental: o Sol não brilha à noite, e as nuvens reduzem a produção.
+Engineers are tackling this problem with large batteries and smarter electrical grids that share energy across regions.|Los ingenieros están enfrentando este problema con grandes baterías y redes eléctricas más inteligentes que comparten energía entre regiones.|Os engenheiros estão enfrentando esse problema com grandes baterias e redes elétricas mais inteligentes que compartilham energia entre regiões.
+If these efforts succeed, the same star that has warmed our planet for billions of years could also become its main power plant.|Si estos esfuerzos tienen éxito, la misma estrella que ha calentado nuestro planeta durante miles de millones de años podría convertirse también en su principal central eléctrica.|Se esses esforços derem certo, a mesma estrela que aquece o nosso planeta há bilhões de anos poderá se tornar também a sua principal usina de energia.
+@delivers=envía=entrega;humanity=humanidad=humanidade;consumes=consume=consome;fraction=parte=parte;photovoltaic=fotovoltaicas=fotovoltaicas;silicon=silicio=silício;electrons=electrones=elétrons;current=corriente=corrente;decade=década=década;dramatically=muchísimo=muito;cheapest=más baratas=mais baratas;limitation=limitación=limitação;tackling=enfrentando=enfrentando;batteries=baterías=baterias;grids=redes=redes
+?How much energy does the Sun deliver to Earth every hour?|More than humanity uses in a year|About the same as one city uses in a day|Less than a light bulb|Nobody can measure it
+?What are solar cells usually made of?|Silicon|Wood|Plastic|Gold
+?What happens when light hits a solar cell?|It creates an electric current|It makes a loud noise|It produces water|It starts to move
+?What is a fundamental limitation of solar power?|The Sun doesn't shine at night|It is too expensive to install anywhere|It pollutes the air|It only works in winter
+?How are engineers solving this problem?|With batteries and smarter grids|By building bigger suns|By using only candles at night|By stopping all factories
+
+#t4|travel|e|🛫|At the Airport|En el aeropuerto|No aeroporto
+Maria is going to visit her aunt in London.|María va a visitar a su tía en Londres.|Maria vai visitar a tia em Londres.
+She arrives at the airport two hours early.|Llega al aeropuerto dos horas antes.|Ela chega ao aeroporto duas horas antes.
+First, she shows her passport and her ticket.|Primero, muestra su pasaporte y su boleto.|Primeiro, ela mostra o passaporte e a passagem.
+Then she puts her big suitcase on the belt.|Después pone su maleta grande en la cinta.|Depois ela coloca a mala grande na esteira.
+She waits at gate number twelve.|Espera en la puerta número doce.|Ela espera no portão número doze.
+On the plane, she sits next to the window.|En el avión, se sienta junto a la ventana.|No avião, ela se senta ao lado da janela.
+She looks at the clouds and smiles.|Mira las nubes y sonríe.|Ela olha as nuvens e sorri.
+@aunt=tía=tia;arrives=llega=chega;early=temprano=cedo;passport=pasaporte=passaporte;ticket=boleto=passagem;suitcase=maleta=mala;belt=cinta=esteira;waits=espera=espera;gate=puerta=portão;plane=avión=avião;window=ventana=janela;clouds=nubes=nuvens
+?Who is Maria going to visit?|Her aunt|Her teacher|Her brother
+?When does she arrive at the airport?|Two hours early|Ten minutes late|At midnight
+?What does she show first?|Her passport and ticket|Her phone|Her suitcase
+?Which gate does she wait at?|Gate twelve|Gate two|Gate twenty
+?Where does she sit on the plane?|Next to the window|Next to the door|In the kitchen
+
+#t5|travel|n|🌮|A Weekend in Mexico City|Un fin de semana en Ciudad de México|Um fim de semana na Cidade do México
+Mexico City is one of the largest cities in the world, and it sits about 2,240 meters above sea level.|Ciudad de México es una de las ciudades más grandes del mundo y está a unos 2.240 metros sobre el nivel del mar.|A Cidade do México é uma das maiores cidades do mundo e fica a cerca de 2.240 metros acima do nível do mar.
+It was built on the ruins of Tenochtitlan, the ancient capital of the Aztecs.|Se construyó sobre las ruinas de Tenochtitlan, la antigua capital de los aztecas.|Ela foi construída sobre as ruínas de Tenochtitlán, a antiga capital dos astecas.
+
+On Saturday morning, Leo and his cousin walked around the Zócalo, the enormous main square.|El sábado por la mañana, Leo y su primo pasearon por el Zócalo, la enorme plaza principal.|No sábado de manhã, Leo e o primo passearam pelo Zócalo, a enorme praça principal.
+In the afternoon, they visited the Blue House in Coyoacán, where the painter Frida Kahlo lived.|Por la tarde, visitaron la Casa Azul en Coyoacán, donde vivió la pintora Frida Kahlo.|À tarde, visitaram a Casa Azul em Coyoacán, onde morou a pintora Frida Kahlo.
+At night, they tried tacos al pastor from a street stand and agreed they were the best they had ever eaten.|Por la noche, probaron tacos al pastor en un puesto callejero y estuvieron de acuerdo en que eran los mejores que habían comido.|À noite, provaram tacos al pastor em uma barraca de rua e concordaram que eram os melhores que já tinham comido.
+
+On Sunday, they rented bicycles and rode through Chapultepec Park, one of the biggest city parks in Latin America.|El domingo alquilaron bicicletas y recorrieron el Bosque de Chapultepec, uno de los parques urbanos más grandes de América Latina.|No domingo, alugaram bicicletas e pedalaram pelo Parque de Chapultepec, um dos maiores parques urbanos da América Latina.
+Leo left with a full camera and a promise to return.|Leo se fue con la cámara llena y la promesa de volver.|Leo foi embora com a câmera cheia e a promessa de voltar.
+@largest=más grandes=maiores;above=sobre=acima;ruins=ruinas=ruínas;ancient=antigua=antiga;cousin=primo=primo;enormous=enorme=enorme;square=plaza=praça;painter=pintora=pintora;stand=puesto=barraca;agreed=estuvieron de acuerdo=concordaram;rented=alquilaron=alugaram;rode=recorrieron=pedalaram;promise=promesa=promessa;return=volver=voltar
+?How high is Mexico City above sea level?|About 2,240 meters|About 200 meters|About 5,000 meters|At sea level
+?What was built where Mexico City is today?|Tenochtitlan, the Aztec capital|Machu Picchu|A Roman city|A Spanish castle
+?What is the Zócalo?|The enormous main square|A famous taco|A museum|A mountain
+?Who lived in the Blue House?|Frida Kahlo|Leo's cousin|An Aztec king|A famous chef
+?What did they do on Sunday?|They rode bicycles in Chapultepec Park|They took a plane home|They visited the beach|They went to a football game
+
+#t6|travel|d|🗣️|Lost in Translation|Perdido en la traducción|Perdido na tradução
+When Daniel moved to Japan to teach English, he assumed that a translation app on his phone would be enough to get by.|Cuando Daniel se mudó a Japón para enseñar inglés, pensó que una aplicación de traducción en el teléfono le bastaría para arreglárselas.|Quando Daniel se mudou para o Japão para dar aulas de inglês, achou que um aplicativo de tradução no celular seria suficiente para se virar.
+Within a week, he realized how much meaning gets lost when words are converted mechanically from one language to another.|En una semana, se dio cuenta de cuánto significado se pierde cuando las palabras se convierten de forma mecánica de un idioma a otro.|Em uma semana, ele percebeu quanto significado se perde quando as palavras são convertidas mecanicamente de um idioma para outro.
+
+At a restaurant, his app translated a polite request as a strange command, and the waiter looked confused.|En un restaurante, la aplicación tradujo una petición amable como una orden extraña, y el camarero lo miró confundido.|Em um restaurante, o aplicativo traduziu um pedido educado como uma ordem estranha, e o garçom ficou confuso.
+He also discovered that politeness in Japanese depends heavily on context, on who is speaking and to whom.|También descubrió que la cortesía en japonés depende mucho del contexto, de quién habla y a quién.|Ele também descobriu que a cortesia em japonês depende muito do contexto, de quem fala e com quem.
+Some expressions simply have no direct equivalent, because they reflect values and habits unique to that culture.|Algunas expresiones simplemente no tienen equivalente directo, porque reflejan valores y costumbres propios de esa cultura.|Algumas expressões simplesmente não têm equivalente direto, porque refletem valores e hábitos próprios daquela cultura.
+
+Determined to improve, Daniel started taking evening classes and practicing with his neighbors, who patiently corrected his mistakes.|Decidido a mejorar, Daniel empezó a tomar clases nocturnas y a practicar con sus vecinos, que corregían sus errores con paciencia.|Decidido a melhorar, Daniel começou a fazer aulas à noite e a praticar com os vizinhos, que corrigiam seus erros com paciência.
+A year later, he could hold simple conversations, and more importantly, he understood the jokes.|Un año después, ya podía mantener conversaciones sencillas y, lo más importante, entendía los chistes.|Um ano depois, ele já conseguia manter conversas simples e, mais importante, entendia as piadas.
+He now tells his own students that learning a language is not just about words, but about entering a new way of seeing the world.|Ahora les dice a sus propios alumnos que aprender un idioma no es solo cuestión de palabras, sino de entrar en una nueva forma de ver el mundo.|Hoje ele diz aos próprios alunos que aprender um idioma não é só uma questão de palavras, mas de entrar em um novo jeito de ver o mundo.
+@assumed=pensó=achou;translation=traducción=tradução;realized=se dio cuenta=percebeu;meaning=significado=significado;mechanically=de forma mecánica=mecanicamente;polite=amable=educado;request=petición=pedido;command=orden=ordem;waiter=camarero=garçom;politeness=cortesía=cortesia;context=contexto=contexto;equivalent=equivalente=equivalente;determined=decidido=decidido;neighbors=vecinos=vizinhos;jokes=chistes=piadas
+?Why did Daniel move to Japan?|To teach English|To study cooking|To work in a restaurant|To visit his family
+?What did Daniel think would be enough at first?|A translation app|A dictionary only|Hand gestures|His friends' help
+?What happened at the restaurant?|The app turned a polite request into a strange command|The waiter spoke perfect English|Daniel ordered the wrong dessert|The restaurant was closed
+?What does politeness in Japanese depend on?|Context and who is speaking to whom|The weather|The time of day only|Nothing in particular
+?What could Daniel understand a year later?|The jokes|Only numbers|Nothing at all|Only written signs
+
+#k4|tech|e|🎮|Video Games|Los videojuegos|Os videogames
+Many children and adults love video games.|A muchos niños y adultos les encantan los videojuegos.|Muitas crianças e adultos adoram videogames.
+You can play on a computer, a console or a phone.|Puedes jugar en una computadora, una consola o un teléfono.|Dá para jogar no computador, no console ou no celular.
+Some games are about sports, and others are about adventures.|Algunos juegos son de deportes y otros son de aventuras.|Alguns jogos são de esportes, e outros são de aventura.
+Some games help you learn math or new words.|Algunos juegos te ayudan a aprender matemáticas o palabras nuevas.|Alguns jogos ajudam você a aprender matemática ou palavras novas.
+Playing with friends can be a lot of fun.|Jugar con amigos puede ser muy divertido.|Jogar com amigos pode ser muito divertido.
+But it is important to take breaks and rest your eyes.|Pero es importante hacer pausas y descansar los ojos.|Mas é importante fazer pausas e descansar os olhos.
+After playing, go outside and move your body!|Después de jugar, ¡sal afuera y mueve el cuerpo!|Depois de jogar, saia de casa e mexa o corpo!
+@children=niños=crianças;adults=adultos=adultos;console=consola=console;sports=deportes=esportes;adventures=aventuras=aventura;learn=aprender=aprender;words=palabras=palavras;friends=amigos=amigos;fun=divertido=divertido;important=importante=importante;breaks=pausas=pausas;outside=afuera=lá fora
+?Who loves video games?|Children and adults|Only teachers|Only babies
+?Where can you play video games?|On a computer, a console or a phone|Only at school|Only on TV
+?What can some games help you learn?|Math or new words|How to fly|How to cook
+?What is important to do when playing?|Take breaks and rest your eyes|Play all night|Never stop
+?What should you do after playing?|Go outside and move your body|Play another game|Go to sleep immediately
+
+#k5|tech|n|🔒|Staying Safe Online|Cómo protegerte en internet|Como se proteger na internet
+The internet lets us learn, chat with friends and watch videos, but it also has risks.|Internet nos permite aprender, chatear con amigos y ver videos, pero también tiene riesgos.|A internet nos permite aprender, conversar com amigos e assistir a vídeos, mas também tem riscos.
+One of the simplest ways to protect yourself is to use strong passwords.|Una de las formas más sencillas de protegerte es usar contraseñas seguras.|Uma das formas mais simples de se proteger é usar senhas fortes.
+A strong password is long and mixes letters, numbers and symbols, and you should never use the same one everywhere.|Una contraseña segura es larga y mezcla letras, números y símbolos, y nunca deberías usar la misma en todas partes.|Uma senha forte é longa e mistura letras, números e símbolos, e você nunca deve usar a mesma em todo lugar.
+
+Be careful with messages that ask for your personal information or tell you that you have won a prize.|Ten cuidado con los mensajes que piden tu información personal o te dicen que ganaste un premio.|Cuidado com mensagens que pedem suas informações pessoais ou dizem que você ganhou um prêmio.
+These are often tricks called phishing, designed to steal accounts or money.|A menudo son trampas llamadas phishing, pensadas para robar cuentas o dinero.|Muitas vezes são golpes chamados phishing, feitos para roubar contas ou dinheiro.
+Before you click a link, check who sent it and whether it looks strange.|Antes de hacer clic en un enlace, revisa quién lo envió y si se ve raro.|Antes de clicar em um link, veja quem enviou e se ele parece estranho.
+
+Finally, think before you post.|Por último, piensa antes de publicar.|Por fim, pense antes de postar.
+Photos and comments can stay online for years, so share only what you would be happy for anyone to see.|Las fotos y los comentarios pueden quedarse en internet durante años, así que comparte solo lo que no te importaría que viera cualquiera.|Fotos e comentários podem ficar na internet por anos, então compartilhe só o que você não se importaria que qualquer pessoa visse.
+@risks=riesgos=riscos;simplest=más sencillas=mais simples;protect=proteger=proteger;passwords=contraseñas=senhas;mixes=mezcla=mistura;symbols=símbolos=símbolos;careful=cuidado=cuidado;personal=personal=pessoais;prize=premio=prêmio;tricks=trampas=golpes;steal=robar=roubar;accounts=cuentas=contas;link=enlace=link;post=publicar=postar;share=comparte=compartilhe
+?What is one of the simplest ways to protect yourself online?|Use strong passwords|Turn off your screen|Use the same password everywhere|Never use the internet
+?What does a strong password include?|Letters, numbers and symbols|Only your name|Only numbers|Your birthday
+?What is phishing?|A trick to steal accounts or money|A video game|A way to catch fish online|A type of password
+?What should you check before clicking a link?|Who sent it and if it looks strange|The color of the link|How long it is|Nothing
+?Why should you think before you post?|Posts can stay online for years|Posts disappear immediately|Nobody can see posts|It makes your phone faster
+
+#k6|tech|d|📲|The Story of the Smartphone|La historia del teléfono inteligente|A história do smartphone
+In 1994, IBM released a device called the Simon, which many historians consider the first smartphone.|En 1994, IBM lanzó un aparato llamado Simon, que muchos historiadores consideran el primer teléfono inteligente.|Em 1994, a IBM lançou um aparelho chamado Simon, que muitos historiadores consideram o primeiro smartphone.
+It combined a mobile phone with a calendar, an address book and even a touchscreen, but it was heavy, expensive and its battery lasted only about an hour.|Combinaba un teléfono móvil con un calendario, una agenda de contactos e incluso una pantalla táctil, pero era pesado, caro y su batería duraba apenas una hora.|Ele combinava um celular com um calendário, uma agenda de contatos e até uma tela sensível ao toque, mas era pesado, caro e a bateria durava só cerca de uma hora.
+
+For more than a decade, phones gradually gained cameras, color screens and access to email.|Durante más de una década, los teléfonos fueron incorporando poco a poco cámaras, pantallas a color y acceso al correo electrónico.|Por mais de uma década, os celulares foram ganhando aos poucos câmeras, telas coloridas e acesso ao e-mail.
+The decisive shift came in 2007, when the first iPhone popularized a large multitouch screen and an intuitive interface controlled with fingers instead of buttons.|El cambio decisivo llegó en 2007, cuando el primer iPhone popularizó una gran pantalla multitáctil y una interfaz intuitiva controlada con los dedos en lugar de botones.|A virada decisiva veio em 2007, quando o primeiro iPhone popularizou uma tela grande multitoque e uma interface intuitiva controlada com os dedos em vez de botões.
+Soon afterward, app stores allowed independent developers to create software for millions of users.|Poco después, las tiendas de aplicaciones permitieron que desarrolladores independientes crearan programas para millones de usuarios.|Pouco depois, as lojas de aplicativos permitiram que desenvolvedores independentes criassem programas para milhões de usuários.
+
+Today, billions of people carry a smartphone that is far more powerful than the computers that guided the Apollo missions to the Moon.|Hoy, miles de millones de personas llevan un teléfono inteligente mucho más potente que las computadoras que guiaron las misiones Apolo a la Luna.|Hoje, bilhões de pessoas carregam um smartphone muito mais potente do que os computadores que guiaram as missões Apollo até a Lua.
+These devices have transformed banking, education and photography, while also raising concerns about privacy and screen addiction.|Estos aparatos han transformado la banca, la educación y la fotografía, aunque también han generado preocupación por la privacidad y la adicción a las pantallas.|Esses aparelhos transformaram os bancos, a educação e a fotografia, mas também trouxeram preocupações com a privacidade e o vício em telas.
+@released=lanzó=lançou;device=aparato=aparelho;historians=historiadores=historiadores;combined=combinaba=combinava;touchscreen=pantalla táctil=tela sensível ao toque;heavy=pesado=pesado;battery=batería=bateria;gradually=poco a poco=aos poucos;decisive=decisivo=decisiva;popularized=popularizó=popularizou;intuitive=intuitiva=intuitiva;developers=desarrolladores=desenvolvedores;powerful=potente=potente;privacy=privacidad=privacidade;addiction=adicción=vício
+?What do many historians consider the first smartphone?|The IBM Simon|The first iPhone|A radio from 1950|A video game console
+?What was a problem with the Simon?|Its battery lasted about an hour|It had no screen|It couldn't make calls|It was free
+?What happened in 2007?|The first iPhone popularized multitouch screens|The internet was invented|The Simon was released|Phones got their first cameras
+?What did app stores allow?|Independent developers to create software for millions|Phones to work without batteries|Free phone calls forever|People to build their own phones
+?What concern does the text mention?|Privacy and screen addiction|Phones being too slow|Lack of colors|Phones being too cheap
+
+#h4|history|e|🧱|The Great Wall of China|La Gran Muralla China|A Grande Muralha da China
+The Great Wall is in China.|La Gran Muralla está en China.|A Grande Muralha fica na China.
+It is very, very long.|Es muy, muy larga.|Ela é muito, muito comprida.
+It goes over mountains, hills and deserts.|Pasa por montañas, colinas y desiertos.|Ela passa por montanhas, colinas e desertos.
+People built it over many hundreds of years.|La gente la construyó a lo largo de cientos de años.|As pessoas a construíram ao longo de centenas de anos.
+The wall protected China from enemies.|La muralla protegía a China de los enemigos.|A muralha protegia a China dos inimigos.
+Soldiers watched from tall towers.|Los soldados vigilaban desde torres altas.|Os soldados vigiavam do alto de torres.
+Today, millions of tourists walk on the wall every year.|Hoy, millones de turistas caminan por la muralla cada año.|Hoje, milhões de turistas andam pela muralha todo ano.
+@wall=muralla=muralha;long=larga=comprida;mountains=montañas=montanhas;hills=colinas=colinas;deserts=desiertos=desertos;built=construyó=construíram;hundreds=cientos=centenas;protected=protegía=protegia;enemies=enemigos=inimigos;soldiers=soldados=soldados;towers=torres=torres;tourists=turistas=turistas
+?Where is the Great Wall?|In China|In Egypt|In Mexico
+?What is the wall like?|Very long|Very short|Very new
+?How long did it take to build?|Many hundreds of years|One week|Ten years
+?Why did people build it?|To protect China from enemies|To keep animals inside|For a race
+?Who watched from the towers?|Soldiers|Teachers|Farmers
+
+#h5|history|n|⚗️|Marie Curie|Marie Curie|Marie Curie
+Marie Curie was born in Warsaw, Poland, in 1867, at a time when women were not allowed to study at the university there.|Marie Curie nació en Varsovia, Polonia, en 1867, en una época en la que allí las mujeres no podían estudiar en la universidad.|Marie Curie nasceu em Varsóvia, na Polônia, em 1867, em uma época em que as mulheres não podiam estudar na universidade de lá.
+Determined to learn, she moved to Paris and studied physics and mathematics, often with very little money for food or heating.|Decidida a aprender, se mudó a París y estudió física y matemáticas, muchas veces con muy poco dinero para comida o calefacción.|Decidida a aprender, ela se mudou para Paris e estudou física e matemática, muitas vezes com pouquíssimo dinheiro para comida ou aquecimento.
+
+Together with her husband, Pierre Curie, she investigated a mysterious energy given off by certain materials, which she called radioactivity.|Junto con su esposo, Pierre Curie, investigó una energía misteriosa que desprendían ciertos materiales, a la que llamó radiactividad.|Junto com o marido, Pierre Curie, ela investigou uma energia misteriosa liberada por certos materiais, que ela chamou de radioatividade.
+The couple discovered two new elements: polonium, named after her homeland, and radium.|La pareja descubrió dos elementos nuevos: el polonio, llamado así por su patria, y el radio.|O casal descobriu dois elementos novos: o polônio, nome dado em homenagem à terra natal dela, e o rádio.
+In 1903, she became the first woman to win a Nobel Prize, and in 1911 she won a second one, this time in chemistry.|En 1903 se convirtió en la primera mujer en ganar un Premio Nobel, y en 1911 ganó un segundo, esta vez de química.|Em 1903, ela se tornou a primeira mulher a ganhar um Prêmio Nobel, e em 1911 ganhou o segundo, desta vez em química.
+
+During the First World War, she created mobile X-ray units that helped doctors treat wounded soldiers.|Durante la Primera Guerra Mundial, creó unidades móviles de rayos X que ayudaron a los médicos a atender a soldados heridos.|Durante a Primeira Guerra Mundial, ela criou unidades móveis de raios X que ajudaram os médicos a tratar soldados feridos.
+Her notebooks are still so radioactive that they are kept in lead boxes.|Sus cuadernos siguen siendo tan radiactivos que se guardan en cajas de plomo.|Os cadernos dela ainda são tão radioativos que ficam guardados em caixas de chumbo.
+@born=nació=nasceu;allowed=permitido=permitido;determined=decidida=decidida;physics=física=física;heating=calefacción=aquecimento;husband=esposo=marido;investigated=investigó=investigou;mysterious=misteriosa=misteriosa;radioactivity=radiactividad=radioatividade;elements=elementos=elementos;homeland=patria=terra natal;chemistry=química=química;wounded=heridos=feridos;notebooks=cuadernos=cadernos;lead=plomo=chumbo
+?Where was Marie Curie born?|In Warsaw, Poland|In Paris, France|In London|In Rome
+?Why did she move to Paris?|To study at the university|To work as a painter|To get married|To open a shop
+?What did she call the mysterious energy she studied?|Radioactivity|Electricity|Gravity|Magnetism
+?Which element was named after her homeland?|Polonium|Radium|Uranium|Oxygen
+?What did she create during the First World War?|Mobile X-ray units|A new type of plane|A secret code|A hospital ship
+
+#h6|history|d|🚀|The Moon Landing|La llegada a la Luna|A chegada à Lua
+On July 20, 1969, the lunar module of Apollo 11 touched down on a dusty plain called the Sea of Tranquility.|El 20 de julio de 1969, el módulo lunar del Apolo 11 se posó sobre una llanura polvorienta llamada el Mar de la Tranquilidad.|Em 20 de julho de 1969, o módulo lunar da Apollo 11 pousou em uma planície empoeirada chamada Mar da Tranquilidade.
+A few hours later, Neil Armstrong became the first human to step onto another world, followed shortly by Buzz Aldrin.|Unas horas más tarde, Neil Armstrong se convirtió en el primer ser humano en pisar otro mundo, seguido poco después por Buzz Aldrin.|Algumas horas depois, Neil Armstrong se tornou o primeiro ser humano a pisar em outro mundo, seguido logo depois por Buzz Aldrin.
+Meanwhile, their colleague Michael Collins orbited above in the command module, waiting to bring them home.|Mientras tanto, su compañero Michael Collins orbitaba arriba en el módulo de mando, esperando para llevarlos de regreso.|Enquanto isso, o colega Michael Collins orbitava lá em cima no módulo de comando, esperando para levá-los de volta para casa.
+
+The landing was far from easy.|El alunizaje estuvo lejos de ser fácil.|O pouso esteve longe de ser fácil.
+As they approached the surface, alarms sounded on the onboard computer, and Armstrong had to steer manually past a field of boulders.|Al acercarse a la superficie, sonaron alarmas en la computadora de a bordo, y Armstrong tuvo que pilotar a mano para evitar un campo de rocas.|Ao se aproximarem da superfície, alarmes tocaram no computador de bordo, e Armstrong teve que pilotar manualmente para desviar de um campo de pedras.
+When the module finally settled, it had only seconds of fuel to spare.|Cuando el módulo por fin se posó, le quedaban apenas unos segundos de combustible.|Quando o módulo finalmente pousou, restavam só alguns segundos de combustível.
+
+Hundreds of millions of people watched the grainy black-and-white broadcast, making it one of the most viewed events in history.|Cientos de millones de personas vieron la transmisión granulada en blanco y negro, lo que la convirtió en uno de los acontecimientos más vistos de la historia.|Centenas de milhões de pessoas assistiram à transmissão granulada em preto e branco, o que a tornou um dos acontecimentos mais vistos da história.
+The achievement depended on roughly 400,000 engineers, scientists and workers, many of whom never appeared on camera.|El logro dependió de unas 400.000 personas entre ingenieros, científicos y trabajadores, muchas de las cuales nunca salieron ante una cámara.|A conquista dependeu de cerca de 400.000 engenheiros, cientistas e trabalhadores, muitos dos quais nunca apareceram diante das câmeras.
+By 1972, twelve astronauts had walked on the Moon, and no one has returned since.|Para 1972, doce astronautas habían caminado sobre la Luna, y nadie ha vuelto desde entonces.|Até 1972, doze astronautas tinham andado na Lua, e ninguém voltou desde então.
+@lunar=lunar=lunar;module=módulo=módulo;dusty=polvorienta=empoeirada;plain=llanura=planície;orbited=orbitaba=orbitava;command=mando=comando;approached=se acercaron=se aproximaram;alarms=alarmas=alarmes;onboard=de a bordo=de bordo;steer=pilotar=pilotar;manually=a mano=manualmente;boulders=rocas=pedras;fuel=combustible=combustível;broadcast=transmisión=transmissão;achievement=logro=conquista
+?Where did Apollo 11 land?|The Sea of Tranquility|The dark side of the Moon|A crater full of ice|The Moon's north pole
+?Who stayed in orbit in the command module?|Michael Collins|Neil Armstrong|Buzz Aldrin|Yuri Gagarin
+?What problem happened during the landing?|Alarms sounded and Armstrong steered manually|The engine exploded|The radio stopped working forever|The astronauts got lost
+?How much fuel was left when they landed?|Only seconds|Enough for a week|Half a tank|None at all
+?How many people worked on the Apollo program, roughly?|400,000|400|4,000|40 million
+
+#m4|mystery|e|🍪|Who Ate the Cookies?|¿Quién se comió las galletas?|Quem comeu os biscoitos?
+Grandma makes ten chocolate cookies and puts them on the table.|La abuela hace diez galletas de chocolate y las pone en la mesa.|A vovó faz dez biscoitos de chocolate e coloca na mesa.
+Then she goes to the garden.|Luego va al jardín.|Depois ela vai para o jardim.
+When she comes back, there are only four cookies.|Cuando regresa, solo quedan cuatro galletas.|Quando ela volta, só sobraram quatro biscoitos.
+"Who ate my cookies?" she asks.|«¿Quién se comió mis galletas?», pregunta.|“Quem comeu os meus biscoitos?”, ela pergunta.
+Tom says, "Not me!"|Tom dice: «¡Yo no!».|Tom diz: “Eu não!”
+But Tom has chocolate on his face.|Pero Tom tiene chocolate en la cara.|Mas Tom está com chocolate no rosto.
+And the dog, Rocky, has crumbs on his nose!|¡Y el perro, Rocky, tiene migas en la nariz!|E o cachorro, Rocky, está com migalhas no nariz!
+Grandma laughs and makes more cookies for everyone.|La abuela se ríe y hace más galletas para todos.|A vovó ri e faz mais biscoitos para todo mundo.
+@cookies=galletas=biscoitos;table=mesa=mesa;garden=jardín=jardim;comes=regresa=volta;only=solo=só;asks=pregunta=pergunta;face=cara=rosto;crumbs=migas=migalhas;nose=nariz=nariz;laughs=se ríe=ri;everyone=todos=todo mundo
+?How many cookies does Grandma make?|Ten|Four|Six
+?How many cookies are left?|Four|Ten|None
+?What does Tom have on his face?|Chocolate|Milk|Paint
+?What does Rocky the dog have on his nose?|Crumbs|Mud|A flower
+?What does Grandma do at the end?|She makes more cookies|She gets very angry|She sells the cookies
+
+#m5|mystery|n|🔺|The Bermuda Triangle|El Triángulo de las Bermudas|O Triângulo das Bermudas
+The Bermuda Triangle is an area of the Atlantic Ocean roughly between Miami, Bermuda and Puerto Rico.|El Triángulo de las Bermudas es una zona del océano Atlántico que está más o menos entre Miami, las Bermudas y Puerto Rico.|O Triângulo das Bermudas é uma área do oceano Atlântico que fica mais ou menos entre Miami, as Bermudas e Porto Rico.
+For decades, books and movies have claimed that ships and planes mysteriously disappear there.|Durante décadas, libros y películas han afirmado que allí desaparecen barcos y aviones de forma misteriosa.|Durante décadas, livros e filmes afirmaram que navios e aviões desaparecem ali de forma misteriosa.
+
+One of the most famous stories is Flight 19, a group of five military planes that vanished during a training flight in 1945.|Una de las historias más famosas es la del Vuelo 19, un grupo de cinco aviones militares que desapareció durante un vuelo de entrenamiento en 1945.|Uma das histórias mais famosas é a do Voo 19, um grupo de cinco aviões militares que desapareceu durante um voo de treinamento em 1945.
+Over the years, people have blamed everything from magnetic forces to giant waves and even aliens.|Con los años, la gente ha culpado de todo, desde fuerzas magnéticas hasta olas gigantes e incluso extraterrestres.|Ao longo dos anos, as pessoas culparam de tudo, de forças magnéticas a ondas gigantes e até extraterrestres.
+
+However, most scientists say there is no real mystery.|Sin embargo, la mayoría de los científicos dice que no hay ningún misterio real.|Porém, a maioria dos cientistas diz que não há mistério de verdade.
+The area is one of the busiest in the world for ships and planes, and it often has sudden storms.|La zona es una de las más transitadas del mundo por barcos y aviones, y suele tener tormentas repentinas.|A área é uma das mais movimentadas do mundo para navios e aviões, e costuma ter tempestades repentinas.
+When experts compare the numbers, accidents there are not more common than in other busy parts of the ocean.|Cuando los expertos comparan las cifras, los accidentes allí no son más frecuentes que en otras zonas concurridas del océano.|Quando os especialistas comparam os números, os acidentes ali não são mais comuns do que em outras partes movimentadas do oceano.
+Sometimes, the best answer to a mystery is careful thinking.|A veces, la mejor respuesta a un misterio es pensar con cuidado.|Às vezes, a melhor resposta para um mistério é pensar com cuidado.
+@area=zona=área;roughly=más o menos=mais ou menos;decades=décadas=décadas;claimed=afirmado=afirmaram;mysteriously=de forma misteriosa=de forma misteriosa;disappear=desaparecen=desaparecem;vanished=desapareció=desapareceu;training=entrenamiento=treinamento;blamed=culpado=culparam;magnetic=magnéticas=magnéticas;aliens=extraterrestres=extraterrestres;busiest=más transitadas=mais movimentadas;sudden=repentinas=repentinas;storms=tormentas=tempestades;compare=comparan=comparam
+?Where is the Bermuda Triangle?|In the Atlantic Ocean|In the Pacific Ocean|In the Sahara Desert|In Antarctica
+?What was Flight 19?|Five military planes that vanished in 1945|A famous movie|A big cruise ship|A rescue team
+?What have people blamed for the disappearances?|Magnetic forces, giant waves and even aliens|Only pirates|Nothing at all|The Moon
+?What do most scientists say?|There is no real mystery|The triangle moves every year|Aliens are real|Nobody can study it
+?Why do accidents happen there?|It is very busy and has sudden storms|The water is too cold|There are no lighthouses|Ships are not allowed
+
+#m6|mystery|d|🪨|Stonehenge|Stonehenge|Stonehenge
+On a windy plain in southern England stands Stonehenge, a ring of enormous stones that has puzzled visitors for centuries.|En una llanura ventosa del sur de Inglaterra se alza Stonehenge, un círculo de piedras enormes que ha desconcertado a los visitantes durante siglos.|Em uma planície cheia de vento no sul da Inglaterra fica Stonehenge, um círculo de pedras enormes que intriga os visitantes há séculos.
+Archaeologists believe it was built in several stages, beginning around five thousand years ago, long before writing arrived in Britain.|Los arqueólogos creen que se construyó en varias etapas, empezando hace unos cinco mil años, mucho antes de que la escritura llegara a Gran Bretaña.|Os arqueólogos acreditam que ele foi construído em várias etapas, começando há cerca de cinco mil anos, muito antes de a escrita chegar à Grã-Bretanha.
+
+The largest stones, called sarsens, weigh as much as several elephants and were dragged from about twenty-five kilometers away.|Las piedras más grandes, llamadas sarsens, pesan tanto como varios elefantes y fueron arrastradas desde unos veinticinco kilómetros de distancia.|As maiores pedras, chamadas sarsens, pesam tanto quanto vários elefantes e foram arrastadas de cerca de vinte e cinco quilômetros de distância.
+Even more astonishing, the smaller bluestones came from the hills of Wales, more than two hundred kilometers to the west.|Aún más asombroso, las piedras azules, más pequeñas, vinieron de las colinas de Gales, a más de doscientos kilómetros al oeste.|Ainda mais impressionante, as pedras azuis, menores, vieram das colinas do País de Gales, a mais de duzentos quilômetros a oeste.
+How a society without metal tools or wheels transported them remains a subject of debate.|Cómo una sociedad sin herramientas de metal ni ruedas logró transportarlas sigue siendo motivo de debate.|Como uma sociedade sem ferramentas de metal nem rodas conseguiu transportá-las ainda é motivo de debate.
+
+The monument is carefully aligned with the sun: on the summer solstice, the sun rises in line with its main axis.|El monumento está alineado con cuidado con el sol: en el solsticio de verano, el sol sale en línea con su eje principal.|O monumento está cuidadosamente alinhado com o sol: no solstício de verão, o sol nasce na direção do seu eixo principal.
+For this reason, some researchers think it worked as a calendar, while others see it as a sacred place for ceremonies or burials.|Por eso, algunos investigadores creen que funcionaba como calendario, mientras que otros lo ven como un lugar sagrado para ceremonias o entierros.|Por isso, alguns pesquisadores acham que ele funcionava como calendário, enquanto outros o veem como um lugar sagrado para cerimônias ou sepultamentos.
+Perhaps it was all of these things, and that is exactly why it still fascinates us.|Quizá fue todas esas cosas a la vez, y justo por eso todavía nos fascina.|Talvez tenha sido tudo isso ao mesmo tempo, e é exatamente por isso que ainda nos fascina.
+@windy=ventosa=cheia de vento;puzzled=desconcertado=intrigado;archaeologists=arqueólogos=arqueólogos;stages=etapas=etapas;writing=escritura=escrita;weigh=pesan=pesam;dragged=arrastradas=arrastadas;astonishing=asombroso=impressionante;transported=transportó=transportou;debate=debate=debate;aligned=alineado=alinhado;solstice=solsticio=solstício;axis=eje=eixo;sacred=sagrado=sagrado;burials=entierros=sepultamentos
+?Where is Stonehenge?|In southern England|In northern Scotland|In Wales|In France
+?When did construction begin?|Around five thousand years ago|In the Middle Ages|Around five hundred years ago|In 1900
+?Where did the bluestones come from?|The hills of Wales|The beach next to it|Egypt|The same field
+?What happens on the summer solstice?|The sun rises in line with the main axis|The stones change color|Visitors are not allowed|It always rains
+?What do researchers think Stonehenge might have been?|A calendar or a sacred place|A royal palace|A market|A fortress for soldiers`;
+
 /* ---------- Aprende leyendo: textos en inglés con palabras que se tocan, voz y preguntas ---------- */
 const RD=(()=>{const out=[];let cur=null;
- for(const raw of RD_TX.split('\n')){const l=raw.trim();
+ for(const raw of (RD_TX+'\n\n'+RD_TX2).split('\n')){const l=raw.trim();
   if(l[0]=='#'){const [id,c,lv,em,t,tes,tpt]=l.slice(1).split('|');cur={id,c,lv,em,t:[t,tes,tpt],p:[[]],k:{},q:[]};out.push(cur);continue}
   if(!cur)continue;
   if(!l){if(cur.p[cur.p.length-1].length)cur.p.push([]);continue}
@@ -3851,6 +4343,138 @@ $('rGo').onclick=()=>{const t=RD.find(x=>x.id==RCUR);if(!t)return;rdStop();wpHid
 function rdNext(id){const i=RD.findIndex(t=>t.id==id),t0=RD[i],rest=[...RD.slice(i+1),...RD.slice(0,i)];
  return(rest.find(t=>t.lv==t0.lv&&!RDP[t.id])||rest.find(t=>!RDP[t.id])||rest[0]).id}
 function rdFinish(){const g=G.cfg,p=RDP[g.id];if(!p||G.score>=p.s)RDP[g.id]={s:G.score,n:G.qs.length};saveRDP()}
+
+/* ---------- Aprende leyendo: guardar el texto como video (voz, karaoke, traducción, preguntas y música) ---------- */
+let RV={music:'piano',mvol:.35,vvol:1,rate:1,voice:true,tr:true,qs:true,bg:'aurora',res:'1080',handle:''};
+try{Object.assign(RV,JSON.parse(localStorage.getItem('qvs-rv')||'{}'))}catch(e){}
+const saveRV=()=>{try{localStorage.setItem('qvs-rv',JSON.stringify(RV))}catch(e){}};
+const RVBG=['aurora','burbujas','galaxia','ondas','rayos','confeti','puntos','retro'];
+let RVC=null;/* tu canción, solo en esta sesión */
+const rvVoiceOn=()=>RV.voice&&NSYN();
+const rKey=t=>'en|'+RV.rate+'|'+vClean(t,'en');
+async function rvClip(t){const k=rKey(t);if(!CL.has(k)){try{const s=vClean(t,'en');if(!s)throw 0;CL.set(k,await decodePCM(await NativeApp.synth(s,'en-US',RV.rate)))}catch(e){CL.set(k,'x')}}const c=CL.get(k);return c&&c!=='x'&&c.length?c:null}
+const rvTxt=()=>({intro:tr('Escucha y lee en inglés'),quiz:tr('¿Entendiste el texto?'),end:tr('¿Cuántas acertaste?'),thanks:tr('¡Gracias por leer!'),follow:tr('Sigue para más textos en inglés'),badge:tr('Aprende inglés')});
+/* arma la línea de tiempo: con voz usa la duración real de cada frase */
+async function rvBuild(t,onProg){const V=rvVoiceOn(),C=RCATS.find(c=>c.k==t.c),segs=[],clips=[];let a=0;
+ const need=[t.t[0],...t.s.map(s=>s[0])];if(RV.qs)need.push('Now, answer the questions.',...t.q.flatMap(q=>[q.q,'The answer is: '+q.c]),'How many did you get?');
+ const CC={};if(V)for(let i=0;i<need.length;i++){onProg&&onProg(i,need.length);CC[need[i]]=await rvClip(need[i])}
+ const push=(k,d,x={})=>{segs.push({k,a,d,...x});a+=d};
+ const say=(txt,at)=>{const p=CC[txt];if(p)clips.push([at,p]);return p?p.length/VSR:0};
+ {const du=say(t.t[0],a+.6);push('intro',Math.max(3.2,.6+du+.9))}
+ t.s.forEach((s,i)=>{const du=say(s[0],a+.3),est=Math.max(2,s[0].split(/\s+/).length*.42/RV.rate+.6);push('s',du?.3+du+.6:est,{i,vd:du||est-.6})});
+ if(RV.qs&&t.q.length){{const du=say('Now, answer the questions.',a+.4);push('qi',Math.max(2.4,.4+du+.6))}
+  t.q.forEach((q,i)=>{const o=shuf([q.c,...q.w]),qd=say(q.q,a+.35)||1.6,cd0=.35+qd+.3,ad=say('The answer is: '+q.c,a+cd0+5.35)||1;push('q',cd0+5+.35+ad+.9,{q,o,c:o.indexOf(q.c),cd0,i})})}
+ {const du=RV.qs?say('How many did you get?',a+.5):0;push('end',Math.max(3.4,.5+du+1.6))}
+ return{t,C:{b1:C.c1,b2:C.c2,ac:'#FFD600',hi:'#FFD600'},segs,clips,dur:a,voice:V&&clips.length>0}}
+/* dibujo de cada cuadro */
+function rvWords(c,txt,maxW,px,minPx,maxLines){let L;do{c.font=bf(700,px);L=[];let cur=[],w=0;const sp=c.measureText(' ').width;
+ for(const wd of txt.split(/\s+/)){const ww=c.measureText(wd).width;if(cur.length&&w+sp+ww>maxW){L.push(cur);cur=[];w=0}cur.push({wd,ww});w+=(cur.length>1?sp:0)+ww}if(cur.length)L.push(cur);px-=2}while(L.length>maxLines&&px>minPx);return{L,px:px+2}}
+function rvPill(c,x,y,txt,bg,fg,al='left'){c.font=bf(700,18);const w=c.measureText(txt).width+28;if(al=='right')x-=w;box(c,x,y,w,38,19,bg,3,'#000',0);c.fillStyle=fg;c.textAlign='left';c.fillText(txt,x+14,y+26);return w}
+function rvShadowText(c,txt,x,y,font,fill='#fff',lw=7){c.font=font;c.lineJoin='round';c.lineWidth=lw;c.strokeStyle='rgba(0,0,0,.75)';c.strokeText(txt,x,y);c.fillStyle=fill;c.fillText(txt,x,y)}
+function rvDraw(c,W,tt,pl){const k=W/540;c.setTransform(k,0,0,k,0,0);c.globalAlpha=1;c.textBaseline='alphabetic';c.lineJoin='round';
+ const t=pl.t,C=pl.C,X=rvTxt();tt=clamp(tt,0,pl.dur-1e-3);const ix=pl.segs.findIndex(s=>tt<s.a+s.d),sg=pl.segs[ix<0?pl.segs.length-1:ix],lt=tt-sg.a;
+ paintBg(c,RV.bg,tt*.55,C);c.fillStyle='rgba(5,10,30,.2)';c.fillRect(0,0,540,960);
+ rvPill(c,24,26,'📖 '+X.badge,'#FFD600','#000');const V=LVL[t.lv];rvPill(c,516,26,V.em+' '+tr(V.n),'#fff','#0A1840','right');
+ const e=Math.min(1,lt/.35),ee=1-(1-e)**3,out=Math.min(1,(sg.d-lt)/.25),al=Math.max(0,Math.min(ee,out));
+ c.save();c.globalAlpha=al;c.translate(0,(1-ee)*36);c.textAlign='center';
+ if(sg.k=='intro'){c.font='120px Fredoka, system-ui, sans-serif';c.fillText(t.em,270,330+Math.sin(tt*2.2)*6);
+  const r=rvWords(c,t.t[0],470,52,30,3);r.L.forEach((ln,j)=>rvShadowText(c,ln.map(w=>w.wd).join(' '),270,440+j*(r.px+10),tf(700,r.px),'#fff',9));
+  const y2=440+r.L.length*(r.px+10)+10;if(UIL!='en'){c.font=bf(600,24);c.fillStyle='rgba(255,255,255,.92)';c.fillText(t.t[RTI],270,y2)}
+  box(c,135,y2+40,270,46,23,'#fff',3,'#000',4);c.fillStyle='#0A1840';c.font=bf(700,20);c.fillText('🎧 '+X.intro,270,y2+70)}
+ else if(sg.k=='s'){const s=t.s[sg.i],r=rvWords(c,s[0],436,40,24,7),lh=r.px*1.38,hTxt=r.L.length*lh,cy=Math.max(100,(RV.tr?380:440)-(hTxt+64)/2);
+  box(c,28,cy,484,hTxt+64,30,'#fff',5,C.b1,8);c.font=bf(700,15);c.fillStyle='#8A93B5';c.textAlign='right';c.fillText((sg.i+1)+' / '+t.s.length,496,cy+26);
+  const tot=s[0].length,pr=clamp((lt-.3)/Math.max(.5,sg.vd),0,1)*tot;let cum=0;c.textAlign='left';c.font=bf(700,r.px);const sp=c.measureText(' ').width;
+  r.L.forEach((ln,j)=>{const lw=ln.reduce((x,w)=>x+w.ww,0)+sp*(ln.length-1);let x=270-lw/2;const y=cy+40+r.px+j*lh;
+   ln.forEach(w=>{const st=cum,en=cum+w.wd.length;cum=en+1;const done=pr>=en,cur=pr>=st&&pr<en,key=!!t.k[wNorm(w.wd)];
+    if(cur){box(c,x-5,y-r.px*.92,w.ww+10,r.px*1.22,8,'#FFD600',0,'#000',0)}
+    c.fillStyle=done||cur?'#0A1840':'#9AA3BF';c.fillText(w.wd,x,y);
+    if(key){c.fillStyle=done||cur?C.b1:'#C9CEE0';c.fillRect(x,y+5,w.ww,3.5)}x+=w.ww+sp})});
+  if(RV.tr&&s[RTI]){const tx=s[RTI];c.textAlign='center';const rr=rvWords(c,tx,460,25,17,4);let y=cy+hTxt+64+48;
+   rr.L.forEach((ln,j)=>rvShadowText(c,ln.map(w=>w.wd).join(' '),270,y+j*(rr.px+8),bf(600,rr.px),'#fff',6))}}
+ else if(sg.k=='qi'){c.font='96px Fredoka, system-ui, sans-serif';c.fillText('🧠',270,380);rvShadowText(c,X.quiz,270,480,tf(700,40),'#FFD600',9);rvShadowText(c,trf('{n} preguntas',{n:t.q.length}),270,530,bf(700,24),'#fff',6)}
+ else if(sg.k=='q'){const q=sg.q,cd=lt-sg.cd0,rev=cd>=5,r=rvWords(c,q.q,430,34,22,4),qh=r.L.length*(r.px+8),y0=Math.max(96,450-(qh+60+30+sg.o.length*78+90)/2);
+  box(c,28,y0,484,qh+60,28,'#fff',5,C.b1,8);c.fillStyle='#0A1840';r.L.forEach((ln,j)=>{c.font=tf(700,r.px);c.fillText(ln.map(w=>w.wd).join(' '),270,y0+40+r.px*.8+j*(r.px+8))});
+  c.font=bf(700,15);c.fillStyle='#8A93B5';c.textAlign='right';c.fillText((sg.i+1)+' / '+t.q.length,496,y0+26);c.textAlign='center';
+  let y=y0+qh+90;sg.o.forEach((o,j)=>{const ok=rev&&j==sg.c,dim=rev&&j!=sg.c,ap=Math.min(1,Math.max(0,(lt-.3-j*.12)/.3));c.save();c.globalAlpha*=ap*(dim?.45:1);
+   box(c,40,y,460,62,31,ok?'#22C55E':'#fff',3.5,'#000',5);dot(c,74,y+31,20,ok?'#fff':'#FFE8F3',3);c.fillStyle=ok?'#16A34A':C.b1;c.font=bf(700,20);c.fillText(ok?'✓':LET[j],74,y+38);
+   c.textAlign='left';c.fillStyle=ok?'#fff':'#0A1840';const rr=rvWords(c,o,370,23,15,1);c.font=bf(700,rr.px);c.fillText(o,108,y+39);c.textAlign='center';c.restore();y+=78});
+  if(cd>0&&!rev){const p=1-cd/5;box(c,60,y+10,420,18,9,'rgba(255,255,255,.35)',2.5,'#000',0);box(c,60,y+10,Math.max(18,420*p),18,9,p<.4?'#EF4444':'#FFD600',0,'#000',0);rvShadowText(c,String(Math.ceil(5-cd)),270,y+80,tf(700,46),'#fff',8)}
+  if(rev)rvShadowText(c,'✅ '+(LBL[UIL]||LBL.es).ans,270,y+60,tf(700,36),'#FFD600',8)}
+ else if(sg.k=='end'){c.font='110px Fredoka, system-ui, sans-serif';c.fillText(RV.qs?'🏆':'📚',270,360);rvShadowText(c,RV.qs?X.end:X.thanks,270,470,tf(700,42),'#FFD600',9);
+  rvShadowText(c,X.follow,270,525,bf(700,22),'#fff',6);if(RV.handle)rvShadowText(c,RV.handle,270,580,bf(700,26),'#fff',6)}
+ c.restore();
+ if(RV.handle&&sg.k!='end'){c.textAlign='center';c.globalAlpha=.85;rvShadowText(c,RV.handle,270,930,bf(700,18),'#fff',5);c.globalAlpha=1}
+ const p=tt/pl.dur;box(c,24,900-10,492,8,4,'rgba(255,255,255,.3)',0,'#000',0);box(c,24,890,Math.max(8,492*p),8,4,'#FFD600',0,'#000',0)}
+/* sonido: música con volumen, voz y efectos; la música baja cuando habla la voz */
+let RVM={key:'',buf:null};
+function rvMusic(dur,sr){const n=Math.ceil(dur*sr);if(RV.music=='none')return null;
+ if(RV.music=='custom'){if(!RVC)return null;const d=RVC.data,o=new Float32Array(n);for(let i=0;i<n;i++)o[i]=d[i%d.length];return o}
+ const key=RV.music+'|'+n+'|'+sr;if(RVM.key!=key)RVM={key,buf:mkMusic(RV.music,dur,sr)};return RVM.buf}
+function rvAudio(pl,sr){const n=Math.ceil(pl.dur*sr),a=new Float32Array(n),{osc}=synth(a,sr);
+ pl.segs.forEach(s=>{if(s.k=='q'){for(let i=0;i<5;i++)osc(s.a+s.cd0+i,i>=2?880:700,.16,.1,'sine',.01,.16);[523,659,784].forEach((f,j)=>osc(s.a+s.cd0+5+j*.12,f,.55,.2,'sine',.01,.55))}if(s.k=='end')[523,659,784,1047].forEach((f,j)=>osc(s.a+.3+j*.13,f,.7,.18,'sine',.01,.7))});
+ const m=rvMusic(pl.dur,sr);if(m){let env=null;if(pl.clips.length){env=new Float32Array(n).fill(1);const r=Math.round(.25*sr);for(const [at,p] of pl.clips){const s0=Math.round(at*sr),s1=s0+Math.round(p.length*sr/VSR);for(let i=Math.max(0,s0-r);i<Math.min(n,s1+r);i++){const e=i<s0?(s0-i)/r:i>s1?(i-s1)/r:0;env[i]=Math.min(env[i],.32+.68*e)}}}
+  const f=sr*1.5;for(let i=0;i<n;i++)a[i]+=m[i]*RV.mvol*Math.min(1,i/f,(n-i)/f)*(env?env[i]:1)}
+ const kk=VSR/sr;for(const [at,p] of pl.clips){const s0=Math.round(at*sr);for(let i=0;s0+i<n&&Math.floor(i*kk)<p.length;i++)a[s0+i]+=p[Math.floor(i*kk)]*RV.vvol}
+ for(let i=0;i<n;i++)a[i]=Math.tanh(a[i]);return a}
+/* hoja de ajustes del video */
+let RVPL=null,rvBusy=0,rvPrevSrc=null,rvPlaying=false,rvT0=0,rvRaf=0;
+const rvCx=$('rvCv').getContext('2d');
+function rvSettingsUI(){const ok=NSYN();$('rvVNote').hidden=ok;$('rvVNote').textContent=ok?'':tr('La voz se graba en el video solo en la app Android. Aquí el video sale con música y texto.');
+ $('rvVoice').checked=RV.voice&&ok;$('rvVoice').disabled=!ok;$('rvRate').value=String(RV.rate);$('rvVv').value=RV.vvol;$('rvVvV').textContent=Math.round(RV.vvol*100)+'%';
+ $('rvMv').value=RV.mvol;$('rvMvV').textContent=Math.round(RV.mvol*100)+'%';$('rvTr').checked=RV.tr;$('rvQs').checked=RV.qs;$('rvHandle').value=RV.handle||'';$('rvRes').value=RV.res;
+ $('rvMus').innerHTML=Object.entries(MUS).map(([k,[e,n]])=>`<button data-m="${k}" class="${RV.music==k?'on':''}" aria-pressed="${RV.music==k}"><i>${e}</i>${k=='custom'&&RVC?esc(RVC.name).slice(0,18):n}</button>`).join('');
+ $('rvCustBox').hidden=RV.music!='custom';
+ $('rvBgs').innerHTML=RVBG.filter(k=>BGS[k]).map(k=>`<button data-bg="${k}" class="${RV.bg==k?'on':''}" aria-pressed="${RV.bg==k}">${BGS[k].n}</button>`).join('')}
+let rvBT=0;function rvRebuild(){clearTimeout(rvBT);rvBT=setTimeout(rvPrepare,250)}
+async function rvPrepare(){const t=RD.find(x=>x.id==RCUR);if(!t)return null;const my=++rvBusy;rvStopPrev();
+ $('rvInfo').textContent=rvVoiceOn()?tr('Preparando la voz…'):'';
+ const pl=await rvBuild(t,(i,n)=>{if(my==rvBusy)$('rvInfo').textContent=trf('Preparando la voz… {a}/{b}',{a:i+1,b:n})});if(my!=rvBusy)return null;
+ RVPL=pl;$('rvInfo').textContent=trf('Duración: {d}',{d:fm(pl.dur)})+(pl.voice?' · 🎙️':'');rvDraw(rvCx,432,Math.min(1.2,pl.dur),pl);return pl}
+function rvStopPrev(){rvPlaying=false;cancelAnimationFrame(rvRaf);try{rvPrevSrc&&rvPrevSrc.stop()}catch(e){}rvPrevSrc=null;$('rvPlay').textContent='▶'}
+async function rvPlayPrev(){if(rvPlaying)return rvStopPrev();const pl=RVPL||await rvPrepare();if(!pl)return;
+ $('rvInfo').textContent=tr('Preparando la música…');await new Promise(r=>setTimeout(r,30));
+ try{ac=ac||new AudioContext();ac.resume();const a=rvAudio(pl,VSR),b=ac.createBuffer(1,a.length,VSR);b.copyToChannel(a,0);rvPrevSrc=ac.createBufferSource();rvPrevSrc.buffer=b;rvPrevSrc.connect(ac.destination);rvPrevSrc.start()}catch(e){}
+ $('rvInfo').textContent=trf('Duración: {d}',{d:fm(pl.dur)})+(pl.voice?' · 🎙️':'');
+ rvPlaying=true;rvT0=performance.now();$('rvPlay').textContent='⏸';const f=()=>{if(!rvPlaying||SHEET!='rvid'){rvStopPrev();return}const tt=(performance.now()-rvT0)/1000;if(tt>=pl.dur){rvStopPrev();return}rvDraw(rvCx,432,tt,pl);rvRaf=requestAnimationFrame(f)};rvRaf=requestAnimationFrame(f)}
+$('rVid').onclick=()=>{rdStop();wpHide();rvSettingsUI();openSheet('rvid');rvPrepare()};
+$('rvPlay').onclick=rvPlayPrev;$('rvCv').onclick=rvPlayPrev;
+$('rvMus').onclick=e=>{const b=e.target.closest('button');if(!b)return;RV.music=b.dataset.m;saveRV();if(RV.music=='custom'&&!RVC)setTimeout(()=>$('rvFile').click(),50);rvSettingsUI();rvStopPrev()};
+$('rvFile').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;if(f.size>25e6)return toast(tr('El archivo es muy grande (máximo 25 MB).'));
+ try{$('rvInfo').textContent=tr('Preparando la canción…');const buf=await new OfflineAudioContext(1,1,VSR).decodeAudioData(await f.arrayBuffer()),nc=buf.numberOfChannels,d=new Float32Array(buf.length);
+  for(let c=0;c<nc;c++){const x=buf.getChannelData(c);for(let i=0;i<d.length;i++)d[i]+=x[i]/nc}RVC={name:f.name.replace(/\.[^.]+$/,''),data:d};RV.music='custom';saveRV();rvSettingsUI();$('rvInfo').textContent=tr('Lista. Se repite si el video es más largo que la canción.')}
+ catch(x){toast(tr('No pude leer ese archivo de audio. Prueba con un MP3.'))}};
+$('rvMv').oninput=e=>{RV.mvol=+e.target.value;$('rvMvV').textContent=Math.round(RV.mvol*100)+'%';saveRV();rvStopPrev()};
+$('rvVv').oninput=e=>{RV.vvol=+e.target.value;$('rvVvV').textContent=Math.round(RV.vvol*100)+'%';saveRV();rvStopPrev()};
+$('rvVoice').onchange=e=>{RV.voice=e.target.checked;saveRV();rvRebuild()};
+$('rvRate').onchange=e=>{RV.rate=+e.target.value;saveRV();rvRebuild()};
+$('rvTr').onchange=e=>{RV.tr=e.target.checked;saveRV();if(RVPL)rvDraw(rvCx,432,RVPL.segs[1]?RVPL.segs[1].a+1:1,RVPL)};
+$('rvQs').onchange=e=>{RV.qs=e.target.checked;saveRV();rvRebuild()};
+$('rvBgs').onclick=e=>{const b=e.target.closest('button');if(!b)return;RV.bg=b.dataset.bg;saveRV();rvSettingsUI();if(RVPL&&!rvPlaying)rvDraw(rvCx,432,1.2,RVPL)};
+$('rvHandle').oninput=e=>{RV.handle=e.target.value;saveRV()};$('rvRes').onchange=e=>{RV.res=e.target.value;saveRV()};
+/* exportar el MP4 */
+const rvMsg=x=>$('rvMsg').textContent=x;
+$('rvExp').onclick=async()=>{if(!window.VideoEncoder||!window.Mp4Muxer){rvMsg(tr(window.NativeApp&&NativeApp.isNative?'Este dispositivo no puede exportar video. Actualiza «Android System WebView» y Chrome desde Google Play e inténtalo de nuevo.':'Este navegador no puede exportar video. Usa Chrome o Edge en computadora.'));return}
+ rvStopPrev();const btn=$('rvExp');btn.disabled=true;$('rvPg').hidden=false;$('rvPg').value=0;
+ try{const pl=await rvPrepare();if(!pl)throw Error('—');
+  const W=+RV.res,H=W*16/9,fps=30,N=Math.round(pl.dur*fps),sr=VSR;rvMsg(tr('Cargando letras, imágenes y música…'));for(const f of[bf(700,30),bf(600,30),tf(700,30)])await document.fonts.load(f);
+  const cv=document.createElement('canvas');cv.width=W;cv.height=H;const c=cv.getContext('2d');
+  let ac2=null,am='aac';if(window.AudioEncoder){const cf=codec=>({codec,sampleRate:sr,numberOfChannels:2,bitrate:128000});
+   if((await AudioEncoder.isConfigSupported(cf('mp4a.40.2'))).supported)ac2='mp4a.40.2';else if((await AudioEncoder.isConfigSupported(cf('opus'))).supported){ac2='opus';am='opus'}}
+  const vc={width:W,height:H,bitrate:W>800?8e6:5e6,framerate:fps};let codec=null;
+  for(const cd of['avc1.640033','avc1.640032','avc1.4d0032','avc1.42003e'])if((await VideoEncoder.isConfigSupported({...vc,codec:cd})).supported){codec=cd;break}
+  if(!codec)throw Error(tr('Tu navegador no tiene codificador H.264.'));
+  const mux=new Mp4Muxer.Muxer({target:new Mp4Muxer.ArrayBufferTarget(),fastStart:'in-memory',video:{codec:'avc',width:W,height:H,frameRate:fps},...(ac2?{audio:{codec:am,numberOfChannels:2,sampleRate:sr}}:{})});
+  let err=null;const ve=new VideoEncoder({output:(ch,m)=>mux.addVideoChunk(ch,m),error:e=>err=e});ve.configure({...vc,codec});
+  for(let i=0;i<N;i++){if(err)throw err;rvDraw(c,W,i/fps,pl);const f=new VideoFrame(cv,{timestamp:Math.round(i*1e6/fps),duration:Math.round(1e6/fps)});ve.encode(f,{keyFrame:i%(fps*2)==0});f.close();
+   if(i%6==0){$('rvPg').value=i/N*.9;rvMsg(trf('Generando video… {p}%',{p:Math.round(i/N*100)}));await wait(0)}while(ve.encodeQueueSize>10)await wait(5)}
+  await ve.flush();
+  if(ac2){rvMsg(tr('Generando audio…'));await wait(20);const pcm=rvAudio(pl,sr),ae=new AudioEncoder({output:(ch,m)=>mux.addAudioChunk(ch,m),error:e=>err=e});ae.configure({codec:ac2,sampleRate:sr,numberOfChannels:2,bitrate:128000});const st=4800;
+   for(let p=0;p<pcm.length;p+=st){const n=Math.min(st,pcm.length-p),d=new Float32Array(n*2);d.set(pcm.subarray(p,p+n),0);d.set(pcm.subarray(p,p+n),n);const ad=new AudioData({format:'f32-planar',sampleRate:sr,numberOfFrames:n,numberOfChannels:2,timestamp:Math.round(p/sr*1e6),data:d});ae.encode(ad);ad.close();if((p/st)%40==0)await wait(0)}
+   await ae.flush()}
+  if(err)throw err;mux.finalize();$('rvPg').value=1;const blob=new Blob([mux.target.buffer],{type:'video/mp4'}),info=` · ${fm(pl.dur)} · ${(blob.size/1048576).toFixed(1)} MB`;
+  await save(blob,'leer-'+slug(pl.t.t[0])+'.mp4',x=>rvMsg(x+info))}
+ catch(e){rvMsg(tr('No se pudo exportar:')+' '+(e&&e.message||e))}
+ btn.disabled=false;$('rvPg').hidden=true};
 
 /* ---------- entrada y arranque ---------- */
 function hideSplash(){const s=$('splash');if(!s||s.classList.contains('bye'))return;s.classList.add('bye');setTimeout(()=>s.remove(),700);const h=$('home');h.classList.remove('go');void h.offsetWidth;h.classList.add('go')}
