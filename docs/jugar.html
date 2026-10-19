@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Duelo · QuizClip</title>
+<meta name="description" content="Te retaron a un duelo en QuizClip. Responde las mismas preguntas y supera sus puntos.">
+<meta property="og:title" content="⚔️ Te retaron a un duelo en QuizClip">
+<meta property="og:description" content="Responde las mismas 10 preguntas y supera sus puntos. Gratis, sin instalar nada.">
+<meta name="theme-color" content="#0B0F1A">
+<link rel="icon" href="icono.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--pk:#5B3DF5;--co:#FF2D55;--ink:#0B0F1A;--bg:#0B0F1A}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%}
+body{font:400 16px/1.5 Poppins,system-ui,sans-serif;color:#fff;background:#0B0F1A;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;overflow-x:hidden}
+body::before,body::after{content:"";position:fixed;width:520px;height:520px;border-radius:50%;z-index:-1;filter:blur(10px);opacity:.55}
+body::before{background:#FF2D55;top:-260px;right:-200px}body::after{background:#5B3DF5;bottom:-300px;left:-220px}
+header{display:flex;align-items:center;gap:10px;padding:16px max(16px,env(safe-area-inset-left));max-width:640px;width:100%;margin:0 auto}
+header b{font-weight:600;font-size:20px;letter-spacing:-.02em}header b span{color:#A99BFF}header svg{width:34px;height:34px}
+header .sc{margin-left:auto;background:rgba(255,255,255,.12);border-radius:999px;padding:4px 12px;font-weight:600;font-size:14px}
+main{flex:1;width:100%;max-width:640px;margin:0 auto;padding:8px 16px 28px;display:grid;align-content:start;gap:14px}
+.card{background:#fff;color:#0B0F1A;border-radius:24px;padding:22px;box-shadow:0 20px 50px rgba(0,0,0,.35);text-align:center}
+.card h1,.card h2{margin:6px 0;font-weight:600;letter-spacing:-.02em;line-height:1.25}.card h1{font-size:26px}.card h2{font-size:21px}
+.card p{margin:6px 0;color:#646B80}.em{font-size:64px;line-height:1.1;display:block}
+.who{display:inline-flex;align-items:center;gap:8px;background:#F0F1F7;border-radius:999px;padding:6px 14px;font-weight:600;color:#0B0F1A}
+.opts{display:grid;gap:10px}
+button{font:inherit;cursor:pointer;border:0;border-radius:16px}
+.opt{display:flex;align-items:center;gap:12px;text-align:left;background:#fff;color:#0B0F1A;padding:14px 16px;font-weight:500;box-shadow:0 6px 16px rgba(0,0,0,.2);min-height:58px}
+.opt i{font-style:normal;width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:#EBE7FF;color:#5B3DF5;font-weight:600;flex:none}
+.opt.ok{background:#12B76A;color:#fff}.opt.ok i{background:rgba(255,255,255,.25);color:#fff}.opt.bad{background:#F04461;color:#fff}.opt.bad i{background:rgba(255,255,255,.25);color:#fff}.opt.dim{opacity:.55}
+.go{background:#5B3DF5;color:#fff;font-weight:600;padding:15px 20px;font-size:17px;box-shadow:0 10px 24px rgba(91,61,245,.4);width:100%}
+.alt{background:rgba(255,255,255,.12);color:#fff;font-weight:600;padding:13px 18px;width:100%;border:1px solid rgba(255,255,255,.25)}
+.bar{height:8px;border-radius:9px;background:rgba(255,255,255,.18);overflow:hidden}.bar i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#FF2D55,#FFC53D);transform-origin:left}
+.top{display:flex;justify-content:space-between;font-weight:600;font-size:14px;opacity:.9}
+.fact{background:rgba(255,255,255,.12);border-radius:16px;padding:12px 14px;font-size:14px;text-align:left}.fact b{display:block}
+.feed{font-weight:600;font-size:20px;text-align:center;margin:0}
+.vs{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;margin-top:12px}.vs em{font-style:normal;font-weight:600;color:#9AA2B8}
+.vs div{display:grid;justify-items:center;gap:2px;padding:12px 6px;border-radius:16px;background:#F0F1F7}.vs div.win{background:#DDF6EC;outline:2px solid #12B76A}
+.vs i{font-style:normal;font-size:32px}.vs b{font-size:14px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.vs span{font-weight:600;font-size:22px}.vs small{font-size:11px;letter-spacing:1px;word-break:break-all}
+input{font:inherit;width:100%;padding:12px 14px;border-radius:14px;border:1px solid #E4E7EF;background:#fff;color:#0B0F1A}
+.row{display:grid;gap:10px}
+.dl{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:14px;text-decoration:none;color:#fff}
+.dl svg{width:52px;height:52px;flex:none}.dl b{display:block;font-weight:600}.dl small{opacity:.8}
+.msg{font-size:14px;text-align:center;opacity:.85;margin:0}
+@media (prefers-reduced-motion:no-preference){.card,.opts{animation:up .35s ease both}@keyframes up{from{opacity:0;transform:translateY(10px)}}}
+</style>
+</head>
+<body>
+<header><svg viewBox="0 0 512 512" aria-hidden="true"><circle cx="208" cy="256" r="118" fill="#FF2D55"/><circle cx="304" cy="256" r="118" fill="#5B3DF5"/><path d="M256 148.2 A118 118 0 0 1 256 363.8 A118 118 0 0 1 256 148.2 Z" fill="#5E1A8C"/><path d="M290 222 Q290 214 297 218 L342 249 Q349 256 342 263 L297 294 Q290 298 290 290 Z" fill="#fff"/></svg><b>Quiz<span>Clip</span></b><span class="sc" id="sc" hidden></span></header>
+<main id="m"></main>
+<script>
+const APP='./';
+const T={es:{t:'Duelo',vs:'te reta a un duelo',beat:'Hizo {p} puntos ({s}/{n}). ¿Puedes superarlo?',same:'Mismas preguntas. Responde rápido para ganar más puntos.',start:'▶ Aceptar el reto',q:'Pregunta {a} de {b}',ok:'¡Correcto! 🎉',bad:'Incorrecto 😅',time:'¡Se acabó el tiempo! ⏰',next:'Siguiente →',res:'Ver resultado 🏆',fact:'💡 Dato curioso',win:'¡Ganaste el duelo!',tie:'¡Empate!',lose:'{n} gana esta vez',you:'Tú',name:'Tu nombre',back:'⚔️ Devolver el reto',again:'↺ Jugar otra vez',copied:'Enlace copiado. Pégalo en WhatsApp o donde quieras 📋',bad_link:'Este enlace de duelo no es válido o está incompleto.',dlT:'Descarga QuizClip gratis',dlS:'Crea videos de quiz, juega el Reto del día y aprende inglés.',msg:'⚔️ Te devuelvo el reto en QuizClip: {t}. Hice {p} puntos ({s}/{n}). ¿Me superas?',pts:'pts'},
+ en:{t:'Duel',vs:'challenges you to a duel',beat:'They scored {p} points ({s}/{n}). Can you beat that?',same:'Same questions. Answer fast to earn more points.',start:'▶ Accept the challenge',q:'Question {a} of {b}',ok:'Correct! 🎉',bad:'Wrong 😅',time:'Time’s up! ⏰',next:'Next →',res:'See result 🏆',fact:'💡 Fun fact',win:'You won the duel!',tie:'It’s a tie!',lose:'{n} wins this time',you:'You',name:'Your name',back:'⚔️ Send it back',again:'↺ Play again',copied:'Link copied. Paste it on WhatsApp or anywhere 📋',bad_link:'This duel link is invalid or incomplete.',dlT:'Get QuizClip free',dlS:'Create quiz videos, play the Daily Challenge and learn English.',msg:'⚔️ I’m sending the challenge back on QuizClip: {t}. I scored {p} points ({s}/{n}). Can you beat me?',pts:'pts'},
+ pt:{t:'Duelo',vs:'desafia você para um duelo',beat:'Fez {p} pontos ({s}/{n}). Você consegue superar?',same:'Mesmas perguntas. Responda rápido para ganhar mais pontos.',start:'▶ Aceitar o desafio',q:'Pergunta {a} de {b}',ok:'Correto! 🎉',bad:'Errado 😅',time:'Acabou o tempo! ⏰',next:'Próxima →',res:'Ver resultado 🏆',fact:'💡 Curiosidade',win:'Você venceu o duelo!',tie:'Empate!',lose:'{n} venceu desta vez',you:'Você',name:'Seu nome',back:'⚔️ Devolver o desafio',again:'↺ Jogar de novo',copied:'Link copiado. Cole no WhatsApp ou onde quiser 📋',bad_link:'Este link de duelo é inválido ou está incompleto.',dlT:'Baixe o QuizClip grátis',dlS:'Crie vídeos de quiz, jogue o Desafio do dia e aprenda inglês.',msg:'⚔️ Devolvo o desafio no QuizClip: {t}. Fiz {p} pontos ({s}/{n}). Você me supera?',pts:'pts'}};
+const PTS={e:10,n:20,d:30},$=id=>document.getElementById(id),m=$('m');
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=n=>Number(n||0).toLocaleString();
+const f=(s,o)=>s.replace(/\{(\w+)\}/g,(_,k)=>o[k]);
+const clip=(s,n)=>String(s==null?'':s).slice(0,n);
+const SQ=r=>(r||[]).map(x=>x==2?'🟩':x==1?'🟨':'🟥').join('');
+let L=T.es,O=null,G=null,raf=0;
+const b64u=u8=>{let s='';for(let i=0;i<u8.length;i+=0x8000)s+=String.fromCharCode.apply(null,u8.subarray(i,i+0x8000));return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')};
+const ub64=t=>{const s=atob(t.replace(/-/g,'+').replace(/_/g,'/'));const u=new Uint8Array(s.length);for(let i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return u};
+async function unpack(t){if(!/^[zj][A-Za-z0-9_-]+$/.test(t))throw 0;let u=ub64(t.slice(1));if(t[0]=='z'){const s=new Blob([u]).stream().pipeThrough(new DecompressionStream('deflate-raw'));u=new Uint8Array(await new Response(s).arrayBuffer())}
+ const o=JSON.parse(new TextDecoder().decode(u));if(!o||!Array.isArray(o.q)||!o.q.length||o.q.length>30)throw 0;return o}
+async function pack(o){const raw=new TextEncoder().encode(JSON.stringify(o));if(window.CompressionStream){try{const s=new Blob([raw]).stream().pipeThrough(new CompressionStream('deflate-raw'));return 'z'+b64u(new Uint8Array(await new Response(s).arrayBuffer()))}catch(e){}}return 'j'+b64u(raw)}
+function qs(o){return o.q.map(a=>({t:clip(a[0],200),o:(a[1]||[]).slice(0,4).map(x=>clip(x,80)),c:Math.max(0,Math.min(3,a[2]|0)),e:clip(a[3],16),f:clip(a[4],300),s:Math.max(4,Math.min(30,a[5]|0||12))})).filter(q=>q.t&&q.o.length>=2)}
+function dl(){return `<a class="dl" href="${APP}"><svg viewBox="0 0 512 512" aria-hidden="true"><rect width="512" height="512" rx="112" fill="#fff"/><circle cx="208" cy="256" r="118" fill="#FF2D55"/><circle cx="304" cy="256" r="118" fill="#5B3DF5"/><path d="M256 148.2 A118 118 0 0 1 256 363.8 A118 118 0 0 1 256 148.2 Z" fill="#5E1A8C"/><path d="M290 222 Q290 214 297 218 L342 249 Q349 256 342 263 L297 294 Q290 298 290 290 Z" fill="#fff"/></svg><span><b>${L.dlT}</b><small>${L.dlS}</small></span></a>`}
+function intro(){const n=O.Q.length;
+ m.innerHTML=`<div class="card"><span class="em">${esc(O.e||'⚔️')}</span><span class="who">${esc(O.a||'🙂')} ${esc(O.n||'')}</span><h1>${L.vs}</h1><h2>${esc(O.t||'')}</h2><p>${f(L.beat,{p:fmt(O.p),s:O.s|0,n})}</p><p>${L.same}</p></div><button class="go" id="st">${L.start}</button>${dl()}`;
+ $('st').onclick=()=>{G={i:-1,sc:0,pts:0,combo:0,res:[]};q()}}
+function q(){G.i++;const n=O.Q.length;if(G.i>=n)return end();const s=O.Q[G.i];$('sc').hidden=false;$('sc').textContent='⭐ '+fmt(G.pts);G.ans=false;
+ m.innerHTML=`<div class="top"><span>${f(L.q,{a:G.i+1,b:n})}</span><span>${esc(O.t||'')}</span></div><div class="bar"><i id="br"></i></div>
+  <div class="card">${s.e?`<span class="em">${esc(s.e)}</span>`:''}<h2>${esc(s.t)}</h2></div><div class="opts">${s.o.map((o,j)=>`<button class="opt" data-j="${j}"><i>${'ABCD'[j]}</i><span>${esc(o)}</span></button>`).join('')}</div><div id="ft"></div>`;
+ m.querySelector('.opts').onclick=e=>{const b=e.target.closest('.opt');if(b)ans(+b.dataset.j)};
+ const t0=performance.now()+250,D=s.s*1000;G.t0=t0;cancelAnimationFrame(raf);const fr=now=>{if(G.ans)return;const el=Math.max(0,now-t0);$('br').style.transform=`scaleX(${Math.max(0,1-el/D)})`;if(el>=D)return ans(-1);raf=requestAnimationFrame(fr)};raf=requestAnimationFrame(fr);scrollTo(0,0)}
+function ans(j){if(G.ans)return;G.ans=true;cancelAnimationFrame(raf);const s=O.Q[G.i],ok=j==s.c,el=performance.now()-G.t0;
+ if(ok){G.sc++;G.combo++;const P=PTS[O.lv]||20,fr=Math.max(0,1-el/(s.s*1000));const g=P+Math.round(P*fr)+(G.combo>=3?5*(G.combo-2):0);G.pts+=g}else G.combo=0;
+ G.res.push(ok?(el<s.s*500?2:1):0);$('sc').textContent='⭐ '+fmt(G.pts);
+ m.querySelectorAll('.opt').forEach((b,k)=>{b.disabled=true;b.classList.add(k==s.c?'ok':k==j?'bad':'dim')});
+ $('ft').innerHTML=`<p class="feed">${j<0?L.time:ok?L.ok:L.bad}${ok&&G.combo>=3?' 🔥 x'+G.combo:''}</p>${s.f?`<div class="fact"><b>${L.fact}</b>${esc(s.f)}</div>`:''}<button class="go" id="nx" style="margin-top:12px">${G.i+1<O.Q.length?L.next:L.res}</button>`;
+ $('nx').onclick=q;$('nx').scrollIntoView({block:'nearest',behavior:'smooth'})}
+function end(){const n=O.Q.length,win=G.pts>O.p,tie=G.pts==O.p;let me='';try{me=localStorage.getItem('qc-name')||''}catch(e){}
+ m.innerHTML=`<div class="card"><span class="em">${win?'🏆':tie?'🤝':'💪'}</span><h1>${win?L.win:tie?L.tie:esc(f(L.lose,{n:O.n||''}))}</h1>
+  <div class="vs"><div class="${win?'win':''}"><i>🙂</i><b>${esc(me||L.you)}</b><span>${fmt(G.pts)}</span><small>${SQ(G.res)}</small></div><em>VS</em><div class="${!win&&!tie?'win':''}"><i>${esc(O.a||'🙂')}</i><b>${esc(O.n||'')}</b><span>${fmt(O.p)}</span><small>${SQ(O.r)}</small></div></div></div>
+  <div class="row"><input id="nm" maxlength="24" placeholder="${L.name}" value="${esc(me)}"><button class="go" id="bk">${L.back}</button><p class="msg" id="ms" role="status"></p><button class="alt" id="ag">${L.again}</button></div>${dl()}`;
+ $('ag').onclick=intro;
+ $('bk').onclick=async()=>{const nm=clip($('nm').value.trim()||L.you,24);try{localStorage.setItem('qc-name',nm)}catch(e){}
+  const o={v:1,l:O.l,n:nm,a:'🙂',t:O.t,e:O.e,lv:O.lv,p:G.pts,s:G.sc,r:G.res,q:O.q};const url=location.href.split('#')[0]+'#d='+await pack(o);
+  const text=f(L.msg,{t:O.t||'',p:fmt(G.pts),s:G.sc,n});
+  try{if(navigator.share){await navigator.share({text,url});return}}catch(e){if(e&&e.name=='AbortError')return}
+  try{await navigator.clipboard.writeText(text+'\n'+url);$('ms').textContent=L.copied}catch(e){$('ms').innerHTML=`<input value="${esc(url)}" readonly onfocus="this.select()">`}}}
+(async()=>{const h=location.hash.match(/[#&]d=([A-Za-z0-9_-]+)/);
+ const nl=(navigator.language||'es').slice(0,2);L=T[nl]||T.es;
+ try{if(!h)throw 0;O=await unpack(h[1]);L=T[O.l]||L;document.documentElement.lang=O.l||'es';O.Q=qs(O);if(!O.Q.length)throw 0;document.title=L.t+' · QuizClip';intro()}
+ catch(e){m.innerHTML=`<div class="card"><span class="em">⚔️</span><h2>${L.bad_link}</h2></div>${dl()}`}})();
+</script>
+</body>
+</html>

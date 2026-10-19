@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0A8CFF">
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}input,textarea{-webkit-user-select:text;user-select:text}img{max-width:100%}[hidden]{display:none!important}</style>
-<title>Quiz Video Studio</title>
+<title>QuizClip</title>
 <link rel="stylesheet" href="fonts.css">
 <script src="mp4-muxer.js"></script>
 <script src="native.js"></script>
@@ -464,51 +464,248 @@ button.rcard:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ln)
 .rvfs canvas{cursor:pointer}
 .rvfs .fsbar{width:min(420px,100%)}
 body.relang{opacity:.35;pointer-events:none;transition:opacity .2s}
+
+/* ================= QuizClip: diseño profesional (va al final y reemplaza el estilo anterior) ================= */
+:root{--bg:#F6F7FB;--pn:#FFFFFF;--ink:#0B0F1A;--mut:#646B80;--ln:#E4E7EF;--pk:#5B3DF5;--bl:#5B3DF5;--co:#FF2D55;--pu:#5E1A8C;--gr:#12B76A;--yl:#FFC53D;--soft:#F0F1F7;--glass:rgba(246,247,251,.88);
+ --fd:Poppins,ui-sans-serif,system-ui,sans-serif;--fb:Poppins,ui-sans-serif,system-ui,sans-serif;--sh:0 1px 2px rgba(16,24,40,.05),0 2px 10px rgba(16,24,40,.05);--sh2:0 10px 30px rgba(16,24,40,.12);--r:16px;--tabh:64px}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0B0F1A;--pn:#141A2A;--ink:#F2F4FA;--mut:#9AA2B8;--ln:#242B3F;--soft:#1A2134;--glass:rgba(11,15,26,.88);--sh:0 1px 2px rgba(0,0,0,.3);--sh2:0 10px 30px rgba(0,0,0,.45)}}
+:root[data-theme=dark]{--bg:#0B0F1A;--pn:#141A2A;--ink:#F2F4FA;--mut:#9AA2B8;--ln:#242B3F;--soft:#1A2134;--glass:rgba(11,15,26,.88);--sh:0 1px 2px rgba(0,0,0,.3);--sh2:0 10px 30px rgba(0,0,0,.45)}
+body{font:400 15px/1.5 var(--fb);letter-spacing:-.005em}
+.ic{width:22px;height:22px;display:block;flex:none}
+button{border:1px solid var(--ln);border-radius:12px;font-weight:500;box-shadow:none;padding:8px 14px}
+button:active{transform:scale(.97)}
+button.on{background:var(--pk);border-color:var(--pk);color:#fff}
+button.go{background:var(--pk);border-color:var(--pk);color:#fff;border-radius:14px;box-shadow:0 6px 18px rgba(91,61,245,.28);font-weight:600;padding:13px}
+button.sm{border-radius:10px;padding:6px 12px;font-size:13px}
+button.warn{border-color:#F3B4BE;color:#E11D48}
+.ib{border-radius:12px;width:42px;height:42px;background:var(--pn)}
+.ib.pri{background:var(--pk);border-color:var(--pk);box-shadow:none;border-radius:12px}
+input[type=text],input[type=password],textarea,select{border:1px solid var(--ln);border-radius:12px;background:var(--pn);padding:10px 12px}
+input:focus,textarea:focus,select:focus{outline:2px solid color-mix(in srgb,var(--pk) 35%,transparent);border-color:var(--pk)}
+label{font-weight:500}
+.hint{color:var(--mut)}
+:focus-visible{outline:2px solid var(--pk)}
+code{background:var(--soft)}
+/* barra superior */
+.top{background:var(--glass);border-bottom:1px solid var(--ln)}
+.top .in{padding-block:10px;min-height:62px}
+.bt{font:600 20px var(--fd);letter-spacing:-.02em}.bt em{color:var(--pk)}
+.qlogo{width:34px;height:34px;display:block;flex:none}.qlogo svg{width:100%;height:100%;display:block}
+.qlogo.xl{width:120px;height:120px}
+.brand{gap:10px}
+.avatar{width:42px;height:42px;border-radius:50%;padding:0;display:grid;place-items:center;font-size:22px;background:var(--soft);border:1px solid var(--ln)}
+.avatar.big{width:76px;height:76px;font-size:40px;flex:none}
+.sec{font:600 19px var(--fd);letter-spacing:-.02em;margin:28px 0 12px}
+.sec small{font:500 13px var(--fb)}
+/* barra de pestañas */
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:40;display:grid;grid-template-columns:repeat(5,1fr);background:var(--glass);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-top:1px solid var(--ln);padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
+.tabbar button{border:0;background:none;display:grid;justify-items:center;gap:2px;padding:6px 2px;color:var(--mut);border-radius:12px;font-weight:500}
+.tabbar button small{font-size:11px;font-weight:500}
+.tabbar button.on{color:var(--pk);background:color-mix(in srgb,var(--pk) 10%,transparent)}
+.tabbar button.on .ic{stroke-width:2.2}
+body:not([data-view=home]):not([data-view=create]):not([data-view=brain]):not([data-view=learn]):not([data-view=profile]) .tabbar{display:none}
+body[data-view=home] .view .wrap,body[data-view=create] .view .wrap,body[data-view=brain] .view .wrap,body[data-view=learn] .view .wrap,body[data-view=profile] .view .wrap{padding-bottom:calc(var(--tabh) + 36px + env(safe-area-inset-bottom,0px))}
+@media(min-width:900px){.tabbar{left:50%;right:auto;bottom:16px;transform:translateX(-50%);width:520px;border:1px solid var(--ln);border-radius:20px;box-shadow:var(--sh2);padding:6px}}
+/* inicio */
+.greet{margin:10px 0 14px}.greet h1{font:600 26px/1.2 var(--fd);letter-spacing:-.03em;margin:0}.greet p{margin:4px 0 0;color:var(--mut)}
+button.daily{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:14px;width:100%;text-align:left;border:0;border-radius:20px;padding:18px;color:#fff;background:#5B3DF5;position:relative;overflow:hidden;isolation:isolate;box-shadow:0 10px 26px rgba(91,61,245,.28)}
+button.daily::before{content:"";position:absolute;width:220px;height:220px;border-radius:50%;background:#FF2D55;right:-70px;top:-90px;z-index:-1;opacity:.9}
+button.daily::after{content:"";position:absolute;width:220px;height:220px;border-radius:50%;background:#5E1A8C;right:-10px;top:-90px;z-index:-1;opacity:.55}
+.dic{width:48px;height:48px;border-radius:14px;background:rgba(255,255,255,.16);display:grid;place-items:center}.dic .ic{width:26px;height:26px}
+.dtx{display:grid;gap:2px;min-width:0}.dtx small{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;opacity:.85}.dtx b{font:600 18px/1.25 var(--fd)}.dtx>span{font-size:13px;opacity:.9}
+.dgo{background:#fff;color:#2A1B8F;border-radius:12px;padding:9px 16px;font-weight:600;font-size:14px;white-space:nowrap}
+.dgo.done{background:rgba(255,255,255,.2);color:#fff}
+.qgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+button.qa{display:grid;justify-items:start;gap:2px;text-align:left;padding:16px;border-radius:18px;background:var(--pn);border:1px solid var(--ln);box-shadow:var(--sh);min-height:118px;align-content:start}
+button.qa .qi{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;margin-bottom:10px}
+.qa1 .qi{background:#FFF1D6;color:#B45309}.qa2 .qi{background:#EBE7FF;color:#5B3DF5}.qa3 .qi{background:#FFE4EA;color:#E11D48}.qa4 .qi{background:#DDF6EC;color:#0E8A5F}
+button.qa b{font:600 15px/1.3 var(--fd)}button.qa small{color:var(--mut);font-size:12.5px;font-weight:400}
+.lvline{display:none}
+.sech{display:flex;align-items:baseline;justify-content:space-between}
+.lnk{border:0;background:none;color:var(--pk);font-weight:600;padding:4px}
+.recent{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(150px,42%);gap:12px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none}
+/* crear */
+button.hero1{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:14px;width:100%;text-align:left;border:0;border-radius:22px;padding:20px;background:#0B0F1A;color:#fff;overflow:hidden;position:relative;isolation:isolate;margin-top:6px}
+button.hero1::before{content:"";position:absolute;width:260px;height:260px;border-radius:50%;background:#5B3DF5;opacity:.35;left:-90px;bottom:-140px;z-index:-1}
+.h1t{display:grid;gap:6px}.h1t small{font-size:11.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#A99BFF}.h1t b{font:600 22px/1.2 var(--fd)}.h1t>span{color:#C7CBE0;font-size:14px}
+.btnp{display:inline-flex!important;align-items:center;gap:6px;justify-self:start;background:#fff;color:#2A1B8F!important;border-radius:12px;padding:9px 14px;font-weight:600;font-size:14px!important;margin-top:6px}.btnp .ic{width:18px;height:18px}
+button.hero1 .phone{width:clamp(96px,26vw,150px);border:4px solid #262E45;border-radius:20px;transform:rotate(3deg);box-shadow:none;animation:none}
+.fmts{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(200px,62%);gap:12px;overflow-x:auto;padding:2px 2px 8px;scrollbar-width:none;scroll-snap-type:x mandatory}
+@media(min-width:760px){.fmts{grid-auto-flow:row;grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}}
+button.fmt{scroll-snap-align:start;display:grid;gap:4px;text-align:left;border:0;border-radius:18px;padding:16px;min-height:150px;align-content:end;color:#fff;background:var(--c);position:relative;overflow:hidden;isolation:isolate}
+button.fmt .fe{position:absolute;top:12px;right:14px;font-size:38px;line-height:1}
+button.fmt b{font:600 16.5px/1.25 var(--fd)}button.fmt small{opacity:.9;font-size:12.5px;font-weight:400}
+.modes{gap:12px}
+button.mode{border:1px solid var(--ln);border-radius:18px;box-shadow:var(--sh);padding:14px}
+button.mode:hover{transform:translateY(-2px);box-shadow:var(--sh2)}
+.mode .me{width:48px;height:48px;border-radius:14px;border:0;background:var(--soft);font-size:26px}
+.mode b{font:600 15.5px var(--fd)}.mode span{font-size:13px}
+.idea{border:1px solid var(--ln);border-style:solid;background:var(--pn);box-shadow:var(--sh)}
+.proj{border:1px solid var(--ln);box-shadow:var(--sh);border-radius:16px}
+.pth{border-bottom:1px solid var(--ln)}
+.empty{border:1px dashed var(--ln)}
+/* jugar */
+.bstat{background:#0B0F1A;border:0;box-shadow:none;border-radius:20px;color:#fff}
+.bsl b{font:600 21px var(--fd);text-shadow:none}.bsn span{background:rgba(255,255,255,.07)}.bsn b{font:600 24px var(--fd)}
+.bcbar{background:rgba(127,127,160,.25);border:0;height:8px}.bcbar i{background:linear-gradient(90deg,#FF2D55,#5B3DF5)}
+.lstat{background:#0B0F1A}
+.pduo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+button.daily.mini{padding:14px;gap:10px;grid-template-columns:auto minmax(0,1fr);border-radius:18px}button.daily.mini::before{width:120px;height:120px;right:-60px;top:-60px}button.daily.mini::after{width:120px;height:120px;right:-30px;top:-60px}
+button.daily.mini .dic{width:40px;height:40px}.daily.mini .dtx b{font-size:15px}
+button.daily.duel{background:#FF2D55;box-shadow:0 10px 26px rgba(255,45,85,.25)}button.daily.duel::before{background:#5B3DF5}button.daily.duel::after{display:none}
+.seg button{border-radius:12px;box-shadow:none;padding:11px 6px}
+.seg button.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+button.cat{border:0;box-shadow:var(--sh);border-radius:18px}
+button.cat b{text-shadow:none;font:600 16.5px var(--fd)}.cem{filter:none}
+/* aprender */
+button.rcard{border:1px solid var(--ln);box-shadow:var(--sh);border-radius:18px}
+.rem{border:0;box-shadow:none;border-radius:14px}
+.rtx b{font:600 16px/1.3 var(--fd)}
+.rcats button{box-shadow:none;border-radius:999px}
+.rtext{border:1px solid var(--ln);box-shadow:var(--sh);border-radius:20px}
+.rt{box-shadow:none;border-radius:12px}
+.rvoc button{box-shadow:none;border-radius:12px}
+.rhead h1{font:600 clamp(24px,6vw,34px)/1.15 var(--fd);letter-spacing:-.02em}
+/* perfil */
+.pfcard{display:flex;gap:16px;align-items:center;background:var(--pn);border:1px solid var(--ln);border-radius:20px;padding:16px;box-shadow:var(--sh);margin-top:6px}
+.pfinfo{display:grid;gap:5px;flex:1;min-width:0}.pfinfo input{font:600 18px var(--fd);padding:6px 10px;border-color:transparent;background:transparent}.pfinfo input:hover{border-color:var(--ln)}
+#pfRank{font-weight:500;color:var(--mut);padding-left:10px}.pfinfo small{color:var(--mut);padding-left:10px}.pfinfo .bcbar{margin-left:10px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.stats div{background:var(--pn);border:1px solid var(--ln);border-radius:16px;padding:12px 8px;text-align:center;display:grid;gap:2px}.stats b{font:600 20px var(--fd)}.stats small{color:var(--mut);font-size:12px}
+.medals{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px}
+.medal{background:var(--pn);border:1px solid var(--ln);border-radius:16px;padding:12px 6px;text-align:center;display:grid;gap:4px;justify-items:center}
+.medal i{font-style:normal;font-size:30px;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:var(--soft)}
+.medal b{font-size:12.5px;font-weight:600;line-height:1.25}.medal small{font-size:11px;color:var(--mut);line-height:1.25}
+.medal.off{opacity:.45}.medal.off i{filter:grayscale(1)}
+.setlist{display:grid;background:var(--pn);border:1px solid var(--ln);border-radius:18px;overflow:hidden}
+.setlist button{display:flex;align-items:center;gap:12px;border:0;border-radius:0;border-bottom:1px solid var(--ln);background:none;padding:14px 16px;text-align:left;font-weight:500}
+.setlist button:last-child{border-bottom:0}.setlist button b{margin-left:auto;color:var(--mut);font-weight:500;font-size:13.5px}.setlist button .ic{color:var(--pk)}
+.avgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(56px,1fr));gap:8px}.avgrid button{font-size:30px;height:60px;border-radius:14px;padding:0}
+/* menú y hojas */
+.drawer{border-left:1px solid var(--ln);box-shadow:var(--sh2)}
+button.di{border-radius:12px;font-weight:500}
+.sheet{border-top:1px solid var(--ln);box-shadow:var(--sh2);border-radius:24px 24px 0 0}
+@media(min-width:861px){.sheet{border-left:1px solid var(--ln);border-radius:0}}
+.shead h2{font:600 20px var(--fd)}
+.donbox,.help li{border:1px solid var(--ln);box-shadow:none}
+.ppgo{border:0;box-shadow:none}
+.tcard,button.tcard{border:1px solid var(--ln);box-shadow:var(--sh)}
+.tem{border:0}
+.ths button,.bgs button,.mus button,.pals button,.langs button{box-shadow:none}
+.vrow,.wrow{border:1px solid var(--ln)}
+.toast{border-radius:14px}
+.dbox{border:1px solid var(--ln);box-shadow:var(--sh2)}
+/* editor */
+.card{border:1px solid var(--ln);box-shadow:var(--sh);border-radius:20px}
+canvas#cv{border:1px solid var(--ln);box-shadow:var(--sh2);border-radius:18px}
+.phead h2{font:600 18px var(--fd)}
+/* juego */
+.pill{border:0}
+.pcard{border-width:3px;box-shadow:0 14px 34px rgba(0,0,0,.25)}
+.popt{border:2px solid rgba(0,0,0,.85);box-shadow:0 6px 16px rgba(0,0,0,.18)}
+.pfeed{text-shadow:0 2px 10px rgba(0,0,0,.35)}
+.pnext{border:0;box-shadow:0 8px 20px rgba(0,0,0,.25);border-radius:14px}
+.pexit{border-width:2px;border-radius:14px}
+.pcard h2,.pbig{font-family:var(--fd)}
+/* bienvenida */
+.onb{position:fixed;inset:0;z-index:380;background:var(--bg);display:grid;place-items:center;padding:24px;animation:fadeIn .35s both}
+.onb-in{width:min(440px,100%);display:grid;gap:16px;text-align:center;position:relative}
+.onb-skip{position:absolute;top:-6px;right:0;border:0;background:none;color:var(--mut)}
+.onb-slides{display:grid;grid-auto-flow:column;grid-auto-columns:100%;overflow:hidden;scroll-behavior:smooth}
+.onb-s{display:grid;gap:10px;justify-items:center;padding:30px 6px 0}
+.onb-s h2{font:600 26px/1.2 var(--fd);letter-spacing:-.03em;margin:8px 0 0}.onb-s p{color:var(--mut);margin:0;max-width:34ch}
+.onb-art{width:150px;height:150px;border-radius:40px;display:grid;place-items:center;background:var(--soft)}
+.onb-art.a2{background:#FFF1D6;color:#B45309}.onb-art.a3{background:#EBE7FF;color:#5B3DF5}.onb-art .ic{width:70px;height:70px;stroke-width:1.6}
+.onb-dots{display:flex;gap:6px;justify-content:center}.onb-dots i{width:8px;height:8px;border-radius:9px;background:var(--ln);transition:width .25s}.onb-dots i.on{width:22px;background:var(--pk)}
+.onb-lang{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:8px}.onb-lang button.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+/* entrada */
+.splash{background:#0B0F1A}
+.sp-in{gap:6px}
+.sp-mark{width:170px;height:170px}.sp-mark svg{width:100%;height:100%;display:block;overflow:visible}
+.sp-mark .c1{animation:spL .7s cubic-bezier(.2,.9,.2,1) .15s both}.sp-mark .c2{animation:spR .7s cubic-bezier(.2,.9,.2,1) .15s both}
+.sp-mark .c3{animation:fadeIn .3s ease .8s both}.sp-mark .pl{transform-box:fill-box;transform-origin:center;animation:spQ .45s cubic-bezier(.3,1.6,.5,1) .95s both}
+@keyframes spL{from{transform:translateX(-120px);opacity:0}}@keyframes spR{from{transform:translateX(120px);opacity:0}}@keyframes spQ{from{transform:scale(0)}}
+.sp-t{font:600 46px/1 var(--fd);letter-spacing:-.04em;color:#fff;text-shadow:none;margin:22px 0 0;animation:fadeUp .5s ease 1s both;display:block}
+.sp-t span{color:#8E7BFF;display:inline;animation:none}
+.sp-s{font-weight:500;opacity:1;letter-spacing:.18em;text-transform:uppercase;font-size:12.5px;color:#A6ADC4;margin:8px 0 0;animation:fadeUp .5s ease 1.2s both}
+.view.in-f{animation:fadeIn .22s ease both}
+.onb.bye{opacity:0;transition:opacity .3s}
+.rc{display:grid;gap:6px;text-align:left;border:0;background:none;padding:0;min-width:0}
+.rci{aspect-ratio:9/16;border-radius:14px;overflow:hidden;background:var(--soft);border:1px solid var(--ln);display:grid;place-items:center;font-size:30px;max-height:220px}
+.rci img{width:100%;height:100%;object-fit:cover;display:block}
+.rc b{font-size:13.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rc small{color:var(--mut);font-size:12px;margin-top:-6px}
+.helpbox{display:grid;gap:10px}
+.hsec{background:var(--pn);border:1px solid var(--ln);border-radius:16px;overflow:hidden}
+.hsec summary{display:flex;align-items:center;gap:12px;padding:14px;cursor:pointer;list-style:none}.hsec summary::-webkit-details-marker{display:none}
+.hsec summary b{flex:1;font-weight:600}.hic{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:color-mix(in srgb,var(--pk) 12%,transparent);color:var(--pk);flex:none}
+.hch{transition:transform .2s;color:var(--mut)}.hsec[open] .hch{transform:rotate(90deg)}
+.hbd{padding:0 16px 16px 62px;color:var(--mut);font-size:14px;line-height:1.6}.hbd ol,.hbd ul{margin:0 0 6px;padding-left:18px;display:grid;gap:6px}.hbd b{color:var(--ink)}
+.avgrid button.on{background:color-mix(in srgb,var(--pk) 14%,transparent);border-color:var(--pk)}
+.about .qlogo.xl{margin:0 auto 6px;width:88px;height:88px}
+.dsq{font-size:22px;letter-spacing:2px;margin:6px 0;line-height:1.3;word-break:break-all}.dsq.big{font-size:30px;text-align:center}
+.dlbig{text-align:center;font:600 46px var(--fd);margin:4px 0}.dlbig small{font-size:18px;color:var(--mut)}
+.row.cen{justify-content:center;margin-top:10px}.row.cen .go{min-width:min(320px,100%)}
+.duelbox{display:grid;gap:14px}.dopt{display:grid;gap:8px;background:var(--pn);border:1px solid var(--ln);border-radius:18px;padding:16px}.dopt .hint{margin:0}.hic.big{width:48px;height:48px;border-radius:14px}
+.vsrow{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;margin-top:14px}.vsrow em{font:600 18px var(--fd);font-style:normal;opacity:.6}
+.vsrow div{display:grid;justify-items:center;gap:2px;padding:12px 6px;border-radius:16px;background:rgba(127,127,160,.12)}.vsrow div.win{background:rgba(18,183,106,.16);outline:2px solid #12B76A}
+.vsrow i{font-style:normal;font-size:34px}.vsrow b{font-size:14px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.vsrow span{font:600 22px var(--fd)}.vsrow small{font-size:11px;letter-spacing:1px;word-break:break-all}
+body.ovp .scrim{z-index:110}body.ovp .sheet{z-index:120}
+.pshr{display:grid;gap:8px;background:rgba(0,0,0,.28);border-radius:16px;padding:12px;margin-top:10px}.pshr p{margin:0;font-weight:600}.pshr textarea{background:rgba(255,255,255,.95);color:#0B0F1A;font-size:13px}
+.qk{display:grid;gap:8px}.qk h3{margin:10px 0 2px;font:600 14px var(--fb);color:var(--mut);text-transform:uppercase;letter-spacing:.06em}.qk .go{margin-top:12px}
+.chipset{display:flex;flex-wrap:wrap;gap:8px}.chipset button{border-radius:999px;padding:8px 14px;font-size:14px;background:var(--pn)}
+.chipset button.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.pgrid{display:grid;grid-template-columns:repeat(var(--g),1fr);gap:2px;width:min(100%,360px);margin:0 auto;aspect-ratio:1}
+.pgrid i{font-style:normal;display:grid;place-items:center;font-size:clamp(18px,calc(52vw / var(--g)),48px);position:relative;line-height:1}
+.pgrid small{position:absolute;left:2px;top:1px;font-size:10px;font-weight:700;color:rgba(10,24,64,.5);font-family:var(--fb)}
+.pimg:has(.pgrid){height:auto!important;padding:6px}
+
 </style>
 </head>
 <body>
 
 <div id="splash" class="splash" aria-hidden="true">
- <div class="rays"></div><div class="glow"></div>
- <span class="fl" style="left:8%;animation-delay:.2s">🌍</span><span class="fl" style="left:24%;animation-delay:1.6s;font-size:34px">🎓</span><span class="fl" style="left:46%;animation-delay:.9s;font-size:30px">⭐</span><span class="fl" style="left:68%;animation-delay:2.3s">🧠</span><span class="fl" style="left:86%;animation-delay:.5s;font-size:36px">🎬</span>
  <div class="sp-in">
-  <div class="sp-logo"><b>?</b><i></i></div>
-  <h1 class="sp-t"><span>Quiz</span><span>Video</span><span>Studio</span></h1>
-  <p class="sp-s">Crea · Juega · Enseña</p>
-  <div class="sp-load"><i></i></div>
+  <div class="sp-mark"><svg viewBox="0 0 512 512"><circle class="c1" cx="208" cy="256" r="118" fill="#FF2D55"/><circle class="c2" cx="304" cy="256" r="118" fill="#5B3DF5"/><path class="c3" d="M256 148.2 A118 118 0 0 1 256 363.8 A118 118 0 0 1 256 148.2 Z" fill="#5E1A8C"/><path class="pl" d="M290 222 Q290 214 297 218 L342 249 Q349 256 342 263 L297 294 Q290 298 290 290 Z" fill="#fff"/></svg></div>
+  <h1 class="sp-t">Quiz<span>Clip</span></h1>
+  <p class="sp-s">Crea · Juega · Aprende</p>
  </div>
 </div>
 
 <section id="home" class="view home">
  <header class="top"><div class="in">
-  <div class="brand"><span class="logo" aria-hidden="true"><b>?</b><i></i></span><span class="bt">Quiz Video <em>Studio</em></span><span class="beta">BETA</span></div>
+  <div class="brand"><span class="qlogo" data-logo></span><span class="bt">Quiz<em>Clip</em></span></div>
   <span class="gap"></span>
-  <button class="ib" id="menuH" aria-label="Abrir menú">☰</button>
+  <button class="ib" id="menuH" hidden aria-label="Abrir menú"></button>
+  <button class="avatar" id="homeAv" aria-label="Perfil"><span id="homeAvE">🙂</span></button>
  </div></header>
  <div class="wrap">
-  <div class="hero">
-   <div>
-    <p class="eyebrow">Hola 👋</p>
-    <h1 data-h="hero">¿Qué vas a <em>crear</em> hoy?</h1>
-    <p class="lead">Videos de quiz para redes, repasos para tu clase y juegos para aprender inglés.</p>
-    <div class="tags"><span>🎬 TikTok · Reels · Shorts</span><span>🎓 Escuelas</span><span>🇬🇧 Inglés</span><span>📴 Sin internet</span></div>
-   </div>
-   <div class="phone" aria-hidden="true"><canvas id="heroCv" width="270" height="480"></canvas></div>
+  <div class="greet"><h1 id="greetT">Hola 👋</h1><p id="greetS">¿Qué vas a crear hoy?</p></div>
+  <button class="daily" id="dailyCard"><span class="dic" data-ic="calendar"></span><span class="dtx"><small id="dailyNo">Reto del día</small><b id="dailyT">10 preguntas nuevas cada día</b><span id="dailyS"></span></span><span class="dgo" id="dailyGo">Jugar</span></button>
+  <div class="qgrid">
+   <button class="qa qa1" id="quickHome"><span class="qi" data-ic="zap"></span><b>Video en 1 toque</b><small>Listo en segundos</small></button>
+   <button class="qa qa2" id="createHome"><span class="qi" data-ic="film"></span><b>Crear video</b><small>Plantillas y formatos</small></button>
+   <button class="qa qa3" id="brainCard"><span class="qi" data-ic="game"></span><b>Jugar</b><small id="bcLv"></small></button>
+   <button class="qa qa4" id="learnCard"><span class="qi" data-ic="book"></span><b>Aprender inglés</b><small id="lcProg"></small></button>
   </div>
+  <div class="lvline"><span id="bcStreak"></span><span class="bcbar"><i id="bcBar"></i></span><span class="bcbar" hidden><i id="lcBar"></i></span></div>
+  <div id="recentBox" hidden><div class="sech"><h2 class="sec">Continuar</h2><button class="lnk" id="recentAll">Ver todo</button></div><div class="recent" id="recent"></div></div>
+ </div>
+</section>
 
-  <button class="brainc" id="brainCard"><span class="bci" aria-hidden="true">🧠</span><span class="bct"><small>Nuevo</small><b>Pon a prueba tu mente</b><span id="bcLv"></span><span class="bcbar"><i id="bcBar"></i></span><span id="bcStreak" class="bcs"></span></span><span class="bcgo">Jugar ▶</span></button>
-
-  <button class="brainc learnc" id="learnCard"><span class="bci" aria-hidden="true">📖</span><span class="bct"><small>Nuevo</small><b>Aprende leyendo</b><span>Textos en inglés con preguntas</span><span class="bcbar"><i id="lcBar"></i></span><span id="lcProg" class="bcs"></span></span><span class="bcgo">Leer ▶</span></button>
-
-  <h2 class="sec">Crear nuevo</h2>
+<section id="create" class="view" hidden>
+ <header class="top"><div class="in"><span class="bt">Crear</span><span class="gap"></span></div></header>
+ <div class="wrap">
+  <button class="hero1" id="quickCard"><span class="h1t"><small>Nuevo</small><b>Video en 1 toque</b><span>Elige un tema y la app arma el video completo, con voz y música.</span><span class="btnp"><span data-ic="zap"></span>Crear ahora</span></span><span class="phone" aria-hidden="true"><canvas id="heroCv" width="270" height="480"></canvas></span></button>
+  <h2 class="sec">Formatos virales</h2>
+  <div class="fmts" id="fmts"></div>
+  <h2 class="sec">Plantillas</h2>
   <div class="modes">
-   <button class="mode" data-mode="redes" style="--i:0;--mc:#FFD6E8"><span class="me">🎬</span><b>Videos para redes</b><span>Cuenta atrás, música y efectos para TikTok, Reels y Shorts.</span></button>
-   <button class="mode" data-mode="clase" style="--i:1;--mc:#C9F2D6"><span class="me">🎓</span><b>Para clase</b><span>Repasa temas con tus alumnos y juega en el aula.</span></button>
-   <button class="mode" data-mode="ingles" style="--i:2;--mc:#CFE6FF"><span class="me">🇬🇧</span><b>Inglés con imágenes</b><span>Vocabulario con imágenes y la traducción al revelar.</span></button>
-   <button class="mode" data-mode="blank" style="--i:3;--mc:#FFF1A8"><span class="me">✍️</span><b>Desde cero</b><span>Una hoja en blanco para tu propia idea.</span></button>
+   <button class="mode" data-mode="redes" style="--i:0"><span class="me">🎬</span><b>Videos para redes</b><span>TikTok, Reels y Shorts</span></button>
+   <button class="mode" data-mode="clase" style="--i:1"><span class="me">🎓</span><b>Para clase</b><span>Repasos y juegos en el aula</span></button>
+   <button class="mode" data-mode="ingles" style="--i:2"><span class="me">🇬🇧</span><b>Inglés con imágenes</b><span>Vocabulario con imágenes</span></button>
+   <button class="mode" data-mode="blank" style="--i:3"><span class="me">✍️</span><b>Desde cero</b><span>Tu propia idea</span></button>
   </div>
   <div class="idea"><span class="bulb" aria-hidden="true">💡</span><div><small>Idea del día</small><b id="ideaTx"></b></div><button id="ideaGo">Crear con esta idea</button></div>
-
   <h2 class="sec">Mis proyectos <small id="pCount"></small></h2>
   <div id="projects" class="projs"></div>
  </div>
@@ -516,35 +713,35 @@ body.relang{opacity:.35;pointer-events:none;transition:opacity .2s}
 
 <section id="brain" class="view" hidden>
  <header class="top"><div class="in">
-  <button class="ib" id="bBack" aria-label="Volver al inicio">←</button>
-  <span class="bt" data-h="bmind">Pon a prueba tu <em>mente</em></span>
+  <button class="ib" id="bBack" hidden aria-label="Volver al inicio"></button>
+  <span class="bt">Jugar</span>
   <span class="gap"></span>
-  <button class="ib" id="menuB" aria-label="Abrir menú">☰</button>
+  <button class="ib" id="menuB" hidden aria-label="Abrir menú"></button>
  </div></header>
  <div class="wrap">
   <div class="bstat">
    <div class="bsl"><b id="bStatLv"></b><span class="bcbar"><i id="bStatBar"></i></span><small id="bStatXp"></small></div>
    <div class="bsn"><span><b id="bStatS">0</b><small>🔥 Racha</small></span><span><b id="bStatG">0</b><small>🎮 Partidas</small></span><span><b id="bStatA">—</b><small>🎯 Aciertos</small></span></div>
   </div>
+  <div class="pduo"><button class="daily mini" id="dailyCard2"><span class="dic" data-ic="calendar"></span><span class="dtx"><b>Reto del día</b><span id="dailyS2"></span></span></button><button class="daily mini duel" id="duelCard"><span class="dic" data-ic="sword"></span><span class="dtx"><b>Duelo</b><span>Reta a un amigo</span></span></button></div>
   <h2 class="sec">Elige el nivel</h2>
   <div class="seg" id="bLevel"><button data-lv="e">🟢 Fácil</button><button data-lv="n">🟡 Normal</button><button data-lv="d">🔴 Difícil</button></div>
   <h2 class="sec">Elige una categoría</h2>
   <div class="cats" id="cats"></div>
-  <p class="hint">Cuanto más rápido respondas, más puntos ganas. Con 3 aciertos seguidos activas la racha 🔥. Tu progreso se guarda en este dispositivo.</p>
  </div>
 </section>
 
 <section id="learn" class="view" hidden>
  <header class="top"><div class="in">
-  <button class="ib" id="lBack" aria-label="Volver al inicio">←</button>
-  <span class="bt" data-h="learnT">Aprende <em>leyendo</em></span>
+  <button class="ib" id="lBack" hidden aria-label="Volver al inicio"></button>
+  <span class="bt">Aprender</span>
   <span class="gap"></span>
-  <button class="ib" id="menuL" aria-label="Abrir menú">☰</button>
+  <button class="ib" id="menuL" hidden aria-label="Abrir menú"></button>
  </div></header>
  <div class="wrap">
   <div class="bstat lstat">
-   <div class="bsl"><b><span id="lStatN">0</span> / <span id="lStatT">36</span> 📖</b><span class="bcbar"><i id="lStatBar"></i></span><small>Lee textos en inglés, toca las palabras que no conozcas y responde las preguntas al final.</small></div>
-   <div class="bsn two"><span><b id="lStatA">—</b><small>🎯 Aciertos</small></span><span><b>3</b><small>🎚️ Niveles</small></span></div>
+   <div class="bsl"><b><span id="lStatN">0</span> / <span id="lStatT">60</span> 📖</b><span class="bcbar"><i id="lStatBar"></i></span></div>
+   <div class="bsn two"><span><b id="lStatA">—</b><small>🎯 Aciertos</small></span><span><b id="lStatW">0</b><small>⭐ Palabras</small></span></div>
   </div>
   <div class="myhead"><h2 class="sec">✍️ Mis textos</h2><span class="gap"></span><button class="sm" id="wordsBtn">⭐ Mis palabras <b id="wordsN">0</b></button><button class="sm on" id="myNew">+ Crear mi texto</button></div>
   <div class="rlist" id="myList"></div>
@@ -555,6 +752,46 @@ body.relang{opacity:.35;pointer-events:none;transition:opacity .2s}
   <div class="rlist" id="rList"></div>
  </div>
 </section>
+
+<section id="profile" class="view" hidden>
+ <header class="top"><div class="in"><span class="bt">Perfil</span><span class="gap"></span></div></header>
+ <div class="wrap">
+  <div class="pfcard"><button class="avatar big" id="pfAv" aria-label="Cambiar avatar"><span id="pfAvE">🙂</span></button><div class="pfinfo"><input type="text" id="pfName" maxlength="24" placeholder="Tu nombre" aria-label="Tu nombre"><span id="pfRank"></span><span class="bcbar"><i id="pfBar"></i></span><small id="pfXp"></small></div></div>
+  <div class="stats" id="pfStats"></div>
+  <h2 class="sec">Medallas <small id="pfMedN"></small></h2>
+  <div class="medals" id="pfMedals"></div>
+  <h2 class="sec">Ajustes</h2>
+  <div class="setlist" id="setlist">
+   <button data-act="uiLang"><span data-ic="globe"></span>Idioma de la app<b id="uiLangV2" data-nt></b></button>
+   <button data-act="theme"><span data-ic="moon"></span>Apariencia<b id="themeV2"></b></button>
+   <button data-sheet="backup"><span data-ic="archive"></span>Copia de seguridad</button>
+   <button data-sheet="help"><span data-ic="help"></span>Cómo se usa</button>
+   <button data-sheet="don"><span data-ic="heart"></span>Apoyar el proyecto</button>
+   <button data-sheet="about"><span data-ic="info"></span>Acerca de</button>
+  </div>
+ </div>
+</section>
+
+<nav id="tabbar" class="tabbar" aria-label="Navegación principal">
+ <button data-tab="home" class="on"><span data-ic="home"></span><small>Inicio</small></button>
+ <button data-tab="create"><span data-ic="create"></span><small>Crear</small></button>
+ <button data-tab="brain"><span data-ic="game"></span><small>Jugar</small></button>
+ <button data-tab="learn"><span data-ic="book"></span><small>Aprender</small></button>
+ <button data-tab="profile"><span data-ic="user"></span><small>Perfil</small></button>
+</nav>
+
+<div id="onb" class="onb" hidden>
+ <div class="onb-in">
+  <button class="onb-skip" id="onbSkip">Omitir</button>
+  <div class="onb-slides" id="onbSlides">
+   <div class="onb-s"><div class="onb-art"><span class="qlogo xl" data-logo></span></div><h2>Bienvenido a QuizClip</h2><p>Crea videos de quiz, juega retos y aprende inglés. Todo gratis y sin internet.</p><div class="onb-lang" id="onbLang"></div></div>
+   <div class="onb-s"><div class="onb-art a2"><span data-ic="zap"></span></div><h2>Videos en un toque</h2><p>Elige un tema y obtén un video listo para TikTok, Reels y Shorts, con voz y música.</p></div>
+   <div class="onb-s"><div class="onb-art a3"><span data-ic="trophy"></span></div><h2>Juega, aprende y presume</h2><p>Haz el Reto del día, reta a tus amigos y sube de nivel leyendo en inglés.</p></div>
+  </div>
+  <div class="onb-dots" id="onbDots"><i class="on"></i><i></i><i></i></div>
+  <button class="go onb-next" id="onbNext">Siguiente</button>
+ </div>
+</div>
 
 <section id="reader" class="view rdv" hidden>
  <header class="top"><div class="in">
@@ -567,7 +804,6 @@ body.relang{opacity:.35;pointer-events:none;transition:opacity .2s}
  <div class="wrap rwrap">
   <div class="rhead" id="rHead"></div>
   <div class="rtools"><button id="rPlay" class="rt">▶ <span>Escuchar</span></button><button id="rSlow" class="rt" aria-pressed="false">🐢 <span>Lento</span></button><button id="rTr" class="rt" aria-pressed="false">🌐 <span>Traducción</span></button><button id="rVid" class="rt">🎬 <span>Video</span></button></div>
-  <p class="hint rhint">👆 Toca una palabra para ver qué significa y cómo suena. Las palabras subrayadas son las más importantes.</p>
   <article class="rtext" id="rText" lang="en"></article>
   <h2 class="sec">Palabras clave</h2>
   <div class="rvoc" id="rVoc"></div>
@@ -593,7 +829,6 @@ body.relang{opacity:.35;pointer-events:none;transition:opacity .2s}
     <button class="fsb" id="fsBtn" aria-label="Ver en pantalla completa" title="Pantalla completa">⛶</button>
    </div></div>
    <div class="bar"><button class="ib" id="play" aria-label="Reproducir">▶</button><input id="scrub" type="range" min="0" max="1000" value="0" aria-label="Posición"><span id="tm"></span><button class="ib" id="playBtn" aria-label="Jugar o presentar" title="Jugar o presentar en clase">🎮</button></div>
-   <p class="hint">Toca el video para reproducirlo. Arrastra una imagen aquí o pégala con Ctrl+V.</p>
   </section>
   <aside class="panel">
    <div class="card">
@@ -606,7 +841,6 @@ body.relang{opacity:.35;pointer-events:none;transition:opacity .2s}
     </div>
     <div id="form"></div>
     <details id="bulk"><summary>⚡ Crear muchas preguntas rápido, gratis con cualquier chat de IA</summary>
-     <ol class="how"><li>Escribe el tema y toca «Copiar instrucción».</li><li>Pégala en ChatGPT, Gemini o Claude. Sus versiones gratis sirven.</li><li>Copia lo que te responda y pégalo en el cuadro de abajo.</li></ol>
      <div class="opt"><input type="text" id="topic" placeholder="Tema, ej.: animales del océano"><select id="topicN" aria-label="Cantidad" style="width:auto"><option>5</option><option>8</option><option selected>10</option><option>15</option></select><button class="sm" id="bulkAI">Copiar instrucción</button></div>
      <textarea id="bulkTx" rows="7" style="margin-top:8px" placeholder="¿Cuál es el planeta más grande? | Saturno | *Júpiter | Neptuno | 🪐&#10;dato: Cabrían más de 1.300 Tierras dentro de Júpiter."></textarea>
      <div class="row" style="margin-top:8px"><button id="bulkAdd">Agregar al final</button><button id="bulkRep">Reemplazar todas</button></div>
@@ -643,7 +877,7 @@ body.relang{opacity:.35;pointer-events:none;transition:opacity .2s}
  <button class="di" data-sheet="help" style="--i:10"><i>❓</i>Cómo se usa</button>
  <button class="di" data-act="theme" style="--i:11"><i>🌓</i>Apariencia<b id="themeV">Automática</b></button>
  <button class="di" data-sheet="about" style="--i:12"><i>ℹ️</i>Acerca de</button>
- <p class="dfoot">Quiz Video Studio · Beta 0.3</p>
+ <p class="dfoot">QuizClip · 1.0</p>
  <input type="file" id="openF" accept=".json,application/json" hidden>
 </nav>
 
@@ -674,6 +908,7 @@ body.relang{opacity:.35;pointer-events:none;transition:opacity .2s}
    <label>Fondo</label><div class="rcats" id="rvBgs"></div>
    <div id="rvExpBox">
    <div class="two"><label style="margin-top:4px">Tu @ (marca de agua)<input type="text" id="rvHandle" placeholder="@tucuenta"></label><label style="margin-top:4px">Calidad<select id="rvRes"><option value="1080">1080×1920 (TikTok / Reels / Shorts)</option><option value="720">720×1280 (más liviano)</option></select></label></div>
+   <label class="sw" style="margin-top:10px"><input type="checkbox" id="rvSign"> Firma QuizClip al final (2 s)</label>
    <div style="margin-top:14px"><button class="go" id="rvExp">🎬 Guardar video MP4</button></div>
    <progress id="rvPg" max="1" value="0" hidden></progress><p id="rvMsg" role="status" class="hint"></p>
    </div>
@@ -793,6 +1028,7 @@ body.relang{opacity:.35;pointer-events:none;transition:opacity .2s}
     <label style="margin-top:4px">Cuadros por segundo<select id="fps"><option value="30">30 fps</option><option value="60">60 fps (más fluido)</option></select></label>
    </div>
    <label class="sw" style="margin-top:14px"><input type="checkbox" id="snd" checked> Incluir música y sonidos</label>
+   <label class="sw" style="margin-top:10px"><input type="checkbox" id="sign"> Firma QuizClip al final (2 s)</label>
    <div style="margin-top:14px"><button class="go" id="exp">🎬 Exportar MP4</button></div>
    <progress id="pg" max="1" value="0" hidden></progress><p id="msg" role="status"></p>
    <h3>Miniatura</h3>
@@ -802,28 +1038,23 @@ body.relang{opacity:.35;pointer-events:none;transition:opacity .2s}
    <div class="row"><button class="sm" id="exFs">⛶ Revisar en pantalla completa</button><button class="sm" id="exPlay">🎮 Probarlo como juego</button></div>
   </div>
 
-  <div id="tab-help" hidden>
-   <ol class="help">
-    <li><i>1</i><div><b>Elige un modo</b><span>En el inicio toca Videos para redes, Para clase, Inglés o Desde cero, y elige una plantilla.</span></div></li>
-    <li><i>2</i><div><b>Edita las preguntas</b><span>Toca P1, P2… para cambiar la pregunta, las opciones, la imagen y el dato curioso. El círculo verde marca la respuesta correcta.</span></div></li>
-    <li><i>3</i><div><b>Dale estilo</b><span>En el menú ☰ cambias fondos, música, colores, letra e idioma del video.</span></div></li>
-    <li><i>4</i><div><b>Revísalo en grande</b><span>Toca ⛶ para ver el video en pantalla completa antes de guardarlo.</span></div></li>
-    <li><i>5</i><div><b>Exporta o juega</b><span>🎬 crea el MP4 para TikTok, Reels o Shorts. 🎮 lo convierte en un juego para tu clase o tu familia.</span></div></li>
-   </ol>
-   <h3>Trucos</h3>
-   <ul class="tips" data-h="tips">
-    <li>Usa el efecto <b>Silueta</b> o <b>Pixelada</b> en la imagen para videos de «adivina».</li>
-    <li>Con <b>Crear muchas preguntas rápido</b> armas 10 preguntas en un minuto con un chat de IA gratis.</li>
-    <li>Para enseñar inglés, pon el idioma del video en English y usa el dato curioso para la traducción.</li>
-    <li>En el modo jugar, el botón 🔊 lee la pregunta en voz alta, si tu dispositivo tiene voz.</li>
-    <li>Tus proyectos se guardan solos en este dispositivo. Para pasarlos a otro, usa ☰ → Guardar como archivo.</li>
-   </ul>
-  </div>
-
+  <div id="tab-help" hidden><div id="helpBox" class="helpbox" data-nt></div></div>
+  <div id="tab-shr" hidden><p class="hint" style="margin-top:0">Copia este texto y pégalo en WhatsApp, TikTok o donde quieras.</p><textarea id="shrTx" rows="6" readonly data-nt></textarea><div class="row cen"><button class="go" id="shrCopy">📋 Copiar</button></div></div>
+  <div id="tab-daily" hidden><div id="dailyBox" class="dailybox"></div></div>
+  <div id="tab-duel" hidden><div class="duelbox"><div class="dopt"><span class="hic big" data-ic="sword"></span><b>Crea un duelo</b><p class="hint">Juega 10 preguntas y envía el enlace. Tu amigo responde las mismas preguntas e intenta superar tus puntos, sin instalar nada.</p><button class="go" id="duelNew">⚔️ Jugar y retar</button></div>
+   <div class="dopt"><b>¿Te enviaron un duelo?</b><p class="hint">Pega aquí el enlace que recibiste.</p><input type="text" id="duelIn" placeholder="https://…/jugar.html#d=…" data-nt><button id="duelGo">Aceptar el reto</button><p class="hint" id="duelMsg" role="status"></p></div></div></div>
+  <div id="tab-quick" hidden><div class="qk">
+   <h3>Tema</h3><div class="chipset" id="qkCats"></div>
+   <h3>Nivel</h3><div class="seg" id="qkLv"><button data-lv="e">🟢 Fácil</button><button data-lv="n">🟡 Normal</button><button data-lv="d">🔴 Difícil</button></div>
+   <h3>Preguntas</h3><div class="seg four" id="qkN"><button data-n="5">5</button><button data-n="8">8</button><button data-n="10">10</button><button data-n="15">15</button></div>
+   <h3>Diseño</h3><div class="chipset" id="qkTh"></div>
+   <label class="sw" id="qkVrow"><input type="checkbox" id="qkV"> 🎙️ Narrador: una voz lee las preguntas</label>
+   <button class="go" id="qkGo">⚡ Crear video</button></div></div>
+  <div id="tab-av" hidden><div class="avgrid" id="avGrid"></div></div>
   <div id="tab-don" hidden>
    <div class="donbox">
     <span class="donh" aria-hidden="true">💛</span>
-    <h3>¿Te gusta Quiz Video Studio?</h3>
+    <h3>¿Te gusta QuizClip?</h3>
     <p>La app es gratis y sin anuncios. Si te ayuda con tus videos o tus clases, puedes apoyar su desarrollo con una donación por PayPal, del monto que quieras. ¡Gracias!</p>
    </div>
    <label for="ppMail">Correo de PayPal</label>
@@ -835,7 +1066,7 @@ body.relang{opacity:.35;pointer-events:none;transition:opacity .2s}
   </div>
 
   <div id="tab-about" hidden>
-   <div class="about"><span class="logo" aria-hidden="true"><b>?</b><i></i></span><h3>Quiz Video Studio</h3><p data-h="about">Versión beta 0.3</p><p>Crea videos de quiz para redes, repasos para clase y juegos para aprender inglés. Gratis y sin internet.</p></div>
+   <div class="about"><span class="qlogo xl" data-logo aria-hidden="true"></span><h3>QuizClip</h3><p data-h="about">Versión 1.0</p><p>Crea videos de quiz para redes, repasos para clase y juegos para aprender inglés. Gratis y sin internet.</p></div>
   </div>
  </div>
 </section>
@@ -864,13 +1095,106 @@ const rnd=i=>{const x=Math.sin(i*127.1+311.7)*43758.5453;return x-Math.floor(x)}
 const hexA=(h,a)=>{h=String(h).replace('#','');if(h.length==3)h=[...h].map(x=>x+x).join('');const n=parseInt(h,16)||0;return `rgba(${n>>16},${n>>8&255},${n&255},${a})`};
 const LET='ABCD';
 
+/* ---------- íconos de línea (dibujados a mano, sin librerías) y logo de QuizClip ---------- */
+const ICP={home:'<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9.5 21v-6h5v6"/>',
+ create:'<rect x="3" y="4" width="18" height="16" rx="3.5"/><path d="M12 8.5v7M8.5 12h7"/>',
+ game:'<rect x="2.5" y="7" width="19" height="11" rx="5.5"/><path d="M7.5 10.5v4M5.5 12.5h4"/><path d="M15.5 11.5h.01M18 13.5h.01" stroke-width="3"/>',
+ book:'<path d="M4 4.5h5.5A2.5 2.5 0 0 1 12 7v13a2 2 0 0 0-2-2H4z"/><path d="M20 4.5h-5.5A2.5 2.5 0 0 0 12 7v13a2 2 0 0 1 2-2h6z"/>',
+ user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+ menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',back:'<path d="M15 5l-7 7 7 7"/>',chev:'<path d="M9 5l7 7-7 7"/>',close:'<path d="M6 6l12 12M18 6 6 18"/>',
+ globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
+ moon:'<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
+ archive:'<rect x="3" y="4" width="18" height="5" rx="1.5"/><path d="M5 9v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9M10 13h4"/>',
+ help:'<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .8-1 1.5v.7"/><path d="M12 17h.01" stroke-width="3"/>',
+ heart:'<path d="M12 20s-7.5-4.6-7.5-10.2A4.2 4.2 0 0 1 12 7.2a4.2 4.2 0 0 1 7.5 2.6C19.5 15.4 12 20 12 20z"/>',
+ info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6"/><path d="M12 7.5h.01" stroke-width="3"/>',
+ trophy:'<path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H5.5a3 3 0 0 0 3 4.5M16 6h2.5a3 3 0 0 1-3 4.5M12 13v4M8 21h8M9.5 17h5"/>',
+ flame:'<path d="M12 21a6.5 6.5 0 0 0 6.5-6.5c0-4.2-3.4-6.4-4.4-10.5-2.2 2-3.1 4.1-3.1 6.2-1-.8-1.8-1.9-2.1-3.1C6.6 9.3 5.5 11.6 5.5 14.5A6.5 6.5 0 0 0 12 21z"/>',
+ share:'<circle cx="18" cy="5.5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="18.5" r="2.5"/><path d="M8.2 10.8l7.6-4.1M8.2 13.2l7.6 4.1"/>',
+ zap:'<path d="M13 2.5 4.5 13.5h6.5l-1 8 8.5-11h-6.5z"/>',calendar:'<rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
+ sword:'<path d="M14.5 4H20v5.5L9.5 20 4 14.5z"/><path d="M7 12l5 5M4 20l2.5-2.5"/>',film:'<rect x="3" y="4" width="18" height="16" rx="3"/><path d="M7.5 4v16M16.5 4v16M3 9h4.5M16.5 9H21M3 15h4.5M16.5 15H21"/>',
+ star:'<path d="M12 3.2l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17.2l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>',edit:'<path d="M4 20h4L19.5 8.5a2.1 2.1 0 0 0-3-3L5 17z"/>',
+ folder:'<path d="M3 7.5A2.5 2.5 0 0 1 5.5 5h3.5l2 2h7.5A2.5 2.5 0 0 1 21 9.5v8a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z"/>',
+ play:'<path d="M8 5.5v13l10.5-6.5z"/>',check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',spark:'<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15.5l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/>',
+ target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+ grid:'<rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/>',
+ smile:'<circle cx="12" cy="12" r="9"/><path d="M8.5 14.5a4.5 4.5 0 0 0 7 0"/><path d="M9 9.5h.01M15 9.5h.01" stroke-width="3"/>',flag:'<path d="M5 21V4M5 4.5c4-2 7 2 14 0v9c-7 2-10-2-14 0"/>',
+ chart:'<path d="M4 20V10M10 20V4M16 20v-7M21 20H3"/>',mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/>',
+ bolt2:'<path d="M5 12h4l3-8 3 16 3-8h2"/>',copy:'<rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V6.5A2.5 2.5 0 0 0 13.5 4h-7A2.5 2.5 0 0 0 4 6.5v7A2.5 2.5 0 0 0 6.5 16H8"/>'};
+const ic=(n,cls='')=>`<svg class="ic ${cls}" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${ICP[n]||''}</svg>`;
+const QMARK=(bg)=>`<svg viewBox="0 0 512 512" aria-hidden="true">${bg?`<rect width="512" height="512" rx="112" fill="${bg}"/>`:''}<circle cx="208" cy="256" r="118" fill="#FF2D55"/><circle cx="304" cy="256" r="118" fill="#5B3DF5"/><path d="M256 148.2 A118 118 0 0 1 256 363.8 A118 118 0 0 1 256 148.2 Z" fill="#5E1A8C"/><path d="M290 222 Q290 214 297 218 L342 249 Q349 256 342 263 L297 294 Q290 298 290 290 Z" fill="#fff"/></svg>`;
+function applyIcons(root){(root||document).querySelectorAll('[data-ic]').forEach(el=>{if(!el.firstElementChild)el.innerHTML=ic(el.dataset.ic)});(root||document).querySelectorAll('[data-logo]').forEach(el=>{if(!el.firstElementChild)el.innerHTML=QMARK(el.dataset.logo||'')})}
+applyIcons();
+
 /* ---------- idioma de la app: español, inglés y portugués ---------- */
 const UILS=['es','en','pt'];
 const UIL=(()=>{let l='';try{l=localStorage.getItem('qvs-ui')||''}catch(e){}if(!UILS.includes(l)){const n=String((navigator.languages&&navigator.languages[0])||navigator.language||'es').slice(0,2).toLowerCase();l=UILS.includes(n)?n:(n=='gl'||n=='ca'?'es':'en')}return l})();
 const UIX=UILS.indexOf(UIL)-1;
 document.documentElement.lang=UIL;
 /* cada línea: español || inglés || portugués */
-const DICT_TX=`Mis textos||My texts||Meus textos
+const DICT_TX=`Crea · Juega · Aprende||Create · Play · Learn||Crie · Jogue · Aprenda
+Perfil||Profile||Perfil
+Reto del día||Daily Challenge||Desafio do dia
+10 preguntas nuevas cada día||10 new questions every day||10 perguntas novas todo dia
+Jugar||Play||Jogar
+Video en 1 toque||One-tap video||Vídeo em 1 toque
+Listo en segundos||Ready in seconds||Pronto em segundos
+Crear video||Create video||Criar vídeo
+Plantillas y formatos||Templates and formats||Modelos e formatos
+Aprender inglés||Learn English||Aprender inglês
+Continuar||Continue||Continuar
+Ver todo||See all||Ver tudo
+Crear||Create||Criar
+Nuevo||New||Novo
+Elige un tema y la app arma el video completo, con voz y música.||Pick a topic and the app builds the whole video, with voice and music.||Escolha um tema e o app monta o vídeo completo, com voz e música.
+Crear ahora||Create now||Criar agora
+Formatos virales||Viral formats||Formatos virais
+Plantillas||Templates||Modelos
+TikTok, Reels y Shorts||TikTok, Reels and Shorts||TikTok, Reels e Shorts
+Repasos y juegos en el aula||Reviews and games for class||Revisões e jogos na sala
+Vocabulario con imágenes||Vocabulary with pictures||Vocabulário com imagens
+Tu propia idea||Your own idea||Sua própria ideia
+Duelo||Duel||Duelo
+Reta a un amigo||Challenge a friend||Desafie um amigo
+Aprender||Learn||Aprender
+⭐ Palabras||⭐ Words||⭐ Palavras
+Cambiar avatar||Change avatar||Mudar avatar
+Tu nombre||Your name||Seu nome
+Medallas||Medals||Medalhas
+Ajustes||Settings||Configurações
+Navegación principal||Main navigation||Navegação principal
+Inicio||Home||Início
+Omitir||Skip||Pular
+Bienvenido a QuizClip||Welcome to QuizClip||Bem-vindo ao QuizClip
+Crea videos de quiz, juega retos y aprende inglés. Todo gratis y sin internet.||Create quiz videos, play challenges and learn English. All free and offline.||Crie vídeos de quiz, jogue desafios e aprenda inglês. Tudo grátis e sem internet.
+Videos en un toque||Videos in one tap||Vídeos em um toque
+Elige un tema y obtén un video listo para TikTok, Reels y Shorts, con voz y música.||Pick a topic and get a video ready for TikTok, Reels and Shorts, with voice and music.||Escolha um tema e tenha um vídeo pronto para TikTok, Reels e Shorts, com voz e música.
+Juega, aprende y presume||Play, learn and show off||Jogue, aprenda e mostre
+Haz el Reto del día, reta a tus amigos y sube de nivel leyendo en inglés.||Do the Daily Challenge, challenge your friends and level up reading in English.||Faça o Desafio do dia, desafie seus amigos e suba de nível lendo em inglês.
+Siguiente||Next||Próximo
+Elige tu avatar||Choose your avatar||Escolha seu avatar
+Versión 1.0||Version 1.0||Versão 1.0
+QuizClip · 1.0||QuizClip · 1.0||QuizClip · 1.0
+Copia este texto y pégalo en WhatsApp, TikTok o donde quieras.||Copy this text and paste it on WhatsApp, TikTok or anywhere.||Copie este texto e cole no WhatsApp, TikTok ou onde quiser.
+📋 Copiar||📋 Copy||📋 Copiar
+Crea un duelo||Create a duel||Crie um duelo
+Juega 10 preguntas y envía el enlace. Tu amigo responde las mismas preguntas e intenta superar tus puntos, sin instalar nada.||Play 10 questions and send the link. Your friend answers the same questions and tries to beat your points, no install needed.||Jogue 10 perguntas e envie o link. Seu amigo responde às mesmas perguntas e tenta superar seus pontos, sem instalar nada.
+⚔️ Jugar y retar||⚔️ Play and challenge||⚔️ Jogar e desafiar
+¿Te enviaron un duelo?||Did someone send you a duel?||Recebeu um duelo?
+Pega aquí el enlace que recibiste.||Paste the link you received here.||Cole aqui o link que você recebeu.
+Aceptar el reto||Accept the challenge||Aceitar o desafio
+⚔️ Retar a un amigo||⚔️ Challenge a friend||⚔️ Desafiar um amigo
+Compartir||Share||Compartilhar
+Duelo||Duel||Duelo
+Firma QuizClip al final (2 s)||QuizClip signature at the end (2 s)||Assinatura QuizClip no final (2 s)
+Tema||Topic||Tema
+Nivel||Level||Nível
+Preguntas||Questions||Perguntas
+Diseño||Design||Design
+🎙️ Narrador: una voz lee las preguntas||🎙️ Narrator: a voice reads the questions||🎙️ Narrador: uma voz lê as perguntas
+⚡ Crear video||⚡ Create video||⚡ Criar vídeo
+Video en 1 toque||One-tap video||Vídeo em 1 toque
+Mis textos||My texts||Meus textos
 ✍️ Mis textos||✍️ My texts||✍️ Meus textos
 ⭐ Mis palabras||⭐ My words||⭐ Minhas palavras
 Mis palabras||My words||Minhas palavras
@@ -918,7 +1242,7 @@ Preparando la copia…||Preparing the backup…||Preparando a cópia…
 ¿Restaurar esta copia? Se agregarán sus proyectos y se reemplazará tu progreso actual.||Restore this backup? Its projects will be added and your current progress will be replaced.||Restaurar esta cópia? Os projetos dela serão adicionados e seu progresso atual será substituído.
 Restaurar||Restore||Restaurar
 Copia restaurada ✅||Backup restored ✅||Cópia restaurada ✅
-Ese archivo no es una copia de seguridad de Quiz Video Studio.||That file isn't a Quiz Video Studio backup.||Esse arquivo não é uma cópia de segurança do Quiz Video Studio.
+Ese archivo no es una copia de seguridad de QuizClip.||That file isn't a QuizClip backup.||Esse arquivo não é uma cópia de segurança do QuizClip.
 Guardar como video||Save as video||Salvar como vídeo
 Video||Video||Vídeo
 🎵 Música de fondo||🎵 Background music||🎵 Música de fundo
@@ -1176,7 +1500,7 @@ Toca ⛶ para ver el video en pantalla completa antes de guardarlo.||Tap ⛶ to 
 Exporta o juega||Export or play||Exporte ou jogue
 🎬 crea el MP4 para TikTok, Reels o Shorts. 🎮 lo convierte en un juego para tu clase o tu familia.||🎬 creates the MP4 for TikTok, Reels or Shorts. 🎮 turns it into a game for your class or family.||🎬 cria o MP4 para TikTok, Reels ou Shorts. 🎮 transforma em um jogo para sua turma ou família.
 Trucos||Tips||Dicas
-¿Te gusta Quiz Video Studio?||Do you like Quiz Video Studio?||Gosta do Quiz Video Studio?
+¿Te gusta QuizClip?||Do you like QuizClip?||Gosta do QuizClip?
 La app es gratis y sin anuncios. Si te ayuda con tus videos o tus clases, puedes apoyar su desarrollo con una donación por PayPal, del monto que quieras. ¡Gracias!||The app is free and ad-free. If it helps with your videos or classes, you can support its development with a PayPal donation of any amount. Thank you!||O app é grátis e sem anúncios. Se ele ajuda nos seus vídeos ou aulas, você pode apoiar o desenvolvimento com uma doação pelo PayPal, do valor que quiser. Obrigado!
 Correo de PayPal||PayPal email||E-mail do PayPal
 Copiar||Copy||Copiar
@@ -1292,7 +1616,7 @@ Proyecto duplicado||Project duplicated||Projeto duplicado
 Proyecto eliminado||Project deleted||Projeto excluído
 No se pudo abrir el proyecto.||Couldn't open the project.||Não foi possível abrir o projeto.
 No se pudo guardar en este dispositivo. Usa ☰ → Guardar como archivo.||Couldn't save on this device. Use ☰ → Save as file.||Não foi possível salvar neste aparelho. Use ☰ → Salvar como arquivo.
-Ese archivo no es un proyecto de Quiz Video Studio.||That file isn't a Quiz Video Studio project.||Esse arquivo não é um projeto do Quiz Video Studio.
+Ese archivo no es un proyecto de QuizClip.||That file isn't a QuizClip project.||Esse arquivo não é um projeto do QuizClip.
 Correo copiado 💛||Email copied 💛||E-mail copiado 💛
 Correo seleccionado: cópialo con «Copiar»||Email selected: copy it with “Copy”||E-mail selecionado: copie com “Copiar”
 Copia la instrucción y pégala en un chat de IA gratis||Copy the prompt and paste it into a free AI chat||Copie a instrução e cole em um chat de IA grátis
@@ -1442,7 +1766,7 @@ const HD={
  bulkfmt:['You can also write them yourself: <code>Question | Option | *Correct | Option | emoji</code> and below it <code>fact: …</code>','Você também pode escrevê-las: <code>Pergunta | Opção | *Correta | Opção | emoji</code> e embaixo <code>curiosidade: …</code>'],
  tips:['<li>Use the <b>Silhouette</b> or <b>Pixelated</b> image effect for “guess what” videos.</li><li>With <b>Create many questions fast</b> you can build 10 questions in a minute with a free AI chat.</li><li>To teach English, set the video language to English and use the fun fact for the translation.</li><li>In play mode, the 🔊 button reads the question aloud if your device has a voice.</li><li>Your projects save themselves on this device. To move them to another one, use ☰ → Save as file.</li>',
   '<li>Use o efeito <b>Silhueta</b> ou <b>Pixelada</b> na imagem para vídeos de “adivinhe”.</li><li>Com <b>Crie muitas perguntas rápido</b> você monta 10 perguntas em um minuto com um chat de IA grátis.</li><li>Para ensinar inglês, coloque o idioma do vídeo em English e use a curiosidade para a tradução.</li><li>No modo jogar, o botão 🔊 lê a pergunta em voz alta, se o seu aparelho tiver voz.</li><li>Seus projetos são salvos sozinhos neste aparelho. Para levá-los a outro, use ☰ → Salvar como arquivo.</li>'],
- about:['Beta version 0.3','Versão beta 0.3'],
+ about:['Version 1.0','Versão 1.0'],
  learnT:['Learn by <em>reading</em>','Aprenda <em>lendo</em>']};
 /* traduce lo que aparece en pantalla, también lo que se crea después */
 function trEl(el){if(el.closest&&el.closest('[data-nt]'))return;for(const a of['aria-label','title','placeholder']){const v=el.getAttribute&&el.getAttribute(a);if(v){const t=trAll(v);if(t!==v)el.setAttribute(a,t)}}}
@@ -2208,7 +2532,7 @@ function pic(c,s,x,y,w,h,r,col,lw,rv=1){if(h<20)return;
  OC.width=W2;OC.height=H2;const o=OC.getContext('2d'),m=getIm(s.img),fx=rv>=1?'none':(s.fx||'none'),e=clamp(rv,0,1)**1.4;
  let z=s.iz||1;if(fx=='zoom')z*=1+3.5*(1-e);
  if(m){const k=Math.max(W2/m.width,H2/m.height)*z,dw=m.width*k,dh=m.height*k;o.drawImage(m,(W2-dw)/2-(s.ix||0)*(dw-W2)/2,(H2-dh)/2-(s.iy||0)*(dh-H2)/2,dw,dh)}
- else if(s.em){const fs=Math.min(120,h*.62)*sc*z;o.font=fs+'px Fredoka, system-ui, sans-serif';o.textAlign='center';o.textBaseline='middle';o.fillText(s.em,W2/2-(s.ix||0)*W2*.3,H2/2+fs*.05-(s.iy||0)*H2*.3)}
+ else if(s.grid)drawGrid(o,s,W2,H2);else if(s.em){let fs=Math.min(120,h*.62)*sc*z;o.font=fs+'px Fredoka, system-ui, sans-serif';{const tw=o.measureText(s.em).width;if(tw>W2*.88){fs*=W2*.88/tw;o.font=fs+'px Fredoka, system-ui, sans-serif'}}o.textAlign='center';o.textBaseline='middle';o.fillText(s.em,W2/2-(s.ix||0)*W2*.3,H2/2+fs*.05-(s.iy||0)*H2*.3)}
  else{o.fillStyle='#0A184099';o.font=bf(600,22*sc);o.textAlign='center';o.textBaseline='middle';o.fillText(LB().up,W2/2,H2/2)}
  if(fx=='silueta'){o.globalCompositeOperation='source-in';o.fillStyle='#0A1840';o.fillRect(0,0,W2,H2);o.globalCompositeOperation='source-over'}
  c.save();rr(c,x,y,w,h,r);c.clip();const g=c.createLinearGradient(x,y,x+w,y+h);g.addColorStop(0,'#CFE9FF');g.addColorStop(1,'#FFD6E8');c.fillStyle=g;c.fillRect(x,y,w,h);
@@ -2766,7 +3090,7 @@ async function exportVideo(base){
  stop();$('exp').disabled=true;$('pg').hidden=false;let ok=false;
  try{
   if(vHas())await prepVoice((i,n)=>msg(trf('Preparando la voz… {a}/{b}',{a:i+1,b:n})));
-  const W=+$('res').value,H=W*16/9,fps=+$('fps').value,N=Math.round(tot()*fps),sr=48000;
+  const W=+$('res').value,H=W*16/9,fps=+$('fps').value,N=Math.round((tot()+(P.sign?2:0))*fps),sr=48000;
   msg('Cargando letras, imágenes y música…');await decodeCustom();for(const f of[bf(700,30),bf(600,30),tf(700,30)])await document.fonts.load(f);await preload();
   const cv=document.createElement('canvas');cv.width=W;cv.height=H;const c=cv.getContext('2d');
   let ac2=null,am='aac';
@@ -2777,7 +3101,7 @@ async function exportVideo(base){
   if(!codec)throw Error('Tu navegador no tiene codificador H.264.');
   const mux=new Mp4Muxer.Muxer({target:new Mp4Muxer.ArrayBufferTarget(),fastStart:'in-memory',video:{codec:'avc',width:W,height:H,frameRate:fps},...(ac2?{audio:{codec:am,numberOfChannels:2,sampleRate:sr}}:{})});
   let err=null;const ve=new VideoEncoder({output:(ch,m)=>mux.addVideoChunk(ch,m),error:e=>err=e});ve.configure({...vc,codec});
-  for(let i=0;i<N;i++){if(err)throw err;draw(c,W,i/fps);
+  for(let i=0;i<N;i++){if(err)throw err;if(i/fps>=tot())drawSign(c,W,i/fps-tot());else draw(c,W,i/fps);
    const f=new VideoFrame(cv,{timestamp:Math.round(i*1e6/fps),duration:Math.round(1e6/fps)});ve.encode(f,{keyFrame:i%(fps*2)==0});f.close();
    if(i%6==0){$('pg').value=i/N*(ac2?.9:1);msg('Generando video… '+Math.round(i/N*100)+'%');await wait(0)}
    while(ve.encodeQueueSize>10)await wait(5)}
@@ -2790,7 +3114,7 @@ async function exportVideo(base){
    await ae.flush()}
   if(err)throw err;mux.finalize();$('pg').value=1;
   const blob=new Blob([mux.target.buffer],{type:'video/mp4'});msg(`Video listo: ${fm(N/fps)} · ${(blob.size/1048576).toFixed(1)} MB`);
-  await save(blob,(base?slug(base):'quiz-video-'+Date.now())+'.mp4',x=>msg(`${x} · ${fm(N/fps)} · ${(blob.size/1048576).toFixed(1)} MB`));ok=true;
+  await save(blob,(base?slug(base):'quizclip-'+Date.now())+'.mp4',x=>msg(`${x} · ${fm(N/fps)} · ${(blob.size/1048576).toFixed(1)} MB`));ok=true;try{bump('exp')}catch(e){}
  }catch(e){msg('No se pudo exportar: '+(e&&e.message||e.code||e))}
  $('exp').disabled=false;$('pg').hidden=true;return ok}
 
@@ -2822,7 +3146,7 @@ function loadP(data,id){stop();P=Object.assign(example(),data);if(!P.name)P.name
 async function newProject(data,fresh=true){loadP(data,uid());if(fresh&&NSYN())VO().on=true;await saveNow();enterEditor();toast('Proyecto creado ✨')}
 async function openProject(id){try{const r=await DB.get(id);if(!r)return;loadP(r.data,r.id);enterEditor()}catch(e){toast('No se pudo abrir el proyecto.')}}
 async function renderHome(){try{brainCardsUI()}catch(e){}let L=[];try{L=await DB.all()||[]}catch(e){}
- L.sort((a,b)=>b.updated-a.updated);$('pCount').textContent=L.length?`· ${L.length}`:'';
+ L.sort((a,b)=>b.updated-a.updated);try{homeExtra(L)}catch(e){}$('pCount').textContent=L.length?`· ${L.length}`:'';
  $('projects').innerHTML=L.length?L.map((p,i)=>`<div class="proj" style="--i:${Math.min(i,8)}"><button class="pth" data-open="${p.id}" aria-label="Abrir ${esc(p.name)}">${p.thumb?`<img src="${p.thumb}" alt="">`:'❓'}</button>
   <div class="pin"><button class="pnm" data-nt data-open="${p.id}" title="${esc(p.name)}">${esc(p.name)}</button><span class="hint">${p.nq} preguntas · ${ago(p.updated)}</span>
   <div class="pact"><button class="sm" data-dup="${p.id}">⧉ Duplicar</button><button class="sm warn" data-del="${p.id}" aria-label="Eliminar ${esc(p.name)}">🗑</button></div></div></div>`).join('')
@@ -2833,15 +3157,16 @@ $('projects').onclick=async e=>{const b=e.target.closest('button');if(!b)return;
  if(b.dataset.del){const r=await DB.get(b.dataset.del);if(r&&await ask(`¿Eliminar «${r.name}»? No se puede deshacer.`,'Eliminar')){await DB.del(r.id);renderHome();toast('Proyecto eliminado')}}};
 
 /* ---------- navegación: vistas y capas (funciona con el botón atrás de Android) ---------- */
-function showView(v,dir){if(VIEW==v)return;if(VIEW=='editor')saveNow();if(VIEW=='reader'){rdStop();wpHide();appSecure(false)}stop();$(VIEW).hidden=true;const b=$(v);b.hidden=false;b.classList.remove('in-r','in-l','go');void b.offsetWidth;b.classList.add(dir<0?'in-l':'in-r');VIEW=v;window.scrollTo(0,0);
- if(v=='home'){saveNow();renderHome();heroLoop()}else if(v=='brain')brainUI();else if(v=='learn')learnUI();else if(v=='reader'){}else render()}
-const VIEWS=['editor','brain','learn','reader'];const prevView=()=>[...LAYERS].reverse().find(x=>VIEWS.includes(x))||'home';
+function showView(v,dir){if(VIEW==v)return;if(VIEW=='editor')saveNow();if(VIEW=='reader'){rdStop();wpHide();appSecure(false)}stop();$(VIEW).hidden=true;const b=$(v);b.hidden=false;b.classList.remove('in-r','in-l','go','in-f');void b.offsetWidth;b.classList.add(dir<0?'in-l':dir>0?'in-r':'in-f');VIEW=v;window.scrollTo(0,0);try{navUI()}catch(e){}
+ if(v=='home'||v=='create'){saveNow();renderHome();heroLoop()}else if(v=='profile')profileUI();else if(v=='brain')brainUI();else if(v=='learn')learnUI();else if(v=='reader'){}else render()}
+const VIEWS=['editor','reader'],TABS=['home','create','brain','learn','profile'];let ROOT='home';const prevView=()=>[...LAYERS].reverse().find(x=>VIEWS.includes(x))||ROOT;
+function goTab(v){if(!TABS.includes(v))return;ROOT=v;const k=LAYERS.length;if(k){history.go(-k);setTimeout(()=>showView(ROOT,0),300)}else showView(v,0)}
 function enterEditor(){if(VIEW=='editor'){const k=LAYERS.length-1;if(k>0)history.go(-k);return}openLayer('editor')}
 function showLayer(n){
  if(n=='editor')return showView('editor',1);
- if(n=='brain'||n=='learn'||n=='reader')return showView(n,1);
+ if(n=='reader')return showView(n,1);
  if(n=='drawer'){$('dEd').hidden=VIEW!='editor';$('scrim').hidden=false;$('drawer').hidden=false;requestAnimationFrame(()=>{$('scrim').classList.add('open');$('drawer').classList.add('open')});return}
- if(n=='sheet'){$('scrim').hidden=false;$('sheet').hidden=false;requestAnimationFrame(()=>{$('scrim').classList.add('open');$('sheet').classList.add('open')});return}
+ if(n=='sheet'){document.body.classList.toggle('ovp',LAYERS.includes('player')||LAYERS.includes('fs')||LAYERS.includes('rvfs'));$('scrim').hidden=false;$('sheet').hidden=false;requestAnimationFrame(()=>{$('scrim').classList.add('open');$('sheet').classList.add('open')});return}
  if(n=='fs')return fsShow();
  if(n=='player')return pgShow();
  if(n=='rvfs')return rvFsShow();
@@ -2854,8 +3179,8 @@ function hideLayer(n){
  if(n=='player')return pgHide();
  if(n=='rvfs')return rvFsHide();
  if(n=='dlg'){$('dlg').hidden=true;if(dlgRes){dlgRes(false);dlgRes=null}}}
-function openLayer(n){const top=LAYERS[LAYERS.length-1];
- if(n!='dlg'&&['drawer','sheet','fs','player'].includes(top)){hideLayer(LAYERS.pop());LAYERS.push(n);history.replaceState({d:LAYERS.length},'')}
+function openLayer(n){if(TABS.includes(n))return goTab(n);const top=LAYERS[LAYERS.length-1];
+ if(n!='dlg'&&(['drawer','sheet'].includes(top)||(['fs','player'].includes(top)&&n!='sheet'))){hideLayer(LAYERS.pop());LAYERS.push(n);history.replaceState({d:LAYERS.length},'')}
  else{LAYERS.push(n);history.pushState({d:LAYERS.length},'')}showLayer(n)}
 function closeTop(){if(LAYERS.length)history.back()}
 addEventListener('popstate',e=>{const d=(e.state&&e.state.d)||0;while(LAYERS.length>d)hideLayer(LAYERS.pop())});
@@ -2875,20 +3200,18 @@ $('drawer').onclick=e=>{const b=e.target.closest('button.di');if(!b)return;if(b.
  if(a=='play')return openPlayer();if(a=='fs')return openFs();
  if(a=='saveFile'){closeTop();return save(new Blob([JSON.stringify(P,(k,v)=>k=='scene'?undefined:v)],{type:'application/json'}),slug(P.name||'quiz')+'.quiz.json',toast)}
  if(a=='openFile')return $('openF').click();
- if(a=='home'){if(LAYERS.some(x=>VIEWS.includes(x)))history.go(-LAYERS.length);else closeTop();return}
- if(a=='learn'){if(VIEW=='learn')return closeTop();if(LAYERS.includes('learn')){history.go(LAYERS.lastIndexOf('learn')+1-LAYERS.length);return}closeTop();setTimeout(()=>openLayer('learn'),60);return}
- if(a=='brainGo'){if(VIEW=='brain')return closeTop();closeTop();setTimeout(()=>openLayer('brain'),60);return}
+ if(a=='home'||a=='learn'||a=='brainGo'||a=='create'||a=='profile')return goTab(a=='brainGo'?'brain':a);
  if(a=='theme')return cycleTheme();
  if(a=='uiLang')return openSheet('lang')};
 $('openF').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
  try{const j=JSON.parse(await f.text());if(!Array.isArray(j.slides))throw 0;if(!j.name)j.name=f.name.replace(/(\.quiz)?\.json$/i,'');
   if(VIEW=='editor')history.go(-LAYERS.length);else if(LAYERS.length)history.back();setTimeout(()=>newProject(j,false),120)}
- catch(x){toast('Ese archivo no es un proyecto de Quiz Video Studio.')}};
+ catch(x){toast('Ese archivo no es un proyecto de QuizClip.')}};
 const THEME0=document.documentElement.getAttribute('data-theme'),THM={auto:'Automática',light:'Clara',dark:'Oscura'};
 let theme='auto';try{theme=localStorage.getItem('qvs-theme')||'auto'}catch(e){}
 function applyTheme(){if(theme=='auto'){if(THEME0)document.documentElement.setAttribute('data-theme',THEME0);else document.documentElement.removeAttribute('data-theme')}else document.documentElement.setAttribute('data-theme',theme);$('themeV').textContent=THM[theme]}
 function cycleTheme(){theme={auto:'light',light:'dark',dark:'auto'}[theme];try{localStorage.setItem('qvs-theme',theme)}catch(e){}applyTheme();toast('Apariencia: '+THM[theme])}
-applyTheme();
+applyTheme();try{$('themeV2').textContent=tr(THM[theme])}catch(e){}
 
 $('ppCopy').onclick=async()=>{const v=$('ppMail').value;try{await navigator.clipboard.writeText(v);toast('Correo copiado 💛')}catch(e){const i=$('ppMail');i.focus();i.select();toast('Correo seleccionado: cópialo con «Copiar»')}};
 $('ppMail').onfocus=e=>e.target.select();
@@ -2917,7 +3240,7 @@ $('ideaGo').onclick=async()=>{const en=/inglés/i.test(idea),d=en?blank('en'):lo
 /* vista previa animada del inicio */
 const DEMO=locProj(example()),hcx=$('heroCv').getContext('2d');let heroOn=false,heroLast=0;const heroT0=performance.now();
 function heroDraw(tt){const keep=P;P=DEMO;try{const T=tl(),q=T[1],cyc=Math.floor(tt/q.d);DEMO.theme=THK[cyc%THK.length];draw(hcx,270,q.a+tt%q.d)}catch(e){}P=keep}
-function heroLoop(){if(heroOn)return;if(RMQ.matches){heroDraw(4.5);return}heroOn=true;const f=now=>{if(VIEW!='home'){heroOn=false;return}if(now-heroLast>40){heroLast=now;if(!document.hidden)heroDraw((now-heroT0)/1000)}requestAnimationFrame(f)};requestAnimationFrame(f)}
+function heroLoop(){if(heroOn)return;if(RMQ.matches){heroDraw(4.5);return}heroOn=true;const f=now=>{if(VIEW!='create'){heroOn=false;return}if(now-heroLast>40){heroLast=now;if(!document.hidden)heroDraw((now-heroT0)/1000)}requestAnimationFrame(f)};requestAnimationFrame(f)}
 
 /* ---------- editor ---------- */
 $('back').onclick=closeTop;
@@ -2978,7 +3301,7 @@ function pgShow(){stop();const cfg=PGC,C=cfg?cfg.colors:P.colors,el=$('player');
  voiceBtn();G={i:-1,score:0,pts:0,combo:0,cfg,qs:cfg?cfg.qs:S().filter(s=>s.t=='q'),useTime:cfg&&cfg.read?RDT:G&&G.useTime!=null?G.useTime:true,ans:false,raf:0};el.hidden=false;voiceBtn();reqFS(el);pgIntro()}
 function pgHide(){if(G)cancelAnimationFrame(G.raf);stopVoice();$('player').hidden=true;exitFS();if(G&&!(G.cfg&&G.cfg.read))G={useTime:G.useTime};else G=null;PGC=null;LBO=null}
 function pgTop(){const L=LB(),n=G.qs.length;$('pgCount').textContent=G.i>=0&&G.i<n?L.q(G.i+1,n):(G.cfg?G.cfg.title:(P.name||'Quiz'));$('pgScore').textContent='⭐ '+(G.cfg?fmtN(G.pts):G.score)}
-const pgMedia=(s,cls='')=>s.img?`<img src="${s.img}" alt="">`:`<span class="pem ${cls}">${esc(s.em||'❓')}</span>`;
+const pgMedia=(s,cls='')=>s.grid?pgGrid(s):s.img?`<img src="${s.img}" alt="">`:`<span class="pem ${cls}">${esc(s.em||'❓')}</span>`;
 function pgIntro(){if(G.cfg)return pgIntroB();const L=LB(),c=S()[0]&&S()[0].t=='cover'?S()[0]:null;G.i=-1;G.score=0;pgTop();$('pgTimer').hidden=true;
  $('pgMain').innerHTML=`<div class="pcard pintro">${c&&c.img?`<div class="pimg" style="height:clamp(120px,24vh,240px);margin-bottom:12px">${pgMedia(c)}</div>`:`<span class="pem big">${esc(c&&c.em||'🧠')}</span>`}
   <h2>${esc(c?c.title:P.name).replace(/\n/g,'<br>')}</h2>${c&&c.sub?`<p>${esc(c.sub)}</p>`:''}<p class="pmeta">${G.qs.length} ${L.qs}</p></div>
@@ -2993,7 +3316,7 @@ function pgQ(){G.i++;G.ans=false;if(G.i>=G.qs.length)return pgEnd();const s=G.qs
 function pgTimer(s){G.qT0=performance.now()+300;if(!G.useTime)return;const bar=$('pgTime'),box=$('pgTimer');
  const t0=performance.now()+300,D=s.secs*1000;let last=-1;const f=now=>{if(!G||G.ans)return;const el=Math.max(0,now-t0),rem=Math.ceil((D-el)/1000);bar.style.transform=`scaleX(${Math.max(0,1-el/D)})`;
   if(rem!=last&&rem>0&&el>0){last=rem;box.classList.toggle('hurry',rem<=3);sfx(rem<=3?'tick3':'tick')}if(el>=D)return pgAnswer(-1);G.raf=requestAnimationFrame(f)};G.raf=requestAnimationFrame(f)}
-function pgAnswer(j){if(!G||G.ans||G.i<0||G.i>=G.qs.length)return;G.ans=true;cancelAnimationFrame(G.raf);stopVoice();const L=LB(),s=G.qs[G.i],ok=j==s.c;if(ok)G.score++;
+function pgAnswer(j){if(!G||G.ans||G.i<0||G.i>=G.qs.length)return;G.ans=true;cancelAnimationFrame(G.raf);stopVoice();const L=LB(),s=G.qs[G.i],ok=j==s.c;if(ok)G.score++;if(G.res)G.res.push(ok?(G.useTime&&performance.now()-G.qT0<s.secs*500?2:1):0);
  let gain=0;if(G.cfg){if(ok){G.combo++;const L2=LVL[G.cfg.lv],fr=G.useTime?Math.max(0,1-(performance.now()-G.qT0)/(s.secs*1000)):.5;gain=L2.pts+Math.round(L2.pts*fr)+(G.combo>=3?5*(G.combo-2):0);G.pts+=gain}else G.combo=0}
  document.querySelectorAll('.popt').forEach((b,k)=>{b.disabled=true;b.classList.add(k==s.c?'ok':k==j?'bad':'dim')});
  const im=$('pgImg');im&&im.classList.add('rev');sfx(ok?'ding':'bad');
@@ -3016,15 +3339,15 @@ $('pgMain').onclick=e=>{const b=e.target.closest('button');if(!b||!G)return;if(b
  if(a=='rback')return closeTop();if(a=='rnext'){const nx=rdNext(G.cfg.id);closeTop();setTimeout(()=>rdOpen(nx),80);return}
  if(a=='next')pgQ();if(a=='again')pgIntro();if(a=='exit')closeTop();
  if(a=='bagain'){if(!G.cfg.read)G.cfg.qs=G.qs=G.cfg.gen?G.cfg.gen():makeGame(G.cfg.cat,G.cfg.lv);pgIntro()}if(a=='bvideo')brainToVideo()};
-function pgIntroB(){const L=LB(),g=G.cfg,V=LVL[g.lv];G.i=-1;G.score=0;G.pts=0;G.combo=0;pgTop();$('pgTimer').hidden=true;
+function pgIntroB(){const L=LB(),g=G.cfg,V=LVL[g.lv];G.i=-1;G.score=0;G.res=[];if(g.daily||g.vs)G.useTime=true;G.pts=0;G.combo=0;pgTop();$('pgTimer').hidden=true;
  $('pgMain').innerHTML=`<div class="pcard pintro"><span class="pem big">${g.em}</span><h2>${esc(g.title)}</h2><p>${V.em} ${tr(V.n)} · ${trf('{n} preguntas',{n:G.qs.length})}</p><p class="pmeta">${tr(g.read?'Responde según lo que leíste':'Responde rápido para ganar más puntos')}</p></div>
-  <div class="prow"><label class="ptog"><input type="checkbox" id="pgUseT" ${G.useTime?'checked':''}> ⏱ ${L.timed}</label>${canVoice()?`<label class="ptog"><input type="checkbox" id="pgUseV" ${VOICE?'checked':''}> 🔊 ${L.voice}</label>`:''}</div>
+  <div class="prow"><label class="ptog"${g.daily||g.vs?' hidden':''}><input type="checkbox" id="pgUseT" ${G.useTime?'checked':''}> ⏱ ${L.timed}</label>${canVoice()?`<label class="ptog"><input type="checkbox" id="pgUseV" ${VOICE?'checked':''}> 🔊 ${L.voice}</label>`:''}</div>${g.vs?`<p class="pmeta" data-nt>⚔️ ${esc(g.vs.n)}: ${fmtN(g.vs.p)} pts · ${g.vs.s}/${g.vs.q.length}</p>`:''}
   <button class="pnext" data-act="start">▶ ${L.play}</button>`}
-function pgEndB(){const n=G.qs.length,r=brainFinish(),h=brainHome(),rd=G.cfg.read;if(rd)rdFinish();G.i=n;pgTop();$('pgTimer').hidden=true;
+function pgEndB(){if(G.cfg.daily)return dailyEnd();if(G.cfg.vs)return duelEnd();const n=G.qs.length,r=brainFinish(),h=brainHome(),rd=G.cfg.read;if(rd)rdFinish();G.i=n;pgTop();$('pgTimer').hidden=true;
  $('pgMain').innerHTML=`<div class="pcard pend"><span class="pem big">${G.score>=n*.8?'🏆':G.score>=n*.5?'🎉':'💪'}</span>${r.rec?`<br><span class="pbadge">${tr('⭐ ¡Nuevo récord!')}</span>`:''}
   <p class="pbig">${fmtN(G.pts)}<small> pts</small></p><h2>${trf('{a} de {b} correctas',{a:G.score,b:n})}</h2>
   <p class="pmeta"><span>${h.re} ${trf('Nivel {n}',{n:h.l})} · ${tr(h.rn)}</span>${r.up?`<span> · ${tr('¡Subiste de nivel! 🎊')}</span>`:''}</p><span class="bcbar"><i style="width:0"></i></span><p class="pmeta">${h.st?trf(h.st==1?'🔥 Racha de {n} día':'🔥 Racha de {n} días',{n:h.st}):''}</p></div>
-  <div class="prow">${rd?`<button class="pnext" data-act="rnext">${tr('➡️ Siguiente texto')}</button><button class="pexit" data-act="bagain">${tr('↺ Responder otra vez')}</button><button class="pexit" data-act="rback">${tr('📖 Volver al texto')}</button>`:`<button class="pnext" data-act="bagain">${tr('↺ Otra partida')}</button>${G.cfg.gen?'':`<button class="pexit" data-act="bvideo">${tr('🎬 Convertir en video')}</button>`}<button class="pexit" data-act="exit">${tr('Salir')}</button>`}</div>`;
+  <div class="prow">${rd?`<button class="pnext" data-act="rnext">${tr('➡️ Siguiente texto')}</button><button class="pexit" data-act="bagain">${tr('↺ Responder otra vez')}</button><button class="pexit" data-act="rback">${tr('📖 Volver al texto')}</button>`:`<button class="pnext" data-act="bagain">${tr('↺ Otra partida')}</button><button class="pexit" data-act="duel">${tr('⚔️ Retar a un amigo')}</button>${G.cfg.gen?'':`<button class="pexit" data-act="bvideo">${tr('🎬 Convertir en video')}</button>`}<button class="pexit" data-act="exit">${tr('Salir')}</button>`}</div>`;
  requestAnimationFrame(()=>{const b=$('pgMain').querySelector('.pend .bcbar i');if(b)b.style.width=Math.round(h.p*100)+'%'});
  if(VOICE&&canVoice())setTimeout(()=>speakSeq([{t:LB().got(G.score,n)+'. '+fmtN(G.pts)+' '+tr('puntos')+'.'+(r.rec?' '+tr('¡Nuevo récord!'):''),l:UIL}]),700);
  sfx('fan');if(G.score>=n/2){burst(innerWidth*.25,innerHeight*.35,60);setTimeout(()=>burst(innerWidth*.75,innerHeight*.35,60),250);setTimeout(()=>burst(innerWidth*.5,innerHeight*.2,80),500)}}
@@ -4528,10 +4851,10 @@ async function rvFsPlay(){const pl=RVPL||await rvPrepare();if(!pl)return;if(RVF.
 $('rvFsBtn').onclick=()=>{rvStopPrev();openLayer('rvfs')};
 $('rvFsPlay').onclick=()=>RVF.playing?rvFsPause():rvFsPlay();$('rvFsCv').onclick=$('rvFsPlay').onclick;$('rvFsClose').onclick=closeTop;
 /* 🗂️ copia de seguridad de todo */
-const LSK=['qvs-brain','qvs-read','qvs-mytx','qvs-words','qvs-rv','qvs-rf','qvs-ui','qvs-theme','qvs-voice','qvs-blv','qvs-rdt'];
+const LSK=['qvs-prof','qvs-cnt','qvs-daily','qvs-onb','qvs-brain','qvs-read','qvs-mytx','qvs-words','qvs-rv','qvs-rf','qvs-ui','qvs-theme','qvs-voice','qvs-blv','qvs-rdt'];
 $('bkSave').onclick=async()=>{const m=$('bkMsg');m.textContent=tr('Preparando la copia…');let projects=[];try{projects=await DB.all()||[]}catch(e){}
  const ls={};for(const k of LSK){try{const v=localStorage.getItem(k);if(v!=null)ls[k]=v}catch(e){}}
- const data={app:'quizvideostudio',v:1,date:new Date().toISOString(),projects,ls},d=new Date(),name='quiz-video-studio-copia-'+d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+'.json';
+ const data={app:'quizvideostudio',v:1,date:new Date().toISOString(),projects,ls},d=new Date(),name='quizclip-copia-'+d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+'.json';
  save(new Blob([JSON.stringify(data)],{type:'application/json'}),name,x=>{m.textContent=x+' · '+trf('{n} proyectos',{n:projects.length})})};
 $('bkLoad').onclick=()=>$('bkFile').click();
 $('bkFile').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;const m=$('bkMsg');
@@ -4540,7 +4863,7 @@ $('bkFile').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f
   for(const p of j.projects||[])try{await DB.put(p)}catch(x){}
   for(const k in j.ls)if(LSK.includes(k))try{localStorage.setItem(k,j.ls[k])}catch(x){}
   m.textContent=tr('Copia restaurada ✅');toast(tr('Copia restaurada ✅'));setTimeout(()=>{const k=LAYERS.length;if(k)history.go(-k);setTimeout(()=>location.reload(),k?260:60)},900)}
- catch(x){m.textContent=tr('Ese archivo no es una copia de seguridad de Quiz Video Studio.')}};
+ catch(x){m.textContent=tr('Ese archivo no es una copia de seguridad de QuizClip.')}};
 
 /* ---------- Aprende leyendo: guardar el texto como video (voz, karaoke, traducción, preguntas y música) ---------- */
 let RV={music:'piano',mvol:.35,vvol:1,rate:1,voice:true,tr:true,qs:true,bg:'aurora',res:'1080',handle:''};
@@ -4654,7 +4977,7 @@ const rvMsg=x=>$('rvMsg').textContent=x;
 $('rvExp').onclick=async()=>{if(!window.VideoEncoder||!window.Mp4Muxer){rvMsg(tr(window.NativeApp&&NativeApp.isNative?'Este dispositivo no puede exportar video. Actualiza «Android System WebView» y Chrome desde Google Play e inténtalo de nuevo.':'Este navegador no puede exportar video. Usa Chrome o Edge en computadora.'));return}
  rvStopPrev();const btn=$('rvExp');btn.disabled=true;$('rvPg').hidden=false;$('rvPg').value=0;
  try{const pl=await rvPrepare();if(!pl)throw Error('—');
-  const W=+RV.res,H=W*16/9,fps=30,N=Math.round(pl.dur*fps),sr=VSR;rvMsg(tr('Cargando letras, imágenes y música…'));for(const f of[bf(700,30),bf(600,30),tf(700,30)])await document.fonts.load(f);
+  const W=+RV.res,H=W*16/9,fps=30,N=Math.round((pl.dur+(RV.sign?2:0))*fps),sr=VSR;rvMsg(tr('Cargando letras, imágenes y música…'));for(const f of[bf(700,30),bf(600,30),tf(700,30)])await document.fonts.load(f);
   const cv=document.createElement('canvas');cv.width=W;cv.height=H;const c=cv.getContext('2d');
   let ac2=null,am='aac';if(window.AudioEncoder){const cf=codec=>({codec,sampleRate:sr,numberOfChannels:2,bitrate:128000});
    if((await AudioEncoder.isConfigSupported(cf('mp4a.40.2'))).supported)ac2='mp4a.40.2';else if((await AudioEncoder.isConfigSupported(cf('opus'))).supported){ac2='opus';am='opus'}}
@@ -4663,16 +4986,264 @@ $('rvExp').onclick=async()=>{if(!window.VideoEncoder||!window.Mp4Muxer){rvMsg(tr
   if(!codec)throw Error(tr('Tu navegador no tiene codificador H.264.'));
   const mux=new Mp4Muxer.Muxer({target:new Mp4Muxer.ArrayBufferTarget(),fastStart:'in-memory',video:{codec:'avc',width:W,height:H,frameRate:fps},...(ac2?{audio:{codec:am,numberOfChannels:2,sampleRate:sr}}:{})});
   let err=null;const ve=new VideoEncoder({output:(ch,m)=>mux.addVideoChunk(ch,m),error:e=>err=e});ve.configure({...vc,codec});
-  for(let i=0;i<N;i++){if(err)throw err;rvDraw(c,W,i/fps,pl);const f=new VideoFrame(cv,{timestamp:Math.round(i*1e6/fps),duration:Math.round(1e6/fps)});ve.encode(f,{keyFrame:i%(fps*2)==0});f.close();
+  for(let i=0;i<N;i++){if(err)throw err;if(i/fps>=pl.dur)drawSign(c,W,i/fps-pl.dur);else rvDraw(c,W,i/fps,pl);const f=new VideoFrame(cv,{timestamp:Math.round(i*1e6/fps),duration:Math.round(1e6/fps)});ve.encode(f,{keyFrame:i%(fps*2)==0});f.close();
    if(i%6==0){$('rvPg').value=i/N*.9;rvMsg(trf('Generando video… {p}%',{p:Math.round(i/N*100)}));await wait(0)}while(ve.encodeQueueSize>10)await wait(5)}
   await ve.flush();
   if(ac2){rvMsg(tr('Generando audio…'));await wait(20);const pcm=rvAudio(pl,sr),ae=new AudioEncoder({output:(ch,m)=>mux.addAudioChunk(ch,m),error:e=>err=e});ae.configure({codec:ac2,sampleRate:sr,numberOfChannels:2,bitrate:128000});const st=4800;
    for(let p=0;p<pcm.length;p+=st){const n=Math.min(st,pcm.length-p),d=new Float32Array(n*2);d.set(pcm.subarray(p,p+n),0);d.set(pcm.subarray(p,p+n),n);const ad=new AudioData({format:'f32-planar',sampleRate:sr,numberOfFrames:n,numberOfChannels:2,timestamp:Math.round(p/sr*1e6),data:d});ae.encode(ad);ad.close();if((p/st)%40==0)await wait(0)}
    await ae.flush()}
   if(err)throw err;mux.finalize();$('rvPg').value=1;const blob=new Blob([mux.target.buffer],{type:'video/mp4'}),info=` · ${fm(pl.dur)} · ${(blob.size/1048576).toFixed(1)} MB`;
-  await save(blob,'leer-'+slug(pl.t.t[0])+'.mp4',x=>rvMsg(x+info))}
+  await save(blob,'leer-'+slug(pl.t.t[0])+'.mp4',x=>rvMsg(x+info));try{bump('exp')}catch(e){}}
  catch(e){rvMsg(tr('No se pudo exportar:')+' '+(e&&e.message||e))}
  btn.disabled=false;$('rvPg').hidden=true};
+
+/* ---------- QuizClip: pestañas, inicio, perfil, medallas, bienvenida y ayuda ---------- */
+const L3=(e,n,p)=>UIL=='en'?n:UIL=='pt'?p:e;
+const lsGet=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k)||'null');return v==null?d:v}catch(e){return d}};
+const lsSet=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const PROF=Object.assign({name:'',av:'🙂',medals:[]},lsGet('qvs-prof',{}));const saveProf=()=>lsSet('qvs-prof',PROF);
+const CNT=Object.assign({exp:0,duel:0,daily:0,bestSt:0,quick:0},lsGet('qvs-cnt',{}));const saveCnt=()=>lsSet('qvs-cnt',CNT);
+function bump(k,n){CNT[k]=(CNT[k]||0)+(n||1);saveCnt();setTimeout(medalCheck,600)}
+applyIcons();
+function navUI(){document.body.dataset.view=VIEW;document.querySelectorAll('#tabbar button').forEach(b=>{const on=VIEW===b.dataset.tab;b.classList.toggle('on',on);if(on)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')})}
+$('tabbar').onclick=e=>{const b=e.target.closest('button[data-tab]');if(!b)return;if(VIEW===b.dataset.tab){window.scrollTo({top:0,behavior:'smooth'});return}goTab(b.dataset.tab)};
+$('createHome').onclick=$('recentAll').onclick=()=>goTab('create');
+$('homeAv').onclick=()=>goTab('profile');
+$('brainCard').onclick=()=>goTab('brain');$('learnCard').onclick=()=>goTab('learn');
+/* inicio */
+function greetUI(){const h=new Date().getHours(),n=PROF.name.trim();
+ const g=h<12?L3('Buenos días','Good morning','Bom dia'):h<19?L3('Buenas tardes','Good afternoon','Boa tarde'):L3('Buenas noches','Good evening','Boa noite');
+ $('greetT').textContent=g+(n?', '+n:'')+' 👋';$('greetT').dataset.nt='';
+ const st=streakNow();$('greetS').textContent=st>1?L3(`🔥 Llevas ${st} días seguidos. ¡No la rompas!`,`🔥 ${st}-day streak. Keep it going!`,`🔥 ${st} dias seguidos. Não pare agora!`):L3('¿Qué vas a crear hoy?','What will you create today?','O que você vai criar hoje?');$('greetS').dataset.nt='';
+ $('homeAvE').textContent=PROF.av}
+function homeExtra(L){greetUI();try{dailyCardUI()}catch(e){}
+ const r=L.slice(0,8);$('recentBox').hidden=!r.length;
+ $('recent').innerHTML=r.map(p=>`<button class="rc" data-open="${p.id}"><span class="rci">${p.thumb?`<img src="${p.thumb}" alt="">`:'❓'}</span><b data-nt>${esc(p.name)}</b><small>${ago(p.updated)}</small></button>`).join('')}
+$('recent').onclick=e=>{const b=e.target.closest('button[data-open]');if(b)openProject(b.dataset.open)};
+/* perfil y medallas */
+const AVS='🙂 😎 🤓 🥳 🤠 🦊 🐼 🐯 🦁 🐸 🐵 🦄 🐙 🐧 🦉 🐨 🐶 🐱 🐰 🐲 👾 🤖 👽 🚀 ⚡ 🌟 🔥 🎧 🎮 🎨 ⚽ 🏀 🍕 🌈 💎 👑'.split(' ');
+function stats(){const st=streakNow();if(st>(CNT.bestSt||0)){CNT.bestSt=st;saveCnt()}let rd=0,ww=0,my=0;try{rd=rdDone()}catch(e){}try{ww=WORDS.length}catch(e){}try{my=MYT.length}catch(e){}
+ return{games:BRN.games,acc:BRN.total?Math.round(BRN.correct/BRN.total*100):0,st,best:CNT.bestSt||0,lv:lvOf(BRN.xp),rd,ww,my,exp:CNT.exp||0,daily:CNT.daily||0,duel:CNT.duel||0,quick:CNT.quick||0,proj:PROJN}}
+let PROJN=0;
+const MEDALS=[
+ ['g1','🎮',L3('Primera partida','First game','Primeira partida'),L3('Juega una vez','Play once','Jogue uma vez'),s=>s.games>=1],
+ ['g25','🕹️',L3('Jugador fiel','Loyal player','Jogador fiel'),L3('25 partidas','25 games','25 partidas'),s=>s.games>=25],
+ ['g100','👑',L3('Leyenda','Legend','Lenda'),L3('100 partidas','100 games','100 partidas'),s=>s.games>=100],
+ ['s3','🔥',L3('En racha','On fire','Pegando fogo'),L3('3 días seguidos','3-day streak','3 dias seguidos'),s=>s.best>=3],
+ ['s7','🏅',L3('Semana perfecta','Perfect week','Semana perfeita'),L3('7 días seguidos','7-day streak','7 dias seguidos'),s=>s.best>=7],
+ ['s30','💎',L3('Imparable','Unstoppable','Imparável'),L3('30 días seguidos','30-day streak','30 dias seguidos'),s=>s.best>=30],
+ ['l5','⭐',L3('Nivel 5','Level 5','Nível 5'),L3('Sube al nivel 5','Reach level 5','Chegue ao nível 5'),s=>s.lv>=5],
+ ['l15','🌟',L3('Nivel 15','Level 15','Nível 15'),L3('Sube al nivel 15','Reach level 15','Chegue ao nível 15'),s=>s.lv>=15],
+ ['d1','✅',L3('Reto cumplido','Daily done','Desafio feito'),L3('Haz un Reto del día','Finish a Daily Challenge','Faça um Desafio do dia'),s=>s.daily>=1],
+ ['d10','🗓️',L3('Constante','Consistent','Constante'),L3('10 Retos del día','10 Daily Challenges','10 Desafios do dia'),s=>s.daily>=10],
+ ['du','⚔️',L3('Retador','Challenger','Desafiante'),L3('Reta a un amigo','Challenge a friend','Desafie um amigo'),s=>s.duel>=1],
+ ['v1','🎬',L3('Creador','Creator','Criador'),L3('Exporta tu primer video','Export your first video','Exporte seu primeiro vídeo'),s=>s.exp>=1],
+ ['v10','🎥',L3('Productor','Producer','Produtor'),L3('Exporta 10 videos','Export 10 videos','Exporte 10 vídeos'),s=>s.exp>=10],
+ ['r1','📖',L3('Primer texto','First text','Primeiro texto'),L3('Lee un texto en inglés','Read an English text','Leia um texto em inglês'),s=>s.rd>=1],
+ ['r20','📚',L3('Lector','Reader','Leitor'),L3('Lee 20 textos','Read 20 texts','Leia 20 textos'),s=>s.rd>=20],
+ ['w20','🔤',L3('Coleccionista','Collector','Colecionador'),L3('Guarda 20 palabras','Save 20 words','Salve 20 palavras'),s=>s.ww>=20],
+ ['m1','✍️',L3('Autor','Author','Autor'),L3('Crea tu propio texto','Write your own text','Crie seu próprio texto'),s=>s.my>=1],
+ ['a90','🎯',L3('Puntería','Sharpshooter','Mira certeira'),L3('90% de aciertos (20+ partidas)','90% accuracy (20+ games)','90% de acertos (20+ partidas)'),s=>s.games>=20&&s.acc>=90]];
+function medalCheck(quiet){const s=stats(),got=new Set(PROF.medals),nw=MEDALS.filter(m=>!got.has(m[0])&&m[4](s));if(!nw.length)return;nw.forEach(m=>PROF.medals.push(m[0]));saveProf();
+ if(!quiet)toast('🏅 '+L3('Nueva medalla: ','New medal: ','Nova medalha: ')+nw.map(m=>m[2]).join(', '))}
+async function profileUI(){try{PROJN=(await DB.all()||[]).length}catch(e){}medalCheck();const s=stats(),h=brainHome();
+ $('pfAvE').textContent=PROF.av;$('pfName').value=PROF.name;$('pfName').placeholder=L3('Tu nombre','Your name','Seu nome');
+ $('pfRank').textContent=`${h.re} ${L3('Nivel','Level','Nível')} ${h.l} · ${tr(h.rn)}`;$('pfRank').dataset.nt='';$('pfBar').style.width=Math.round(h.p*100)+'%';
+ $('pfXp').textContent=L3(`${fmtN(BRN.xp)} puntos`,`${fmtN(BRN.xp)} points`,`${fmtN(BRN.xp)} pontos`);$('pfXp').dataset.nt='';
+ const it=[[s.games,L3('Partidas','Games','Partidas')],[s.games?s.acc+'%':'—',L3('Aciertos','Accuracy','Acertos')],[s.best,L3('Mejor racha','Best streak','Melhor sequência')],[s.daily,L3('Retos del día','Daily challenges','Desafios do dia')],[s.rd,L3('Textos leídos','Texts read','Textos lidos')],[s.exp,L3('Videos','Videos','Vídeos')]];
+ $('pfStats').innerHTML=it.map(([v,l])=>`<div data-nt><b>${v}</b><small>${l}</small></div>`).join('');
+ const got=new Set(PROF.medals);$('pfMedN').textContent=`${got.size} / ${MEDALS.length}`;
+ $('pfMedals').innerHTML=MEDALS.map(m=>`<div class="medal${got.has(m[0])?'':' off'}" data-nt title="${esc(m[3])}"><i>${m[1]}</i><b>${m[2]}</b><small>${m[3]}</small></div>`).join('');
+ $('uiLangV2').textContent=LANGN[UIL];$('themeV2').textContent=tr(THM[theme])}
+$('pfName').onchange=$('pfName').onblur=e=>{PROF.name=e.target.value.trim().slice(0,24);saveProf();greetUI()};
+$('pfName').onkeydown=e=>{if(e.key=='Enter')e.target.blur()};
+SHT.av='Elige tu avatar';
+$('pfAv').onclick=()=>{$('avGrid').innerHTML=AVS.map(a=>`<button data-av="${a}" class="${a==PROF.av?'on':''}" data-nt>${a}</button>`).join('');openSheet('av')};
+$('avGrid').onclick=e=>{const b=e.target.closest('button[data-av]');if(!b)return;PROF.av=b.dataset.av;saveProf();$('pfAvE').textContent=$('homeAvE').textContent=PROF.av;closeTop()};
+$('setlist').onclick=e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.sheet){if(b.dataset.sheet=='help')helpUI();return openSheet(b.dataset.sheet)}
+ if(b.dataset.act=='theme'){cycleTheme();$('themeV2').textContent=tr(THM[theme])}if(b.dataset.act=='uiLang')openSheet('lang')};
+/* ayuda: todas las instrucciones viven aquí */
+const HELP=[
+ ['calendar',L3('Reto del día','Daily Challenge','Desafio do dia'),L3('Cada día hay 10 preguntas nuevas, las mismas para todos. Juégalo una vez, mira tu resultado en cuadritos y compártelo para retar a tus amigos. Si juegas todos los días, tu racha 🔥 sube.','Every day there are 10 new questions, the same for everyone. Play once, see your result as squares and share it to challenge your friends. Play every day to grow your 🔥 streak.','Todo dia há 10 perguntas novas, iguais para todos. Jogue uma vez, veja seu resultado em quadradinhos e compartilhe para desafiar seus amigos. Jogando todo dia, sua sequência 🔥 cresce.')],
+ ['zap',L3('Video en 1 toque','One-tap video','Vídeo em 1 toque'),L3('En Inicio o Crear, toca «Video en 1 toque». Elige un tema, el nivel, cuántas preguntas y el diseño. La app arma el video completo con voz y música, y abre el editor para que lo revises o lo exportes.','On Home or Create, tap “One-tap video”. Pick a topic, level, number of questions and design. The app builds the full video with voice and music and opens the editor so you can review or export it.','Em Início ou Criar, toque em «Vídeo em 1 toque». Escolha o tema, o nível, quantas perguntas e o design. O app monta o vídeo completo com voz e música e abre o editor para revisar ou exportar.')],
+ ['spark',L3('Formatos virales','Viral formats','Formatos virais'),L3('En Crear tienes formatos que funcionan muy bien en redes: «Solo el 1% acierta», «Encuentra el emoji diferente», «Adivina con emojis» y «Banderas en 3 segundos». Toca uno y tendrás el video listo para editar.','In Create you will find formats that do great on social media: “Only 1% get it”, “Find the odd emoji”, “Guess from emojis” and “Flags in 3 seconds”. Tap one and the video is ready to edit.','Em Criar há formatos que vão muito bem nas redes: «Só 1% acerta», «Ache o emoji diferente», «Adivinhe pelos emojis» e «Bandeiras em 3 segundos». Toque em um e o vídeo fica pronto para editar.')],
+ ['film',L3('Crear y editar un video','Create and edit a video','Criar e editar um vídeo'),L3('<ol><li>En Crear elige una plantilla: Videos para redes, Para clase, Inglés con imágenes o Desde cero.</li><li>Toca P1, P2… para cambiar la pregunta, las opciones, la imagen y el dato curioso. El círculo verde marca la respuesta correcta.</li><li>Toca el video para reproducirlo. Puedes arrastrar una imagen o pegarla con Ctrl+V.</li><li>En el menú ☰ cambias el diseño, los fondos, la música, la voz, los colores, la letra y el idioma del video.</li><li>Toca ⛶ para verlo en pantalla completa y 🎬 Exportar para guardar el MP4 para TikTok, Reels o Shorts.</li></ol>','<ol><li>In Create pick a template: Social videos, For class, English with pictures or From scratch.</li><li>Tap Q1, Q2… to change the question, options, image and fun fact. The green circle marks the right answer.</li><li>Tap the video to play it. You can drag an image in or paste it with Ctrl+V.</li><li>In the ☰ menu you change the design, backgrounds, music, voice, colors, font and language of the video.</li><li>Tap ⛶ to watch it full screen and 🎬 Export to save the MP4 for TikTok, Reels or Shorts.</li></ol>','<ol><li>Em Criar escolha um modelo: Vídeos para redes, Para a aula, Inglês com imagens ou Do zero.</li><li>Toque em P1, P2… para mudar a pergunta, as opções, a imagem e a curiosidade. O círculo verde marca a resposta certa.</li><li>Toque no vídeo para reproduzir. Você pode arrastar uma imagem ou colar com Ctrl+V.</li><li>No menu ☰ você muda o design, os fundos, a música, a voz, as cores, a fonte e o idioma do vídeo.</li><li>Toque em ⛶ para ver em tela cheia e em 🎬 Exportar para salvar o MP4 para TikTok, Reels ou Shorts.</li></ol>')],
+ ['bolt2',L3('Muchas preguntas rápido con IA','Many questions fast with AI','Muitas perguntas rápido com IA'),L3('<ol><li>En el editor abre «Crear muchas preguntas rápido», escribe el tema y toca «Copiar instrucción».</li><li>Pégala en ChatGPT, Gemini o Claude. Sus versiones gratis sirven.</li><li>Copia lo que te responda y pégalo en el cuadro. Toca «Agregar al final» o «Reemplazar todas».</li></ol>También puedes escribirlas tú, una por línea: <code>Pregunta | Opción | *Correcta | Opción | emoji</code> y debajo <code>dato: …</code>','<ol><li>In the editor open “Create many questions fast”, type the topic and tap “Copy prompt”.</li><li>Paste it into ChatGPT, Gemini or Claude. Their free versions work.</li><li>Copy the answer and paste it into the box. Tap “Add at the end” or “Replace all”.</li></ol>You can also write them yourself, one per line: <code>Question | Option | *Correct | Option | emoji</code> and below <code>fact: …</code>','<ol><li>No editor abra «Criar muitas perguntas rápido», escreva o tema e toque em «Copiar instrução».</li><li>Cole no ChatGPT, Gemini ou Claude. As versões grátis servem.</li><li>Copie a resposta e cole na caixa. Toque em «Adicionar no final» ou «Substituir todas».</li></ol>Você também pode escrevê-las, uma por linha: <code>Pergunta | Opção | *Correta | Opção | emoji</code> e abaixo <code>curiosidade: …</code>')],
+ ['mic',L3('Voz y música','Voice and music','Voz e música'),L3('En ☰ → Música, voz y sonidos activas el narrador: una voz lee el video y queda grabada en el MP4. La música baja sola mientras habla y la cuenta atrás espera a que termine. ¿Prefieres tu voz? Abre una pregunta y toca «Grabar mi voz». La música se crea en la app y es libre de derechos; si subes tu canción, usa música con permiso.','In ☰ → Music, voice and sounds turn on the narrator: a voice reads the video and is recorded into the MP4. Music lowers while it speaks and the countdown waits for it. Prefer your own voice? Open a question and tap “Record my voice”. Music is made in the app and is royalty-free; if you upload a song, use music you have permission for.','Em ☰ → Música, voz e sons ative o narrador: uma voz lê o vídeo e fica gravada no MP4. A música abaixa sozinha enquanto ela fala e a contagem espera terminar. Prefere sua voz? Abra uma pergunta e toque em «Gravar minha voz». A música é criada no app e é livre de direitos; se enviar sua música, use uma com permissão.')],
+ ['game',L3('Jugar y duelos','Play and duels','Jogar e duelos'),L3('En Jugar elige el nivel y una categoría. Ganas puntos por cada acierto y más si respondes rápido. Al terminar puedes convertir la partida en video o tocar «Retar a un amigo»: se crea un enlace con las mismas preguntas y tu puntaje para que tu amigo intente superarte, sin instalar nada.','In Play choose a level and a category. You earn points for each right answer and more for answering fast. At the end you can turn the game into a video or tap “Challenge a friend”: it creates a link with the same questions and your score so your friend can try to beat you, no install needed.','Em Jogar escolha o nível e uma categoria. Você ganha pontos por acerto e mais se responder rápido. No final pode transformar a partida em vídeo ou tocar em «Desafiar um amigo»: é criado um link com as mesmas perguntas e sua pontuação para seu amigo tentar superar, sem instalar nada.')],
+ ['book',L3('Aprender inglés leyendo','Learn English by reading','Aprender inglês lendo'),L3('Elige un texto por nivel y categoría. Toca cualquier palabra para ver qué significa y cómo suena; las subrayadas son las más importantes. Toca ☆ para guardarla en «Mis palabras» y practicarla en un minijuego. Al final responde las preguntas. También puedes verlo como video narrado con música.','Pick a text by level and category. Tap any word to see its meaning and hear it; underlined words are the most important. Tap ☆ to save it to “My words” and practice in a mini game. At the end answer the questions. You can also watch it as a narrated video with music.','Escolha um texto por nível e categoria. Toque em qualquer palavra para ver o significado e ouvir; as sublinhadas são as mais importantes. Toque em ☆ para salvar em «Minhas palavras» e praticar num minijogo. No final responda às perguntas. Também pode ver como vídeo narrado com música.')],
+ ['edit',L3('Mis textos','My texts','Meus textos'),L3('En Aprender toca «+ Crear mi texto». Escribe o pega tu texto en inglés, deja una línea vacía para separar párrafos, toca las palabras que quieras resaltar y agrega traducción y preguntas si quieres. Tus textos se pueden guardar como video MP4. Los textos de la app solo se leen y se ven dentro de QuizClip.','In Learn tap “+ Create my text”. Write or paste your English text, leave an empty line between paragraphs, tap the words you want to highlight and add a translation and questions if you like. Your texts can be saved as an MP4 video. The app’s own texts can only be read and watched inside QuizClip.','Em Aprender toque em «+ Criar meu texto». Escreva ou cole seu texto em inglês, deixe uma linha vazia entre parágrafos, toque nas palavras que quer destacar e adicione tradução e perguntas se quiser. Seus textos podem ser salvos como vídeo MP4. Os textos do app só podem ser lidos e vistos dentro do QuizClip.')],
+ ['user',L3('Perfil, medallas y copia de seguridad','Profile, medals and backup','Perfil, medalhas e backup'),L3('En Perfil eliges tu nombre y avatar, ves tu nivel, tus estadísticas y tus medallas. Tus proyectos y tu progreso se guardan en este dispositivo: con «Copia de seguridad» los guardas en un archivo para pasarlos a otro teléfono o recuperarlos si borras la app.','In Profile you choose your name and avatar and see your level, stats and medals. Your projects and progress are saved on this device: use “Backup” to save them to a file to move them to another phone or recover them if you delete the app.','Em Perfil você escolhe seu nome e avatar e vê seu nível, estatísticas e medalhas. Seus projetos e progresso ficam neste aparelho: com «Cópia de segurança» você salva tudo num arquivo para passar a outro celular ou recuperar se apagar o app.')],
+ ['star',L3('Trucos','Tips','Dicas'),L3('<ul><li>Usa el efecto <b>Silueta</b> o <b>Pixelada</b> en la imagen para videos de «adivina».</li><li>Para enseñar inglés, pon el idioma del video en English y usa el dato curioso para la traducción.</li><li>La portada sirve como miniatura en TikTok, Reels o YouTube.</li><li>Si quieres, activa la firma QuizClip al exportar: agrega 2 segundos con el logo al final.</li></ul>','<ul><li>Use the <b>Silhouette</b> or <b>Pixelated</b> image effect for “guess” videos.</li><li>To teach English, set the video language to English and use the fun fact for the translation.</li><li>The cover works as the thumbnail on TikTok, Reels or YouTube.</li><li>If you like, turn on the QuizClip signature when exporting: it adds 2 seconds with the logo at the end.</li></ul>','<ul><li>Use o efeito <b>Silhueta</b> ou <b>Pixelada</b> na imagem para vídeos de «adivinhe».</li><li>Para ensinar inglês, coloque o idioma do vídeo em English e use a curiosidade para a tradução.</li><li>A capa serve como miniatura no TikTok, Reels ou YouTube.</li><li>Se quiser, ative a assinatura QuizClip ao exportar: ela adiciona 2 segundos com o logo no final.</li></ul>')]];
+function helpUI(){$('helpBox').innerHTML=HELP.map(([i,t,d],k)=>`<details class="hsec"${k<2?' open':''}><summary><span class="hic">${ic(i)}</span><b>${t}</b>${ic('chev','hch')}</summary><div class="hbd">${d}</div></details>`).join('')}
+/* bienvenida */
+function onbShow(){let st=0;try{if(localStorage.getItem('qvs-onb'))return;st=+(localStorage.getItem('qvs-onbs')||0)}catch(e){return}
+ const o=$('onb'),sl=$('onbSlides'),n=sl.children.length;o.hidden=false;
+ $('onbLang').innerHTML=[['es','🇪🇸 Español'],['en','🇬🇧 English'],['pt','🇧🇷 Português']].map(([k,t])=>`<button class="sm${k==UIL?' on':''}" data-l="${k}" data-nt>${t}</button>`).join('');
+ const go=i=>{st=i;sl.scrollTo({left:sl.clientWidth*i,behavior:RMQ.matches?'auto':'smooth'});[...$('onbDots').children].forEach((d,k)=>d.classList.toggle('on',k==i));$('onbNext').textContent=i==n-1?L3('Empezar','Get started','Começar'):L3('Siguiente','Next','Próximo')};
+ const end=()=>{try{localStorage.setItem('qvs-onb','1');localStorage.removeItem('qvs-onbs')}catch(e){}o.classList.add('bye');setTimeout(()=>o.hidden=true,300)};
+ $('onbNext').onclick=()=>st<n-1?go(st+1):end();$('onbSkip').onclick=end;
+ $('onbLang').onclick=e=>{const b=e.target.closest('button[data-l]');if(!b||b.dataset.l==UIL)return;try{localStorage.setItem('qvs-ui',b.dataset.l);localStorage.setItem('qvs-onbs','1')}catch(x){}location.reload()};
+ requestAnimationFrame(()=>go(st))}
+setTimeout(onbShow,RMQ.matches?550:2700);
+greetUI();navUI();medalCheck(true);
+
+/* ---------- Reto del día (igual para todos), compartir y duelos por enlace ---------- */
+const DUEL_URL='https://ronalesmerlin-star.github.io/quiz-video-studio/jugar.html';
+const APP_URL='https://ronalesmerlin-star.github.io/quiz-video-studio/';
+function seeded(seed,fn){let a=seed>>>0;const R=Math.random;Math.random=()=>{a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};try{return fn()}finally{Math.random=R}}
+const hashS=s=>{let h=2166136261;for(const c of s)h=Math.imul(h^c.charCodeAt(0),16777619);return h>>>0};
+function dailyNo(d){d=d||new Date();return Math.floor((Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())-Date.UTC(2026,9,19))/864e5)+1}
+let DAILY=lsGet('qvs-daily',{});const saveDaily=()=>{const k=Object.keys(DAILY).sort();while(k.length>90)delete DAILY[k.shift()];lsSet('qvs-daily',DAILY)};
+function dailyQs(){const no=dailyNo();return seeded(hashS('quizclip-'+no),()=>{const seen=new Set(),out=[];
+ for(const [lv,n] of [['e',3],['n',4],['d',3]]){let got=0;for(const q of makeGame('mix',lv,8)){const k=q.title+'|'+q.o[q.c];if(got<n&&!seen.has(k)){seen.add(k);out.push(q);got++}}}return out})}
+function dailyStreak(){let n=0,d=new Date();if(!DAILY[dayKey(d)])d=new Date(Date.now()-864e5);while(DAILY[dayKey(d)]){n++;d=new Date(d.getTime()-864e5)}return n}
+function untilNext(){const n=new Date(),m=new Date(n.getFullYear(),n.getMonth(),n.getDate()+1),s=Math.max(0,(m-n)/1000|0),h=s/3600|0,mi=(s%3600)/60|0;return h?`${h} h ${mi} min`:`${mi} min`}
+function dailyCardUI(){const no=dailyNo(),r=DAILY[dayKey()],st=dailyStreak();
+ $('dailyNo').textContent=L3('Reto del día','Daily Challenge','Desafio do dia')+' #'+no;
+ if(r){$('dailyT').textContent=`✅ ${r.sc}/${r.n} · ${fmtN(r.pts)} pts`;$('dailyS').textContent=L3('Nuevo reto en ','Next challenge in ','Novo desafio em ')+untilNext();$('dailyGo').textContent=L3('Compartir','Share','Compartilhar');$('dailyGo').classList.add('done');$('dailyS2').textContent=`✅ ${r.sc}/${r.n}`}
+ else{$('dailyT').textContent=st?L3(`Mantén tu racha de ${st} ${st==1?'día':'días'}`,`Keep your ${st}-day streak`,`Mantenha sua sequência de ${st} ${st==1?'dia':'dias'}`):L3('10 preguntas nuevas cada día','10 new questions every day','10 perguntas novas todo dia');
+  $('dailyS').textContent=L3('Del fácil al difícil · un solo intento','Easy to hard · one try only','Do fácil ao difícil · uma só tentativa');$('dailyGo').textContent=L3('Jugar','Play','Jogar');$('dailyGo').classList.remove('done');$('dailyS2').textContent='#'+no+' · '+L3('Jugar ahora','Play now','Jogar agora')}
+ ['dailyNo','dailyT','dailyS','dailyGo','dailyS2'].forEach(i=>$(i).dataset.nt='')}
+function startDaily(){if(DAILY[dayKey()])return dailySheet();const qs=dailyQs();if(!qs.length)return toast(tr('No hay preguntas para esta categoría.'));
+ PGC={brain:1,daily:1,no:dailyNo(),cat:'mix',lv:'n',qs,title:L3('Reto del día','Daily Challenge','Desafio do dia')+' #'+dailyNo(),em:'📅',colors:{b1:'#5B3DF5',b2:'#2A1B8F',ac:'#FF2D55',hi:'#FFD600'}};openLayer('player')}
+$('dailyCard').onclick=$('dailyCard2').onclick=startDaily;
+const SQ=r=>r.map(x=>x==2?'🟩':x==1?'🟨':'🟥').join('');
+function dailyText(r){return `QuizClip · ${L3('Reto del día','Daily Challenge','Desafio do dia')} #${r.no}\n${SQ(r.res)}\n⭐ ${fmtN(r.pts)} pts · ${r.sc}/${r.n}${r.st>1?` · 🔥 ${r.st}`:''}\n${L3('¿Me superas?','Can you beat me?','Você me supera?')}`}
+function dailyEnd(){const g=G,n=g.qs.length,b=brainFinish(),res=(g.res||[]).slice(0,n);
+ const r={no:g.cfg.no,sc:g.score,n,pts:g.pts,res};DAILY[dayKey()]=r;saveDaily();r.st=dailyStreak();CNT.daily=(CNT.daily||0)+1;saveCnt();
+ G.i=n;pgTop();$('pgTimer').hidden=true;
+ $('pgMain').innerHTML=`<div class="pcard pend" data-nt><span class="pem big">${g.score>=n*.8?'🏆':g.score>=n*.5?'🎉':'💪'}</span><h2>${esc(g.cfg.title)}</h2><p class="dsq">${SQ(res)}</p>
+  <p class="pbig">${fmtN(g.pts)}<small> pts</small></p><p class="pmeta">${trf('{a} de {b} correctas',{a:g.score,b:n})}${r.st>1?' · 🔥 '+r.st:''}${b.up?' · '+tr('¡Subiste de nivel! 🎊'):''}</p><p class="pmeta">${L3('Nuevo reto en ','Next challenge in ','Novo desafio em ')+untilNext()}</p></div>
+  <div class="prow" data-nt><button class="pnext" data-act="dshare">${L3('📤 Compartir resultado','📤 Share result','📤 Compartilhar resultado')}</button><button class="pexit" data-act="exit">${tr('Salir')}</button></div>`;
+ sfx('fan');if(g.score>=n/2){burst(innerWidth*.25,innerHeight*.35,60);setTimeout(()=>burst(innerWidth*.75,innerHeight*.35,60),250)}setTimeout(medalCheck,900)}
+/* tarjeta para compartir (1080×1350) */
+async function shareCard(r){try{await document.fonts.load('600 60px Poppins')}catch(e){}const W=1080,H=1350,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
+ x.fillStyle='#0B0F1A';x.fillRect(0,0,W,H);x.globalAlpha=.9;x.fillStyle='#FF2D55';x.beginPath();x.arc(930,120,260,0,7);x.fill();x.fillStyle='#5B3DF5';x.beginPath();x.arc(1080,260,260,0,7);x.fill();x.globalAlpha=1;
+ const lg=new Image();lg.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(QMARK().replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" '));await new Promise(k=>{lg.onload=k;lg.onerror=k});try{x.drawImage(lg,80,80,110,110)}catch(e){}
+ const F=(w,s)=>`${w} ${s}px Poppins, system-ui, sans-serif`;x.textBaseline='middle';x.fillStyle='#fff';x.font=F(600,58);x.fillText('Quiz',210,137);const qw=x.measureText('Quiz').width;x.fillStyle='#A99BFF';x.fillText('Clip',210+qw,137);
+ x.fillStyle='#A6ADC4';x.font=F(600,34);x.fillText((r.title||L3('RETO DEL DÍA','DAILY CHALLENGE','DESAFIO DO DIA')).toUpperCase()+(r.no?' #'+r.no:''),80,330);
+ x.fillStyle='#fff';x.font=F(600,170);x.fillText(fmtN(r.pts),80,490);const pw=x.measureText(fmtN(r.pts)).width;x.font=F(500,60);x.fillStyle='#A6ADC4';x.fillText('pts',100+pw,515);
+ x.font=F(500,46);x.fillStyle='#fff';x.fillText(trf('{a} de {b} correctas',{a:r.sc,b:r.n})+(r.st>1?'  ·  🔥 '+r.st:''),80,640);
+ const n=r.res.length,cols=Math.min(n,5),sz=150,gap=26,gx=80,gy=740;
+ r.res.forEach((v,i)=>{const cx=gx+(i%cols)*(sz+gap),cy=gy+Math.floor(i/cols)*(sz+gap);x.fillStyle=v==2?'#12B76A':v==1?'#F5B800':'#F04461';x.beginPath();x.roundRect(cx,cy,sz,sz,30);x.fill();
+  x.strokeStyle='#fff';x.lineWidth=14;x.lineCap='round';x.lineJoin='round';x.beginPath();if(v){x.moveTo(cx+42,cy+78);x.lineTo(cx+66,cy+102);x.lineTo(cx+110,cy+52)}else{x.moveTo(cx+50,cy+50);x.lineTo(cx+100,cy+100);x.moveTo(cx+100,cy+50);x.lineTo(cx+50,cy+100)}x.stroke()});
+ x.fillStyle='#fff';x.font=F(600,54);x.fillText(r.vs||L3('¿Me superas?','Can you beat me?','Você me supera?'),80,1170);x.fillStyle='#8E7BFF';x.font=F(500,34);x.fillText(L3('Juega gratis en QuizClip','Play free on QuizClip','Jogue grátis no QuizClip'),80,1240);
+ return new Promise(k=>c.toBlob(b=>k(b),'image/png'))}
+/* compartir: menú del teléfono, o copiar */
+async function shareOut(o){const full=o.text+(o.url?'\n'+o.url:'');
+ if(window.NativeApp&&NativeApp.isNative&&NativeApp.share){try{await NativeApp.share(o);return true}catch(e){}}
+ try{if(navigator.share){const d={text:full};if(o.blob){const f=new File([o.blob],o.name||'quizclip.png',{type:o.blob.type});if(navigator.canShare&&navigator.canShare({files:[f]}))d.files=[f]}await navigator.share(d);return true}}catch(e){if(e&&e.name=='AbortError')return false}
+ try{await navigator.clipboard.writeText(full);toast(L3('Copiado. Pégalo donde quieras 📋','Copied. Paste it anywhere 📋','Copiado. Cole onde quiser 📋'));return true}catch(e){}
+ if(LAYERS[LAYERS.length-1]=='player'){let bx=$('pgMain').querySelector('.pshr');if(!bx){bx=document.createElement('div');bx.className='pshr';bx.dataset.nt='';$('pgMain').appendChild(bx)}
+  bx.innerHTML=`<p>${L3('Copia el texto y pégalo donde quieras:','Copy the text and paste it anywhere:','Copie o texto e cole onde quiser:')}</p><textarea rows="5" readonly>${esc(full)}</textarea><button class="pnext" data-act="pcopy">📋 ${L3('Copiar','Copy','Copiar')}</button>`;const t=bx.querySelector('textarea');t.focus();t.select();bx.scrollIntoView({block:'nearest'});return false}
+ $('shrTx').value=full;openSheet('shr');return false}
+SHT.shr='Compartir';SHT.daily='Reto del día';SHT.duel='Duelo';
+async function dailySheet(){const r=DAILY[dayKey()];if(!r)return startDaily();r.st=dailyStreak();
+ $('dailyBox').innerHTML=`<p class="dsq big">${SQ(r.res)}</p><p class="dlbig">${fmtN(r.pts)} <small>pts</small></p><p class="hint" style="text-align:center">${trf('{a} de {b} correctas',{a:r.sc,b:r.n})}${r.st>1?' · 🔥 '+r.st:''}<br>${L3('Nuevo reto en ','Next challenge in ','Novo desafio em ')+untilNext()}</p>
+  <div class="row cen"><button class="go" id="dShare">${L3('📤 Compartir resultado','📤 Share result','📤 Compartilhar resultado')}</button></div><div class="row cen"><button class="sm" id="dImg">${L3('🖼️ Guardar imagen','🖼️ Save image','🖼️ Salvar imagem')}</button></div>`;
+ openSheet('daily',L3('Reto del día','Daily Challenge','Desafio do dia')+' #'+r.no);
+ $('dShare').onclick=()=>dailyShare(r);$('dImg').onclick=async()=>{const b=await shareCard(r);save(b,'quizclip-reto-'+r.no+'.png',toast)}}
+async function dailyShare(r){r=r||DAILY[dayKey()];if(!r)return;r.st=dailyStreak();const blob=await shareCard(r);shareOut({text:dailyText(r),url:APP_URL,blob,name:'quizclip-reto-'+r.no+'.png'})}
+$('dailyGo').addEventListener('click',e=>{if(DAILY[dayKey()]){e.stopPropagation();dailyShare()}});
+$('shrCopy').onclick=async()=>{const t=$('shrTx');t.focus();t.select();try{await navigator.clipboard.writeText(t.value);toast(L3('Copiado 📋','Copied 📋','Copiado 📋'))}catch(e){document.execCommand&&document.execCommand('copy')}};
+/* duelos */
+const b64u=u8=>{let s='';for(let i=0;i<u8.length;i+=0x8000)s+=String.fromCharCode.apply(null,u8.subarray(i,i+0x8000));return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')};
+const ub64=t=>{const s=atob(t.replace(/-/g,'+').replace(/_/g,'/'));const u=new Uint8Array(s.length);for(let i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return u};
+async function packDuel(o){const raw=new TextEncoder().encode(JSON.stringify(o));
+ if(window.CompressionStream){try{const s=new Blob([raw]).stream().pipeThrough(new CompressionStream('deflate-raw'));return 'z'+b64u(new Uint8Array(await new Response(s).arrayBuffer()))}catch(e){}}return 'j'+b64u(raw)}
+async function unpackDuel(t){t=String(t||'').trim();const m=t.match(/[#&?]d=([A-Za-z0-9_-]+)/);if(m)t=m[1];if(!/^[zj][A-Za-z0-9_-]+$/.test(t))throw Error('bad');let u=ub64(t.slice(1));
+ if(t[0]=='z'){const s=new Blob([u]).stream().pipeThrough(new DecompressionStream('deflate-raw'));u=new Uint8Array(await new Response(s).arrayBuffer())}
+ const o=JSON.parse(new TextDecoder().decode(u));if(!o||!Array.isArray(o.q)||!o.q.length||o.q.length>30)throw Error('bad');return o}
+const clip=(s,n)=>String(s==null?'':s).slice(0,n);
+function duelPayload(g){return{v:1,l:UIL,n:clip(PROF.name||L3('Tu amigo','Your friend','Seu amigo'),24),a:PROF.av,t:clip(tr(g.cfg.vsT||g.cfg.title),60),e:g.cfg.em,lv:g.cfg.lv,p:g.pts,s:g.score,r:(g.res||[]).slice(0,g.qs.length),
+ q:g.qs.map(q=>[q.title,q.o,q.c,q.em||'',q.fact||'',q.secs||12,q.tl||'',q.ol||''])}}
+function duelQs(o){return o.q.map(a=>({t:'q',title:clip(a[0],200),o:(a[1]||[]).slice(0,4).map(x=>clip(x,80)),c:Math.max(0,Math.min(3,a[2]|0)),em:clip(a[3],16),fact:clip(a[4],300),secs:Math.max(4,Math.min(30,a[5]|0||12)),img:'',mini:true,...(a[6]?{tl:clip(a[6],8)}:{}),...(a[7]?{ol:clip(a[7],8)}:{})})).filter(q=>q.title&&q.o.length>=2)}
+async function duelSend(){const o=duelPayload(G);try{const d=await packDuel(o),url=DUEL_URL+'#d='+d;CNT.duel=(CNT.duel||0)+1;saveCnt();setTimeout(medalCheck,600);
+ const r={title:o.t,pts:o.p,sc:o.s,n:o.q.length,res:o.r,vs:L3('¿Me superas?','Can you beat me?','Você me supera?')};const blob=await shareCard(r);
+ shareOut({text:L3(`⚔️ Te reto en QuizClip: ${o.t}. Hice ${fmtN(o.p)} puntos (${o.s}/${o.q.length}). ¿Me superas?`,`⚔️ I challenge you on QuizClip: ${o.t}. I scored ${fmtN(o.p)} points (${o.s}/${o.q.length}). Can you beat me?`,`⚔️ Te desafio no QuizClip: ${o.t}. Fiz ${fmtN(o.p)} pontos (${o.s}/${o.q.length}). Você me supera?`),url,blob,name:'quizclip-duelo.png'})}catch(e){toast(L3('No se pudo crear el enlace.','Could not create the link.','Não foi possível criar o link.'))}}
+function duelStart(o){const qs=duelQs(o);if(!qs.length)throw Error('bad');const lv=LVL[o.lv]?o.lv:'n';
+ PGC={brain:1,vs:o,cat:'duel',lv,qs,title:'⚔️ '+clip(o.t,60),vsT:clip(o.t,60),em:clip(o.e,16)||'⚔️',colors:{b1:'#FF2D55',b2:'#5B3DF5',ac:'#5E1A8C',hi:'#FFD600'}};
+ if(LAYERS.includes('sheet'))closeTop();setTimeout(()=>openLayer('player'),LAYERS.length?320:0)}
+function duelEnd(){const g=G,o=g.cfg.vs,n=g.qs.length,b=brainFinish(),win=g.pts>o.p,tie=g.pts==o.p;G.i=n;pgTop();$('pgTimer').hidden=true;
+ const me=PROF.name||L3('Tú','You','Você');
+ $('pgMain').innerHTML=`<div class="pcard pend" data-nt><span class="pem big">${win?'🏆':tie?'🤝':'💪'}</span><h2>${win?L3('¡Ganaste el duelo!','You won the duel!','Você venceu o duelo!'):tie?L3('¡Empate!','It’s a tie!','Empate!'):L3(`${esc(o.n)} gana esta vez`,`${esc(o.n)} wins this time`,`${esc(o.n)} venceu desta vez`)}</h2>
+  <div class="vsrow"><div class="${win?'win':''}"><i>${esc(PROF.av)}</i><b>${esc(me)}</b><span>${fmtN(g.pts)}</span><small>${SQ(g.res||[])}</small></div><em>VS</em><div class="${!win&&!tie?'win':''}"><i>${esc(o.a||'🙂')}</i><b>${esc(o.n)}</b><span>${fmtN(o.p)}</span><small>${SQ(o.r||[])}</small></div></div></div>
+  <div class="prow" data-nt><button class="pnext" data-act="duel">${L3('⚔️ Devolver el reto','⚔️ Send it back','⚔️ Devolver o desafio')}</button><button class="pexit" data-act="exit">${tr('Salir')}</button></div>`;
+ sfx('fan');if(win){burst(innerWidth*.3,innerHeight*.3,70);setTimeout(()=>burst(innerWidth*.7,innerHeight*.3,70),250)}setTimeout(medalCheck,900)}
+$('pgMain').addEventListener('click',e=>{const b=e.target.closest('button[data-act]');if(!b||!G)return;const a=b.dataset.act;
+ if(a=='dshare'){stopVoice();dailyShare()}if(a=='pcopy'){const t=b.parentElement.querySelector('textarea');t.select();try{navigator.clipboard.writeText(t.value).then(()=>toast(L3('Copiado 📋','Copied 📋','Copiado 📋')),()=>document.execCommand('copy'))}catch(x){document.execCommand('copy')}}if(a=='duel'){stopVoice();duelSend()}});
+$('duelCard').onclick=()=>{$('duelIn').value='';$('duelMsg').textContent='';openSheet('duel')};
+$('duelNew').onclick=()=>{closeTop();setTimeout(()=>startBrain('mix',BLV),320)};
+$('duelGo').onclick=async()=>{try{duelStart(await unpackDuel($('duelIn').value))}catch(e){$('duelMsg').textContent=L3('Ese enlace no es un duelo de QuizClip.','That link is not a QuizClip duel.','Esse link não é um duelo do QuizClip.')}};
+(async()=>{const m=location.hash.match(/[#&]d=([A-Za-z0-9_-]+)/);if(!m)return;try{const o=await unpackDuel(m[1]);history.replaceState({d:0},'',location.pathname+location.search);setTimeout(()=>duelStart(o),3000)}catch(e){}})();
+dailyCardUI();setInterval(()=>{if(VIEW=='home'||VIEW=='brain')dailyCardUI()},60000);
+
+/* ---------- Video en 1 toque, formatos virales y firma QuizClip opcional ---------- */
+const QK=Object.assign({cat:'mix',lv:'n',n:10,th:'auto',v:true},lsGet('qvs-qk',{}));const saveQK=()=>lsSet('qvs-qk',QK);
+function projFrom(qs,o){const n=qs.length,th=o.th&&o.th!='auto'&&THEMES[o.th]?o.th:pickR(THK.filter(k=>k!='clasico'));
+ return{...example(),name:o.name,theme:th,coverTag:o.tag||'',lang:UIL,slides:[{t:'cover',title:o.cov,sub:o.sub||'',em:o.em||'❓',img:'',bg:''},
+  ...qs.map(q=>{const s=mk(q.title,[...q.o],q.c,q.em||o.em||'❓',q.fact||'');s.secs=o.secs||q.secs||8;if(q.grid)s.grid=q.grid;if(q.tl)s.tl=q.tl;if(q.ol)s.ol=q.ol;return s}),
+  {t:'final',title:o.fin||trC('¿Cuántas\nacertaste?'),sub:o.fsub||trC('Cuéntame tu puntaje en los comentarios'),em:'🏆',img:'',bg:''}],
+  tiers:o.tiers||trTiers(`0-${Math.floor(n*.3)} | ¡A practicar!\n${Math.floor(n*.3)+1}-${Math.floor(n*.6)} | Vas bien\n${Math.floor(n*.6)+1}-${n-1} | ¡Muy bien!\n${n} | ¡Genio total!`)}}
+async function makeVideo(d,voice){await newProject(d);try{VO().on=!!voice&&NSYN();await saveNow()}catch(e){}CNT.quick=(CNT.quick||0)+1;saveCnt()}
+/* hoja de Video en 1 toque */
+SHT.quick='Video en 1 toque';
+function quickUI(){$('qkCats').innerHTML=CATS.map(c=>`<button data-c="${c.k}" class="${QK.cat==c.k?'on':''}" style="--c1:${c.c1}">${c.em} ${tr(c.n)}</button>`).join('');
+ document.querySelectorAll('#qkLv button').forEach(b=>b.classList.toggle('on',b.dataset.lv==QK.lv));document.querySelectorAll('#qkN button').forEach(b=>b.classList.toggle('on',+b.dataset.n==QK.n));
+ $('qkTh').innerHTML=[['auto','🎲 '+L3('Sorpresa','Surprise','Surpresa')],...THK.map(k=>[k,tr(THEMES[k].n)])].map(([k,n])=>`<button data-th="${k}" class="${QK.th==k?'on':''}">${n}</button>`).join('');
+ $('qkV').checked=QK.v;$('qkVrow').hidden=!NSYN()}
+function openQuick(){quickUI();openSheet('quick')}
+$('quickHome').onclick=$('quickCard').onclick=openQuick;
+$('qkCats').onclick=e=>{const b=e.target.closest('button');if(!b)return;QK.cat=b.dataset.c;saveQK();quickUI()};
+$('qkLv').onclick=e=>{const b=e.target.closest('button');if(!b)return;QK.lv=b.dataset.lv;saveQK();quickUI()};
+$('qkN').onclick=e=>{const b=e.target.closest('button');if(!b)return;QK.n=+b.dataset.n;saveQK();quickUI()};
+$('qkTh').onclick=e=>{const b=e.target.closest('button');if(!b)return;QK.th=b.dataset.th;saveQK();quickUI()};
+$('qkV').onchange=e=>{QK.v=e.target.checked;saveQK()};
+$('qkGo').onclick=async()=>{const C=CATS.find(c=>c.k==QK.cat)||CATS[0];let qs=[];for(let k=0;k<4&&qs.length<QK.n;k++)qs=qs.concat(makeGame(QK.cat,QK.lv,QK.n)).filter((q,i,a)=>a.findIndex(x=>x.title+x.o[x.c]==q.title+q.o[q.c])==i);qs=qs.slice(0,QK.n);
+ if(!qs.length)return toast(tr('No hay preguntas para esta categoría.'));const cn=tr(C.n),lvn=tr(LVL[QK.lv].n).toLowerCase(),n=qs.length;
+ const T={es:{name:'Quiz de '+cn,cov:'¿Cuánto sabes\nde '+cn.toLowerCase()+'?',sub:'Nivel '+lvn+' · ¿Aciertas las '+n+'?'},en:{name:cn+' quiz',cov:'How much do you\nknow about '+cn.toLowerCase()+'?',sub:lvn[0].toUpperCase()+lvn.slice(1)+' level · Can you get all '+n+'?'},pt:{name:'Quiz de '+cn,cov:'Quanto você\nsabe de '+cn.toLowerCase()+'?',sub:'Nível '+lvn+' · Você acerta as '+n+'?'}}[UIL];
+ const d=projFrom(qs,{name:T.name,cov:T.cov,sub:T.sub,em:C.em,tag:cn,th:QK.th,secs:QK.lv=='e'?8:QK.lv=='n'?7:6});closeTop();setTimeout(()=>makeVideo(d,QK.v),330)};
+/* formatos virales */
+const FMTS=[
+ {k:'1pct',em:'🧠',c:'#5B3DF5',n:L3('Solo el 1% acierta','Only 1% get them all','Só 1% acerta'),d:L3('De fácil a imposible','From easy to impossible','Do fácil ao impossível')},
+ {k:'odd',em:'👀',c:'#FF2D55',n:L3('Encuentra el emoji diferente','Find the odd emoji','Ache o emoji diferente'),d:L3('Pon a prueba tu vista','Test your eyes','Teste sua visão')},
+ {k:'emo',em:'🧩',c:'#0E8A5F',n:L3('Adivina la palabra con emojis','Guess the word from emojis','Adivinhe a palavra pelos emojis'),d:L3('Palabras en inglés','English words','Palavras em inglês')},
+ {k:'flag3',em:'🏁',c:'#E8590C',n:L3('Banderas en 3 segundos','Flags in 3 seconds','Bandeiras em 3 segundos'),d:L3('¿Eres más rápido?','Are you fast enough?','Você é rápido?')}];
+function fmtsUI(){$('fmts').innerHTML=FMTS.map(f=>`<button class="fmt" data-f="${f.k}" style="--c:${f.c}" data-nt><span class="fe">${f.em}</span><b>${f.n}</b><small>${f.d}</small></button>`).join('')}
+const ODD=[['🍎','🍅'],['🌕','🌝'],['🐻','🐨'],['😀','😃'],['🌑','🌚'],['⭐','🌟'],['😄','😁'],['😐','😑'],['🙂','🙃'],['😺','😸'],['🕐','🕑'],['🌸','💮'],['😗','😙'],['🐭','🐹'],['🔵','🔷'],['❤️','💗']];
+function genOdd(i,tot){const p=ODD[Math.min(ODD.length-1,Math.floor(i*ODD.length/tot+Math.random()*2))],g=i<tot/3?4:5,N=g*g,k=Math.floor(Math.random()*N),sw=Math.random()<.5,a=sw?p[1]:p[0],b=sw?p[0]:p[1];
+ const nb=shuf([k-1,k+1,k-g,k+g,k-g-1,k+g+1].filter(x=>x>=0&&x<N&&x!=k)).slice(0,3),o=shuf([k,...nb]).map(x=>String(x+1));
+ return{title:L3('¿Cuál es diferente?','Which one is different?','Qual é diferente?'),o,c:o.indexOf(String(k+1)),em:a,fact:L3(`Era el número ${k+1}: ${b}`,`It was number ${k+1}: ${b}`,`Era o número ${k+1}: ${b}`),grid:{a,b,k,g},secs:i<tot/3?10:i<tot*2/3?8:7}}
+const EMW=[['☀️🌻','sunflower'],['⭐🐟','starfish'],['🌧️🎀','rainbow'],['❄️👨','snowman'],['🦶⚽','football'],['🌙💡','moonlight'],['☀️💡','sunlight'],['☀️👓','sunglasses'],['☀️⬆️','sunrise'],['🌧️🧥','raincoat'],['🌧️💧','raindrop'],['❄️⚽','snowball'],['🥚🌱','eggplant'],['🐴👟','horseshoe'],['👂💍','earring'],['🦶🖨️','footprint'],['🐶🏠','doghouse'],['🐱🐟','catfish'],['☕🎂','cupcake'],['🐟🥣','fishbowl'],['📖🐛','bookworm'],['💥🌽','popcorn'],['🥚🐚','eggshell'],['👩🐛','ladybug'],['🦷🖌️','toothbrush'],['🍳🎂','pancake'],['🌊🐴','seahorse'],['🥇🐟','goldfish'],['🔑🛹','keyboard'],['❄️🌸','snowflake']];
+function genEmo(n){return shuf(EMW).slice(0,n).map(([e,w])=>{const pre=EMW.filter(x=>x[1]!=w&&x[1].slice(0,3)==w.slice(0,3)).map(x=>x[1]),oth=shuf(EMW.filter(x=>x[1]!=w&&!pre.includes(x[1])).map(x=>x[1]));
+ const o=shuf([w,...shuf(pre).concat(oth).slice(0,3)]);return{title:L3('¿Qué palabra en inglés forman?','Which English word is it?','Que palavra em inglês formam?'),o,c:o.indexOf(w),em:e,fact:e+' = '+w,secs:9,ol:'en'}})}
+function genFmt(k){if(k=='1pct'){const out=[],seen=new Set();for(const [lv,n] of [['e',3],['n',4],['d',3]]){let g=0;for(const q of makeGame('mix',lv,10)){const key=q.title+q.o[q.c];if(g<n&&!seen.has(key)){seen.add(key);out.push(q);g++}}}
+  out.forEach(q=>q.secs=q.secs>=15?8:q.secs>=12?7:6);
+  return{qs:out,o:{name:L3('Solo el 1% acierta','Only 1% get them all','Só 1% acerta'),cov:L3('Solo el 1%\nacierta todas','Only 1% get\nall of these','Só 1% acerta\ntodas'),sub:L3('Cada pregunta es más difícil','Each question gets harder','Cada pergunta é mais difícil'),em:'🧠',tag:'1%',fin:L3('¿Eres parte\ndel 1%?','Are you\nthe 1%?','Você é\ndo 1%?'),
+   tiers:trTiers('0-3 | ¡A practicar!\n4-6 | Vas bien\n7-9 | ¡Muy bien!\n10 | ¡Genio total!')}}}
+ if(k=='odd'){const n=8;return{qs:Array.from({length:n},(_,i)=>genOdd(i,n)),o:{name:L3('Encuentra el emoji diferente','Find the odd emoji','Ache o emoji diferente'),cov:L3('Encuentra el\nemoji diferente','Find the\nodd emoji','Ache o emoji\ndiferente'),sub:L3('Solo los más atentos llegan al final','Only the sharpest make it to the end','Só os mais atentos chegam ao final'),em:'👀',tag:L3('Reto visual','Eye test','Desafio visual'),fin:L3('¿Cuántos\nencontraste?','How many\ndid you find?','Quantos você\nachou?')}}}
+ if(k=='emo'){const n=10;return{qs:genEmo(n),o:{name:L3('Adivina con emojis','Guess from emojis','Adivinhe pelos emojis'),cov:L3('Adivina la palabra\nen inglés','Guess the\nEnglish word','Adivinhe a palavra\nem inglês'),sub:L3('Dos emojis, una palabra','Two emojis, one word','Dois emojis, uma palavra'),em:'🧩',tag:'English'}}}
+ if(k=='flag3'){const out=[];for(const [lv,n] of [['e',4],['n',4],['d',2]])out.push(...uniq(genFlag,lv,n));return{qs:out,o:{name:L3('Banderas en 3 segundos','Flags in 3 seconds','Bandeiras em 3 segundos'),cov:L3('Adivina la bandera\nen 3 segundos','Guess the flag\nin 3 seconds','Adivinhe a bandeira\nem 3 segundos'),sub:L3('¿Cuántas aciertas?','How many can you get?','Quantas você acerta?'),em:'🏁',tag:L3('Banderas','Flags','Bandeiras'),secs:3}}}}
+$('fmts').onclick=e=>{const b=e.target.closest('button.fmt');if(!b)return;const f=genFmt(b.dataset.f);if(!f||!f.qs.length)return;makeVideo(projFrom(f.qs,{...f.o,th:'auto'}),true)};
+fmtsUI();
+/* cuadrícula de emojis (en el video y en el modo jugar) */
+function drawGrid(o,s,W2,H2){const G2=s.grid,g=G2.g,cs=Math.min(W2,H2)/g,x0=(W2-cs*g)/2,y0=(H2-cs*g)/2,fs=cs*.66;o.textAlign='center';o.textBaseline='middle';
+ for(let i=0;i<g*g;i++){const cx=x0+(i%g)*cs+cs/2,cy=y0+Math.floor(i/g)*cs+cs/2;o.font=fs+'px Fredoka, system-ui, sans-serif';o.fillText(i==G2.k?G2.b:G2.a,cx,cy+fs*.05);
+  o.font=`700 ${Math.max(9,cs*.2)}px Poppins, system-ui, sans-serif`;o.fillStyle='rgba(10,24,64,.55)';o.fillText(String(i+1),cx-cs*.36,cy-cs*.36);o.fillStyle='#000'}}
+const pgGrid=s=>{const G2=s.grid,g=G2.g;return`<span class="pgrid" style="--g:${g}">${Array.from({length:g*g},(_,i)=>`<i><small>${i+1}</small>${i==G2.k?G2.b:G2.a}</i>`).join('')}</span>`};
+/* firma QuizClip al final del video (opcional, apagada por defecto) */
+function drawSign(c,W,t){const k=W/540;c.setTransform(k,0,0,k,0,0);c.globalAlpha=1;c.fillStyle='#0B0F1A';c.fillRect(0,0,540,960);
+ const e=x=>1-Math.pow(1-Math.min(1,Math.max(0,x)),3),p=e(t/.6),R=86,cx=270,cy=420,d=48*(1+(1-p)*1.6),fo=Math.min(1,Math.max(0,(2-t)/.25));
+ c.globalAlpha=fo*Math.min(1,t/.25);c.fillStyle='#FF2D55';c.beginPath();c.arc(cx-d,cy,R,0,7);c.fill();c.fillStyle='#5B3DF5';c.beginPath();c.arc(cx+d,cy,R,0,7);c.fill();
+ c.save();c.beginPath();c.arc(cx-d,cy,R,0,7);c.clip();c.fillStyle='#5E1A8C';c.beginPath();c.arc(cx+d,cy,R,0,7);c.fill();c.restore();
+ const q=e((t-.5)/.35);if(q>0){c.save();c.translate(cx+28,cy);c.scale(q,q);c.fillStyle='#fff';c.beginPath();c.moveTo(-26,-30);c.lineTo(32,0);c.lineTo(-26,30);c.closePath();c.lineJoin='round';c.lineWidth=8;c.strokeStyle='#fff';c.stroke();c.fill();c.restore()}
+ const a=e((t-.7)/.4);c.globalAlpha=fo*a;c.textAlign='center';c.textBaseline='alphabetic';c.font='600 64px Poppins, system-ui, sans-serif';const w1=c.measureText('Quiz').width,w2=c.measureText('Clip').width,x0=cx-(w1+w2)/2;
+ c.textAlign='left';c.fillStyle='#fff';c.fillText('Quiz',x0,cy+170+(1-a)*14);c.fillStyle='#A99BFF';c.fillText('Clip',x0+w1,cy+170+(1-a)*14);
+ c.textAlign='center';c.font='500 20px Poppins, system-ui, sans-serif';c.fillStyle='#A6ADC4';c.fillText(L3('CREA · JUEGA · APRENDE','CREATE · PLAY · LEARN','CRIE · JOGUE · APRENDA'),cx,cy+214);c.globalAlpha=1}
+const _osh=openSheet;openSheet=function(k,t){_osh(k,t);if(k=='ex')$('sign').checked=!!P.sign;if(k=='rvid')$('rvSign').checked=!!RV.sign};
+$('sign').onchange=e=>{P.sign=e.target.checked;try{persist()}catch(x){}};
+$('rvSign').onchange=e=>{RV.sign=e.target.checked;saveRV()};
 
 /* ---------- entrada y arranque ---------- */
 function hideSplash(){const s=$('splash');if(!s||s.classList.contains('bye'))return;s.classList.add('bye');setTimeout(()=>s.remove(),700);const h=$('home');h.classList.remove('go');void h.offsetWidth;h.classList.add('go')}
@@ -4683,7 +5254,7 @@ $('splash').onclick=hideSplash;setTimeout(hideSplash,RMQ.matches?500:2600);
  renderHome();heroLoop()})();
 brainCardsUI();
 chips();form();H=[clone(P)];hi=0;histUI();
-Promise.all([bf(700,30),bf(600,30),tf(700,30),'400 30px "Lilita One"'].map(f=>document.fonts.load(f))).then(()=>{render();if(VIEW=='home')heroDraw((performance.now()-heroT0)/1000)}).catch(()=>{});
+Promise.all([bf(700,30),bf(600,30),tf(700,30),'400 30px "Lilita One"'].map(f=>document.fonts.load(f))).then(()=>{render();if(VIEW=='create')heroDraw((performance.now()-heroT0)/1000)}).catch(()=>{});
 </script>
 
 </body>

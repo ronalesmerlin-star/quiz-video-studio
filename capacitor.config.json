@@ -1,6 +1,6 @@
 {
   "appId": "com.quizvideostudio.app",
-  "appName": "Quiz Video Studio",
+  "appName": "QuizClip",
   "webDir": "www",
   "android": { "allowMixedContent": false },
   "plugins": {

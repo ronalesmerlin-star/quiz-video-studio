@@ -1,4 +1,4 @@
-// Puente con Android: guarda archivos en Documentos/QuizVideoStudio y abre el menú de compartir.
+// Puente con Android: guarda archivos en Documentos/QuizClip y abre el menú de compartir.
 import { Capacitor, registerPlugin } from '@capacitor/core';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { Share } from '@capacitor/share';
@@ -20,10 +20,17 @@ async function writeBlob(path, directory, blob) {
 
 async function saveFile(blob, filename) {
   let savedTo = '';
-  try { await writeBlob('QuizVideoStudio/' + filename, Directory.Documents, blob); savedTo = 'Documentos/QuizVideoStudio'; } catch (e) { /* algunos teléfonos no permiten escribir en Documentos */ }
+  try { await writeBlob('QuizClip/' + filename, Directory.Documents, blob); savedTo = 'Documentos/QuizClip'; } catch (e) { /* algunos teléfonos no permiten escribir en Documentos */ }
   const uri = await writeBlob(filename, Directory.Cache, blob);
   try { await Share.share({ title: filename, files: [uri] }); } catch (e) { /* el usuario cerró el menú de compartir */ }
   return savedTo;
+}
+
+// Compartir un texto, un enlace y, si hay, una imagen (Reto del día y duelos)
+async function share(o) {
+  const files = [];
+  if (o.blob) { try { files.push(await writeBlob(o.name || 'quizclip.png', Directory.Cache, o.blob)); } catch (e) { } }
+  await Share.share({ title: 'QuizClip', text: o.text, url: o.url, ...(files.length ? { files } : {}), dialogTitle: 'QuizClip' });
 }
 
 // Voz del teléfono (motor de texto a voz de Android): gratis y sin internet
@@ -45,4 +52,4 @@ async function synth(text, lang, rate) {
 const Proteccion = registerPlugin('Proteccion');
 async function secure(on) { try { await Proteccion.set({ on: !!on }); } catch (e) { } }
 
-window.NativeApp = { isNative: Capacitor.isNativePlatform(), platform: Capacitor.getPlatform(), saveFile, speak, stopSpeak, hasLang, installVoices, synth, secure };
+window.NativeApp = { isNative: Capacitor.isNativePlatform(), platform: Capacitor.getPlatform(), saveFile, share, speak, stopSpeak, hasLang, installVoices, synth, secure };
