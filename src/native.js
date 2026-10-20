@@ -33,6 +33,8 @@ async function share(o) {
   await Share.share({ title: 'QuizClip', text: o.text, url: o.url, ...(files.length ? { files } : {}), dialogTitle: 'QuizClip' });
 }
 
+const VozArchivo = registerPlugin('VozArchivo');
+
 // Voz femenina o masculina: se elige entre las voces instaladas en el teléfono
 const VG = () => { try { return localStorage.getItem('qvs-vg') || 'f'; } catch (e) { return 'f'; } };
 // códigos de las voces de Google (motor más común en Android)
@@ -46,29 +48,38 @@ function genderOf(name) {
   return '';
 }
 let VLIST = null;
-async function voices() { if (!VLIST) { try { VLIST = (await TextToSpeech.getSupportedVoices()).voices || []; } catch (e) { VLIST = []; } } return VLIST; }
+async function voices() {
+  if (!VLIST || !VLIST.length) { try { VLIST = (await VozArchivo.voices()).voices || []; } catch (e) { VLIST = []; } }
+  return VLIST;
+}
+// Elige la voz más natural: del idioma, del tipo elegido (femenina o masculina) y con la mejor calidad instalada
 async function pickVoice(lang) {
-  const g = VG(), vs = await voices(), L2 = lang.slice(0, 2).toLowerCase(), LL = lang.toLowerCase();
-  const norm = v => String(v.lang || '').toLowerCase().replace('_', '-');
-  const idx = vs.map((v, i) => ({ v, i })).filter(x => norm(x.v).startsWith(L2));
-  const rank = x => (norm(x.v) === LL ? 0 : 2) + (x.v.localService === false ? 1 : 0);
-  idx.sort((a, b) => rank(a) - rank(b));
-  const hit = idx.find(x => genderOf(x.v.name) === g);
-  if (hit) return { index: hit.i, name: hit.v.name, pitch: 1.0 };
-  return { index: undefined, name: '', pitch: g === 'm' ? 0.8 : 1.1 };
+  const g = VG(), vs = await voices(), L2 = lang.slice(0, 2).toLowerCase(), LL = lang.toLowerCase(), online = navigator.onLine !== false;
+  let best = null, bs = -1e9;
+  for (const v of vs) {
+    const vl = String(v.lang || '').toLowerCase();
+    if (!vl.startsWith(L2) || v.notInstalled) continue;
+    if (v.network && !online) continue;
+    const vg = genderOf(v.name);
+    const sc = (vg === g ? 1000 : vg ? -1000 : 0) + (vl === LL ? 50 : 0) + (v.quality || 300) / 10 + (v.network ? 5 : 0);
+    if (sc > bs) { bs = sc; best = { name: v.name, gender: vg }; }
+  }
+  if (!best) return { name: '', pitch: g === 'm' ? 0.8 : 1.1 };
+  return { name: best.name, pitch: best.gender === g ? 1.0 : (g === 'm' ? 0.8 : 1.1) };
 }
 
 // Voz del teléfono (motor de texto a voz de Android): gratis y sin internet
 async function speak(text, lang, rate) {
   const p = await pickVoice(lang);
-  await TextToSpeech.speak({ text, lang, rate: rate || 1.0, pitch: p.pitch, volume: 1.0, category: 'ambient', queueStrategy: 0, ...(p.index !== undefined ? { voice: p.index } : {}) });
+  try { await VozArchivo.say({ text, lang, rate: rate || 1.0, pitch: p.pitch, voiceName: p.name }); }
+  catch (e) { await TextToSpeech.speak({ text, lang, rate: rate || 1.0, pitch: p.pitch, volume: 1.0, category: 'ambient', queueStrategy: 0 }); }
 }
-async function stopSpeak() { try { await TextToSpeech.stop(); } catch (e) { } }
+async function stopSpeak() { try { await VozArchivo.hush(); } catch (e) { } try { await TextToSpeech.stop(); } catch (e) { } }
 async function hasLang(lang) { try { return (await TextToSpeech.isLanguageSupported({ lang })).supported; } catch (e) { return true; } }
 async function installVoices() { try { await TextToSpeech.openInstall(); } catch (e) { } }
 
 // Voz del narrador como archivo WAV (pieza propia de la app, en Java), para meterla dentro del video
-const VozArchivo = registerPlugin('VozArchivo');
+
 async function synth(text, lang, rate) {
   const p = await pickVoice(lang);
   const r = await VozArchivo.synth({ text, lang, rate: rate || 1.0, voiceName: p.name, pitch: p.pitch });

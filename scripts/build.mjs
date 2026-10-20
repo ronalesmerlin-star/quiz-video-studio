@@ -18,6 +18,7 @@ writeFileSync(W + '/app.js', obf);
 html = html.replace(m[0], '<script src="app.js"></script>');
 writeFileSync(W + '/index.html', html);
 copyFileSync('node_modules/mp4-muxer/build/mp4-muxer.js', W + '/mp4-muxer.js');
+copyFileSync('src/qcvoz.js', W + '/qcvoz.js'); // voces naturales (IA): se carga solo cuando hace falta
 await build({ entryPoints: ['src/native.js'], bundle: true, minify: true, format: 'iife', outfile: W + '/native.js', target: 'chrome100' });
 const FONTS = [['poppins', 'Poppins', [400, 500, 600, 700]], ['fredoka', 'Fredoka', [500, 600, 700]], ['lilita-one', 'Lilita One', [400]], ['bungee', 'Bungee', [400]], ['baloo-2', 'Baloo 2', [600, 700, 800]]];
 let css = '';

@@ -661,6 +661,11 @@ body.ovp .scrim{z-index:110}body.ovp .sheet{z-index:120}
 #fmtSeg button,#qkFmt button{display:grid;gap:2px;justify-items:center}#fmtSeg small{font-size:11px;opacity:.75;font-weight:400}
 .fmtpv{width:100%;aspect-ratio:16/9;height:auto;border-radius:14px;border:1px solid var(--ln);margin-top:10px;display:block;background:#000}.fmtpv[hidden]{display:none}
 .vgseg{margin-top:4px}
+.nvcta{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:0;border-radius:16px;padding:12px 14px;margin:6px 0 10px;color:#fff;background:linear-gradient(110deg,#5B3DF5,#FF2D55)}
+.nvcta>span:first-child{font-size:22px}.nvcta span{display:grid}.nvcta small{opacity:.9;font-weight:400;font-size:12.5px}.nvcta>b{margin-left:auto;font-size:22px}
+.nvlist{display:grid;gap:8px;margin-top:12px}.nvr{display:flex;align-items:center;gap:10px;background:var(--pn);border:1px solid var(--ln);border-radius:14px;padding:10px 12px}
+.nvr.ok{border-color:color-mix(in srgb,var(--gr) 55%,var(--ln))}.nvf{font-size:24px}.nvt{display:grid;gap:2px;flex:1;min-width:0}.nvt b{font-weight:600;font-size:14.5px}.nvt small{color:var(--mut);font-size:12.5px}.nvt .bcbar{height:6px;margin-top:4px}
+#setlist button[data-nvopen] b{margin-left:auto;color:var(--mut)}
 
 </style>
 </head>
@@ -768,6 +773,7 @@ body.ovp .scrim{z-index:110}body.ovp .sheet{z-index:120}
    <button data-act="uiLang"><span data-ic="globe"></span>Idioma de la app<b id="uiLangV2" data-nt></b></button>
    <button data-act="theme"><span data-ic="moon"></span>Apariencia<b id="themeV2"></b></button>
    <button data-act="vg"><span data-ic="mic"></span>Voz del narrador<b id="vgV" data-nt></b></button>
+   <button data-nvopen><span data-ic="spark"></span>Voces naturales (IA)<b>›</b></button>
    <button data-sheet="backup"><span data-ic="archive"></span>Copia de seguridad</button>
    <button data-sheet="help"><span data-ic="help"></span>Cómo se usa</button>
    <button data-sheet="don"><span data-ic="heart"></span>Apoyar el proyecto</button>
@@ -904,6 +910,7 @@ body.ovp .scrim{z-index:110}body.ovp .sheet{z-index:120}
    <label>Volumen de la música: <b id="rvMvV"></b><input type="range" id="rvMv" min="0" max="1" step="0.05"></label>
    <h3>🎙️ Voz</h3>
    <p class="hint vnote" id="rvVNote" hidden></p>
+   <button class="nvcta" data-nvopen><span>✨</span><span><b>Voces naturales (IA)</b><small>Suenan como una persona</small></span><b>›</b></button>
    <label class="sw"><input type="checkbox" id="rvVoice"> Narrador que lee el texto</label>
    <label>Tipo de voz</label><div class="seg vgseg" data-lang="en"><button data-g="f">👩 Femenina</button><button data-g="m">👨 Masculina</button></div>
    <div class="two"><label>Velocidad de la voz<select id="rvRate"><option value="0.8">🐢 Lenta</option><option value="1">Normal</option><option value="1.15">🐇 Rápida</option></select></label><label>Volumen de la voz: <b id="rvVvV"></b><input type="range" id="rvVv" min="0.3" max="1.6" step="0.05"></label></div>
@@ -986,6 +993,7 @@ body.ovp .scrim{z-index:110}body.ovp .sheet{z-index:120}
    <h3 id="vSec">🎙️ Narrador</h3>
    <p class="hint">Una voz lee el video y queda grabada dentro del MP4. La música baja sola mientras habla y la cuenta atrás espera a que termine de leer.</p>
    <p class="hint vnote" id="vNote" hidden></p>
+   <button class="nvcta" data-nvopen><span>✨</span><span><b>Voces naturales (IA)</b><small>Suenan como una persona</small></span><b>›</b></button>
    <label class="sw"><input type="checkbox" id="vOn"> Voz automática que lee el video</label>
    <div id="vOpts">
     <p class="hint" style="margin-top:8px">¿Qué se lee?</p>
@@ -1059,8 +1067,10 @@ body.ovp .scrim{z-index:110}body.ovp .sheet{z-index:120}
    <h3>Diseño</h3><div class="chipset" id="qkTh"></div>
    <h3>Formato</h3><div class="seg" id="qkFmt"><button data-f="v">📱 Vertical</button><button data-f="h">🖥️ Horizontal</button></div>
    <h3>Voz del narrador</h3><div class="seg vgseg"><button data-g="f">👩 Femenina</button><button data-g="m">👨 Masculina</button></div>
+   <button class="nvcta" data-nvopen><span>✨</span><span><b>Voces naturales (IA)</b><small>Suenan como una persona</small></span><b>›</b></button>
    <label class="sw" id="qkVrow"><input type="checkbox" id="qkV"> 🎙️ Narrador: una voz lee las preguntas</label>
    <button class="go" id="qkGo">⚡ Crear video</button></div></div>
+  <div id="tab-nv" hidden><div id="nvBox"></div></div>
   <div id="tab-av" hidden><div class="avgrid" id="avGrid"></div></div>
   <div id="tab-don" hidden>
    <div class="donbox">
@@ -1219,6 +1229,8 @@ TikTok · Reels · Shorts||TikTok · Reels · Shorts||TikTok · Reels · Shorts
 YouTube · Facebook||YouTube · Facebook||YouTube · Facebook
 Alta calidad (1080p)||High quality (1080p)||Alta qualidade (1080p)
 Más liviano (720p)||Lighter (720p)||Mais leve (720p)
+Voces naturales (IA)||Natural voices (AI)||Vozes naturais (IA)
+Suenan como una persona||They sound like a real person||Soam como uma pessoa
 Mis textos||My texts||Meus textos
 ✍️ Mis textos||✍️ My texts||✍️ Meus textos
 ⭐ Mis palabras||⭐ My words||⭐ Minhas palavras
@@ -2463,7 +2475,7 @@ const BGK=Object.keys(BGS);
 const mk=(title,o,c,em,fact)=>({t:'q',title,o,c,em,secs:8,fact:fact||'',img:'',bg:'',fx:'none',iz:1,ix:0,iy:0});
 
 /* ---------- narrador: la voz queda grabada dentro del video ---------- */
-const NSYN=()=>!!(window.NativeApp&&NativeApp.isNative&&NativeApp.synth);
+const NSYN=()=>!!(window.NativeApp&&NativeApp.isNative&&NativeApp.synth)||nvAny();
 const VDEF=()=>({on:false,parts:{cover:true,q:true,o:false,ans:true,fact:true},rate:1,vol:1,duck:true});
 const VO=()=>{if(!P.voice)P.voice=VDEF();if(!P.voice.parts)P.voice.parts=VDEF().parts;return P.voice};
 const VSR=48000,CL=new Map();let CLV=0;const VI=new WeakMap(),NOV={};
@@ -2473,7 +2485,7 @@ function trimPCM(a){let s=0,e=a.length-1;while(s<e&&Math.abs(a[s])<.004)s++;whil
 async function decodePCM(ab){vDec=vDec||new OfflineAudioContext(1,1,VSR);const b=await vDec.decodeAudioData(ab),n=b.numberOfChannels;let m=b.getChannelData(0);
  if(n>1){const o=new Float32Array(m.length);for(let c=0;c<n;c++){const x=b.getChannelData(c);for(let i=0;i<o.length;i++)o[i]+=x[i]/n}m=o}return trimPCM(m)}
 const vClean=(t,l)=>cleanTx(String(t||'').replace(/\n+/g,' '),l);
-const pKey=p=>p.r?'r'+p.r.length+p.r.slice(-24):p.l+'|'+VO().rate+'|'+VG+'|'+vClean(p.t,p.l);
+const pKey=p=>p.r?'r'+p.r.length+p.r.slice(-24):p.l+'|'+VO().rate+'|'+VG+(nvUse(p.l)?'N':'')+'|'+vClean(p.t,p.l);
 function factParts(f,L){const FL=/ESPAÑOL/i.test(P.factLabel||'')?'es':/PORTUGU/i.test(P.factLabel||'')?'pt':L,m=f.match(/^(.+?)\s=\s(.+)$/);
  return m&&FL!=L?[{t:m[1],l:L},{t:m[2],l:FL}]:[{t:f,l:FL}]}
 /* qué se lee en cada diapositiva: tu grabación tiene prioridad sobre la voz automática */
@@ -2499,7 +2511,7 @@ function prepVoice(onProg){if(vRun){vAgain=true;return vRun}
  vRun=(async()=>{try{do{vAgain=false;const need=[],seen=new Set();
   for(const s of S()){const sl=vSlots(s);for(const k in sl)for(const p of sl[k]){const key=pKey(p);if(!CL.has(key)&&!seen.has(key)){seen.add(key);need.push({key,p})}}}
   for(let i=0;i<need.length;i++){const x=need[i];onProg&&onProg(i,need.length);vUI(i,need.length);
-   try{let ab;if(x.p.r)ab=await(await fetch(x.p.r)).arrayBuffer();else{const t=vClean(x.p.t,x.p.l);if(!t||!NSYN())throw 0;ab=await NativeApp.synth(t,LANGC[x.p.l]||'es-ES',VO().rate)}CL.set(x.key,await decodePCM(ab))}
+   try{let ab;if(x.p.r)ab=await(await fetch(x.p.r)).arrayBuffer();else{const t=vClean(x.p.t,x.p.l);if(!t||!NSYN())throw 0;ab=nvUse(x.p.l)?await nvSynth(t,x.p.l,VO().rate):await NativeApp.synth(t,LANGC[x.p.l]||'es-ES',VO().rate)}CL.set(x.key,await decodePCM(ab))}
    catch(e){CL.set(x.key,'x')}CLV++}
   if(need.length){vUI();if(!playing&&VIEW=='editor'){const o=tl()[sel];if(o&&(t<o.a||t>=o.a+o.d))t=o.a+Math.min(1.2,o.d*.3);render()}try{slideInfo()}catch(e){}}}while(vAgain)}finally{vRun=null}})();return vRun}
 const vOn=()=>VO().on&&NSYN();
@@ -3312,11 +3324,11 @@ function cleanTx(t,lg){t=String(t||'').replace(/[\u{1F1E6}-\u{1F1FF}]/gu,'').rep
  const W=lg=='en'?[['×',' times '],['÷',' divided by '],['−',' minus '],['+',' plus '],['²',' squared'],['%',' percent']]:lg=='pt'?[['×',' vezes '],['÷',' dividido por '],['−',' menos '],['+',' mais '],['²',' ao quadrado'],['%',' por cento']]:lg=='fr'?[['×',' fois '],['÷',' divisé par '],['−',' moins '],['+',' plus '],['²',' au carré'],['%',' pour cent']]:[['×',' por '],['÷',' entre '],['−',' menos '],['+',' más '],['²',' al cuadrado'],['%',' por ciento']];
  for(const [a,b] of W)t=t.split(a).join(b);return t.replace(/\s+/g,' ').trim()}
 let spkId=0;
-function speakOne(t,lg,rate=1){t=cleanTx(t,lg);if(!t)return Promise.resolve();const L=LANGC[lg]||'es-ES',guard=new Promise(r=>setTimeout(r,1500+t.length*110/rate));
+function speakOne(t,lg,rate=1){t=cleanTx(t,lg);if(!t)return Promise.resolve();if(nvLiveOk(lg))return nvSpeak(t,lg,rate);const L=LANGC[lg]||'es-ES',guard=new Promise(r=>setTimeout(r,1500+t.length*110/rate));
  if(NATV())return Promise.race([NativeApp.speak(t,L,rate).catch(()=>{}),guard]);
  if(!SPK)return Promise.resolve();return Promise.race([new Promise(res=>{try{const u=new SpeechSynthesisUtterance(t);u.lang=L;u.rate=.95*rate;try{vgApply(u,L)}catch(x){}u.onend=u.onerror=()=>res();speechSynthesis.speak(u)}catch(e){res()}}),guard])}
-async function speakSeq(parts){const my=++spkId;for(const p of parts){if(my!=spkId)return false;await speakOne(p.t,p.l)}return my==spkId}
-function stopVoice(){spkId++;try{if(NATV())NativeApp.stopSpeak();else if(SPK)speechSynthesis.cancel()}catch(e){}}
+async function speakSeq(parts){const my=++spkId;for(const p of parts)if(nvLiveOk(p.l)){const c=cleanTx(p.t,p.l);if(c)nvPcm(c,p.l,1)}for(const p of parts){if(my!=spkId)return false;await speakOne(p.t,p.l)}return my==spkId}
+function stopVoice(){spkId++;try{nvStop()}catch(e){}try{if(NATV())NativeApp.stopSpeak();else if(SPK)speechSynthesis.cancel()}catch(e){}}
 function say(tx){if(!canVoice()){toast('Este dispositivo no tiene voz disponible.');return}speakSeq([{t:tx,l:curLang()}])}
 let voiceChecked={};
 async function checkVoice(lg){lg=lg||curLang();if(!NATV())return;const L=LANGC[lg]||'es-ES';if(voiceChecked[L])return;voiceChecked[L]=1;
@@ -4896,9 +4908,9 @@ try{Object.assign(RV,JSON.parse(localStorage.getItem('qvs-rv')||'{}'))}catch(e){
 const saveRV=()=>{try{localStorage.setItem('qvs-rv',JSON.stringify(RV))}catch(e){}};
 const RVBG=['aurora','burbujas','galaxia','ondas','rayos','confeti','puntos','retro'];
 let RVC=null;/* tu canción, solo en esta sesión */
-const rvVoiceOn=()=>RV.voice&&NSYN();
-const rKey=t=>'en|'+RV.rate+'|'+VG+'|'+vClean(t,'en');
-async function rvClip(t){const k=rKey(t);if(!CL.has(k)){try{const s=vClean(t,'en');if(!s)throw 0;CL.set(k,await decodePCM(await NativeApp.synth(s,'en-US',RV.rate)))}catch(e){CL.set(k,'x')}}const c=CL.get(k);return c&&c!=='x'&&c.length?c:null}
+const rvVoiceOn=()=>RV.voice&&(nvUse('en')||!!(window.NativeApp&&NativeApp.isNative&&NativeApp.synth));
+const rKey=t=>'en|'+RV.rate+'|'+VG+(nvUse('en')?'N':'')+'|'+vClean(t,'en');
+async function rvClip(t){const k=rKey(t);if(!CL.has(k)){try{const s=vClean(t,'en');if(!s)throw 0;CL.set(k,await decodePCM(nvUse('en')?await nvSynth(s,'en',RV.rate):await NativeApp.synth(s,'en-US',RV.rate)))}catch(e){CL.set(k,'x')}}const c=CL.get(k);return c&&c!=='x'&&c.length?c:null}
 const rvTxt=()=>({intro:tr('Escucha y lee en inglés'),quiz:tr('¿Entendiste el texto?'),end:tr('¿Cuántas acertaste?'),thanks:tr('¡Gracias por leer!'),follow:tr('Sigue para más textos en inglés'),badge:tr('Aprende inglés')});
 /* arma la línea de tiempo: con voz usa la duración real de cada frase */
 async function rvBuild(t,onProg){const V=rvVoiceOn(),C=RCATS.find(c=>c.k==t.c),segs=[],clips=[];let a=0;
@@ -4965,7 +4977,7 @@ function rvAudio(pl,sr){const n=Math.ceil(pl.dur*sr),a=new Float32Array(n),{osc}
 /* hoja de ajustes del video */
 let RVPL=null,rvBusy=0,rvPrevSrc=null,rvPlaying=false,rvT0=0,rvRaf=0;
 const rvCx=$('rvCv').getContext('2d');
-function rvSettingsUI(){const ok=NSYN();$('rvVNote').hidden=ok;$('rvVNote').textContent=ok?'':tr('La voz se graba en el video solo en la app Android. Aquí el video sale con música y texto.');
+function rvSettingsUI(){const ok=nvUse('en')||!!(window.NativeApp&&NativeApp.isNative&&NativeApp.synth);$('rvVNote').hidden=ok;$('rvVNote').textContent=ok?'':tr('La voz se graba en el video solo en la app Android. Aquí el video sale con música y texto.');
  $('rvVoice').checked=RV.voice&&ok;$('rvVoice').disabled=!ok;$('rvRate').value=String(RV.rate);$('rvVv').value=RV.vvol;$('rvVvV').textContent=Math.round(RV.vvol*100)+'%';
  $('rvMv').value=RV.mvol;$('rvMvV').textContent=Math.round(RV.mvol*100)+'%';$('rvTr').checked=RV.tr;$('rvQs').checked=RV.qs;$('rvHandle').value=RV.handle||'';$('rvRes').value=RV.res;
  $('rvMus').innerHTML=Object.entries(MUS).map(([k,[e,n]])=>`<button data-m="${k}" class="${RV.music==k?'on':''}" aria-pressed="${RV.music==k}"><i>${e}</i>${k=='custom'&&RVC?esc(RVC.name).slice(0,18):n}</button>`).join('');
@@ -5303,6 +5315,49 @@ const _mk=makeVideo;makeVideo=async function(d,voice){d.fmt=QK.fmt||'v';return _
 SHT.vg='Voz del narrador';
 vgUI();
 $('setlist').addEventListener('click',e=>{const b=e.target.closest('button[data-act=vg]');if(!b)return;setVG(VG=='m'?'f':'m');stopVoice();speakOne(VG=='m'?L3('Hola, soy la voz masculina de QuizClip.','Hi, I am the QuizClip male voice.','Olá, eu sou a voz masculina do QuizClip.'):L3('Hola, soy la voz femenina de QuizClip.','Hi, I am the QuizClip female voice.','Olá, eu sou a voz feminina do QuizClip.'),UIL)});
+
+/* ---------- Voces naturales (IA): suenan como una persona y funcionan sin internet después de descargarlas ---------- */
+const NVV={es:{f:['es_MX-claude-high','Claudia','México'],m:['es_MX-ald-medium','Aldo','México']},en:{f:['en_US-kristin-medium','Kristin','EE. UU.'],m:['en_US-john-medium','John','EE. UU.']},pt:{m:['pt_BR-faber-medium','Fábio','Brasil']}};
+var NVON=true,NVLIVE=true;try{NVON=localStorage.getItem('qvs-nv')!=='0';NVLIVE=localStorage.getItem('qvs-nvl')!=='0'}catch(e){}
+const NVS={};let NVDL=null;
+function nvKey(l,g){l=String(l||'es').slice(0,2);const x=NVV[l];return x&&x[g||VG]?x[g||VG][0]:null}
+function nvAny(){try{return NVON&&!!NVS[nvKey(P.lang)]}catch(e){return false}}
+function nvUse(l){const k=nvKey(l);return NVON&&!!(k&&NVS[k])}
+let NVLIB=null;
+function nvLib(){if(window.QCVoz)return Promise.resolve(window.QCVoz);return NVLIB||(NVLIB=new Promise((res,rej)=>{const s=document.createElement('script');s.src='qcvoz.js';s.onload=()=>window.QCVoz?res(window.QCVoz):rej(Error('qcvoz'));s.onerror=()=>{NVLIB=null;rej(Error('qcvoz'))};document.head.appendChild(s)}))}
+async function nvCheck(){try{const L=await nvLib();for(const l in NVV)for(const g in NVV[l]){const k=NVV[l][g][0];NVS[k]=await L.voiceReady(k)}}catch(e){}try{narrUI()}catch(e){}try{rvSettingsUI()}catch(e){}if(SHEET=='nv')nvUI()}
+async function nvSynth(t,l,rate){const L=await nvLib(),o=await L.synth(t,nvKey(l),rate||1);return L.wav(o.pcm,o.sr)}
+/* hablar en vivo (modo jugar y lectura) */
+let NVAC=null,NVSRC=null;const NVP=new Map();
+function nvPcm(t,l,rate){const k=nvKey(l)+'|'+(rate||1)+'|'+t;if(!NVP.has(k)){if(NVP.size>60)NVP.delete(NVP.keys().next().value);
+ const p=(async()=>{const L=await nvLib(),o=await L.synth(t,nvKey(l),rate||1);NVAC=NVAC||new AudioContext();const b=NVAC.createBuffer(1,o.pcm.length,o.sr);b.copyToChannel(o.pcm,0);return b})();p.catch(()=>NVP.delete(k));NVP.set(k,p)}return NVP.get(k)}
+function nvSpeak(t,l,rate){const my=spkId;return nvPcm(t,l,rate).then(b=>new Promise(res=>{if(my!=spkId)return res();try{NVAC.resume();const s=NVAC.createBufferSource();s.buffer=b;s.connect(NVAC.destination);s.onended=()=>{if(NVSRC===s)NVSRC=null;res()};NVSRC=s;s.start()}catch(e){res()}})).catch(()=>{})}
+function nvStop(){try{NVSRC&&NVSRC.stop()}catch(e){}NVSRC=null}
+const nvLiveOk=l=>NVLIVE&&nvUse(l);
+/* hoja de voces naturales */
+SHT.nv='Voces naturales (IA)';
+function nvRow(l,g){const x=NVV[l][g],k=x[0],ok=NVS[k],dl=NVDL&&NVDL.k==k;const fl={es:'🇲🇽',en:'🇺🇸',pt:'🇧🇷'}[l],ln={es:L3('Español','Spanish','Espanhol'),en:L3('Inglés','English','Inglês'),pt:L3('Portugués','Portuguese','Português')}[l];
+ return`<div class="nvr${ok?' ok':''}"><span class="nvf">${fl}</span><span class="nvt"><b>${x[1]} · ${g=='f'?L3('voz femenina','female voice','voz feminina'):L3('voz masculina','male voice','voz masculina')}</b><small>${ln} (${x[2]}) · ${ok?L3('Descargada ✓','Downloaded ✓','Baixada ✓'):'63 MB'}</small>${dl?`<span class="bcbar"><i style="width:${Math.round(NVDL.p*100)}%"></i></span>`:''}</span>
+ ${ok?`<button class="sm" data-nvt="${l}|${g}">▶</button><button class="sm warn" data-nvd="${k}" aria-label="${L3('Borrar','Delete','Apagar')}">🗑</button>`:`<button class="sm on" data-nvg="${l}|${g}" ${NVDL?'disabled':''}>${dl?Math.round(NVDL.p*100)+'%':L3('Descargar','Download','Baixar')}</button>`}</div>`}
+function nvUI(){const b=$('nvBox');if(!b)return;const rows=[];for(const l of[UIL,...['es','en','pt'].filter(x=>x!=UIL)])for(const g of['f','m'])if(NVV[l]&&NVV[l][g])rows.push(nvRow(l,g));
+ b.innerHTML=`<p class="hint" style="margin-top:0">${L3('Voces creadas con inteligencia artificial que suenan como una persona. Se descargan una sola vez (mejor con Wi-Fi) y después funcionan sin internet. La primera descarga suma 33 MB del motor de voz.','Voices made with artificial intelligence that sound like a real person. They download once (Wi-Fi recommended) and then work offline. The first download adds 33 MB for the voice engine.','Vozes criadas com inteligência artificial que soam como uma pessoa. São baixadas uma vez (de preferência no Wi-Fi) e depois funcionam sem internet. O primeiro download soma 33 MB do motor de voz.')}</p>
+ <label class="sw"><input type="checkbox" id="nvOn" ${NVON?'checked':''}> ${L3('Usar voces naturales en los videos','Use natural voices in videos','Usar vozes naturais nos vídeos')}</label>
+ <label class="sw"><input type="checkbox" id="nvLive" ${NVLIVE?'checked':''}> ${L3('También en el modo jugar y la lectura en voz alta','Also in play mode and reading aloud','Também no modo jogar e na leitura em voz alta')}</label>
+ <div class="nvlist">${rows.join('')}</div><p class="hint" id="nvMsg" role="status"></p>
+ <p class="hint">${L3('Si una voz no está descargada, la app usa la voz del teléfono con la mejor calidad disponible.','If a voice is not downloaded, the app uses the best-quality voice on your phone.','Se uma voz não estiver baixada, o app usa a melhor voz do celular.')}</p>`;b.dataset.nt=''}
+function nvOpen(){nvUI();openSheet('nv');nvCheck()}
+document.addEventListener('change',e=>{if(e.target.id=='nvOn'){NVON=e.target.checked;try{localStorage.setItem('qvs-nv',NVON?'1':'0')}catch(x){}CL.clear();try{narrUI()}catch(x){}}if(e.target.id=='nvLive'){NVLIVE=e.target.checked;try{localStorage.setItem('qvs-nvl',NVLIVE?'1':'0')}catch(x){}}});
+document.addEventListener('click',async e=>{const b=e.target.closest('[data-nvg],[data-nvt],[data-nvd],[data-nvopen]');if(!b)return;
+ if(b.dataset.nvopen!=null)return nvOpen();
+ if(b.dataset.nvg){const [l,g]=b.dataset.nvg.split('|'),k=nvKey(l,g);NVDL={k,p:0};nvUI();let last=0;
+  try{const L=await nvLib();await L.download(k,p=>{NVDL.p=p;const n=performance.now();if(n-last>250){last=n;if(SHEET=='nv')nvUI()}});NVS[k]=true;CL.clear();toast(L3('Voz descargada ✨','Voice downloaded ✨','Voz baixada ✨'));NVDL=null;nvUI();setVG(g);nvTest(l)}
+  catch(x){NVDL=null;nvUI();const m=$('nvMsg');if(m)m.textContent=L3('No se pudo descargar. Revisa tu conexión a internet e inténtalo de nuevo.','Could not download. Check your internet connection and try again.','Não foi possível baixar. Verifique sua internet e tente de novo.')}
+  try{narrUI()}catch(x){}return}
+ if(b.dataset.nvt){const [l,g]=b.dataset.nvt.split('|');setVG(g);nvTest(l);return}
+ if(b.dataset.nvd){const k=b.dataset.nvd;if(!await ask(L3('¿Borrar esta voz del teléfono? La puedes volver a descargar cuando quieras.','Delete this voice from your phone? You can download it again anytime.','Apagar esta voz do celular? Você pode baixá-la de novo quando quiser.'),L3('Borrar','Delete','Apagar')))return;try{(await nvLib()).remove(k)}catch(x){}NVS[k]=false;CL.clear();nvUI()}});
+function nvTest(l){stopVoice();const T={es:'Hola, soy tu narrador. ¿Cuánto sabes? Vamos a descubrirlo.',en:'Hi, I am your narrator. How much do you know? Let’s find out.',pt:'Olá, eu sou seu narrador. Quanto você sabe? Vamos descobrir.'}[l]||'';
+ if(nvUse(l)){const m=$('nvMsg');if(m)m.textContent=L3('Preparando la voz…','Preparing the voice…','Preparando a voz…');nvPcm(T,l,1).then(()=>{if(m)m.textContent='';nvSpeak(T,l,1)}).catch(()=>{if(m)m.textContent=''})}else speakSeq([{t:T,l}])}
+setTimeout(nvCheck,3500);
 
 /* ---------- entrada y arranque ---------- */
 function hideSplash(){const s=$('splash');if(!s||s.classList.contains('bye'))return;s.classList.add('bye');setTimeout(()=>s.remove(),700);const h=$('home');h.classList.remove('go');void h.offsetWidth;h.classList.add('go')}
