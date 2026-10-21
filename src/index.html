@@ -666,6 +666,26 @@ body.ovp .scrim{z-index:110}body.ovp .sheet{z-index:120}
 .nvlist{display:grid;gap:8px;margin-top:12px}.nvr{display:flex;align-items:center;gap:10px;background:var(--pn);border:1px solid var(--ln);border-radius:14px;padding:10px 12px}
 .nvr.ok{border-color:color-mix(in srgb,var(--gr) 55%,var(--ln))}.nvf{font-size:24px}.nvt{display:grid;gap:2px;flex:1;min-width:0}.nvt b{font-weight:600;font-size:14.5px}.nvt small{color:var(--mut);font-size:12.5px}.nvt .bcbar{height:6px;margin-top:4px}
 #setlist button[data-nvopen] b{margin-left:auto;color:var(--mut)}
+.gramcta{display:flex;align-items:center;gap:14px;width:100%;text-align:left;border:0;border-radius:20px;padding:16px;margin-top:14px;color:#fff;background:linear-gradient(120deg,#0E8A5F,#16A34A 60%,#4ADE80);box-shadow:0 10px 26px rgba(22,163,74,.25)}
+.gci{font-size:30px;width:52px;height:52px;border-radius:16px;background:rgba(255,255,255,.18);display:grid;place-items:center;flex:none}.gct{display:grid;gap:2px;flex:1}.gct b{font:600 18px var(--fd)}.gct small{opacity:.92;font-size:13px}.gcg{font-size:26px}
+.glevels{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.glevels button{display:grid;gap:2px;padding:10px 4px;border-radius:14px;text-align:center}.glevels b{font-size:14px}.glevels small{font-size:10.5px;color:var(--mut);line-height:1.2}
+.glevels button.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}.glevels button.on small{color:inherit;opacity:.8}
+.glist{display:grid;gap:10px;margin-top:14px}.gcard{display:flex;align-items:center;gap:12px;text-align:left;background:var(--pn);border:1px solid var(--ln);border-radius:18px;padding:12px 14px;box-shadow:var(--sh)}
+.gem{font-size:26px;width:48px;height:48px;border-radius:14px;background:#E6F6EC;display:grid;place-items:center;flex:none}.gtx{display:grid;gap:2px;flex:1;min-width:0}.gtx b{font:600 15.5px var(--fd)}.gtx small{color:var(--mut);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gsc{font-weight:600;color:var(--mut);font-size:14px}.gsc.full{color:#16A34A}
+.gthead{text-align:center;display:grid;justify-items:center;gap:6px;margin:6px 0 10px}.gtem{font-size:48px}.gthead h1{font:600 26px/1.2 var(--fd);margin:0}.gthead .hint{margin:0}
+.pill2{display:inline-block;padding:4px 12px;border-radius:999px;background:#E6F6EC;color:#0E6B47;font-weight:600;font-size:13px}
+.grule{background:#13241B;color:#fff;border-radius:20px;padding:18px}.grule small{color:#4ADE80;font-weight:700;letter-spacing:.16em;font-size:12px}.grule p{margin:6px 0 12px;font-size:16px;line-height:1.55}
+.grule code{display:block;background:rgba(255,255,255,.08);color:#BFE3CC;border-radius:12px;padding:10px 12px;font:600 14px var(--fb);white-space:normal}
+.gex{display:grid;gap:8px}.gex button{display:flex;gap:10px;align-items:center;text-align:left;border-radius:14px;background:var(--pn);font-weight:500}
+.gmis{display:grid;gap:6px;background:var(--pn);border:1px solid var(--ln);border-radius:16px;padding:12px 14px}.gmis p{margin:0}.gmis .bad{color:#E11D48;text-decoration:line-through;text-decoration-thickness:1.5px}.gmis .good{color:#16A34A;font-weight:600}
+.gwhy{display:grid;gap:8px}.gwhy details{background:var(--pn);border:1px solid var(--ln);border-radius:14px;padding:10px 14px}.gwhy summary{cursor:pointer;font-weight:500}.gwhy p{margin:8px 0 0;color:var(--mut)}
+.gwhy .gblank{background:#E6F6EC;color:#16A34A;font-weight:700;padding:0 6px;border-radius:6px}
+.gacts{display:grid;gap:10px;margin:18px 0 6px}
+.gblank{display:inline-block;min-width:3.2em;border-bottom:3px dashed currentColor;opacity:.85;margin:0 .15em;line-height:1.1}
+.pcard .gblank.fill{border:0;opacity:1;color:#16A34A;background:#E6F6EC;border-radius:8px;padding:0 .3em;min-width:0}
+.pfact .prule{display:block;margin-top:6px;opacity:.85;font-size:.85em}
+.glvres{display:flex;justify-content:center;gap:10px;margin-top:10px;flex-wrap:wrap}.glvres span{display:grid;justify-items:center;font-size:13px}.glvres i{font-style:normal;color:#16A34A;letter-spacing:2px}
 
 </style>
 </head>
@@ -751,6 +771,7 @@ body.ovp .scrim{z-index:110}body.ovp .sheet{z-index:120}
    <div class="bsl"><b><span id="lStatN">0</span> / <span id="lStatT">60</span> 📖</b><span class="bcbar"><i id="lStatBar"></i></span></div>
    <div class="bsn two"><span><b id="lStatA">—</b><small>🎯 Aciertos</small></span><span><b id="lStatW">0</b><small>⭐ Palabras</small></span></div>
   </div>
+  <button class="gramcta" id="gramCard"><span class="gci">✏️</span><span class="gct"><b>Gramática en inglés</b><small>35 lecciones · del A1 al C1 · con el «por qué»</small></span><span class="gcg">›</span></button>
   <div class="myhead"><h2 class="sec">✍️ Mis textos</h2><span class="gap"></span><button class="sm" id="wordsBtn">⭐ Mis palabras <b id="wordsN">0</b></button><button class="sm on" id="myNew">+ Crear mi texto</button></div>
   <div class="rlist" id="myList"></div>
   <h2 class="sec">Elige el nivel</h2>
@@ -802,6 +823,22 @@ body.ovp .scrim{z-index:110}body.ovp .sheet{z-index:120}
   <button class="go onb-next" id="onbNext">Siguiente</button>
  </div>
 </div>
+
+<section id="gram" class="view" hidden>
+ <header class="top"><div class="in"><button class="ib" id="gBack" aria-label="Volver">←</button><span class="bt">Gramática</span><span class="gap"></span></div></header>
+ <div class="wrap">
+  <div class="bstat lstat"><div class="bsl"><b><span id="gStatN">0</span> / <span id="gStatT">35</span> ✏️</b><span class="bcbar"><i id="gStatBar"></i></span></div><div class="bsn two"><span><b id="gStatQ">0</b><small>❓ Preguntas</small></span><span><b id="gMisN">0</b><small>🔁 Por repasar</small></span></div></div>
+  <div class="pduo"><button class="daily mini" id="gPlace"><span class="dic" data-ic="target"></span><span class="dtx"><b>Test de nivel</b><span>15 preguntas</span></span></button><button class="daily mini duel" id="gMis"><span class="dic" data-ic="flame"></span><span class="dtx"><b>Repasar errores</b><span>Tus fallos</span></span></button></div>
+  <h2 class="sec">Elige tu nivel</h2>
+  <div class="glevels" id="gLevels"></div>
+  <div class="glist" id="gList"></div>
+ </div>
+</section>
+
+<section id="gtopic" class="view" hidden>
+ <header class="top"><div class="in"><button class="ib" id="gtBack" aria-label="Volver">←</button><span class="bt rtitle" id="gtTitle"></span><span class="gap"></span></div></header>
+ <div class="wrap" id="gtBody"></div>
+</section>
 
 <section id="reader" class="view rdv" hidden>
  <header class="top"><div class="in">
@@ -1231,6 +1268,16 @@ Alta calidad (1080p)||High quality (1080p)||Alta qualidade (1080p)
 Más liviano (720p)||Lighter (720p)||Mais leve (720p)
 Voces naturales (IA)||Natural voices (AI)||Vozes naturais (IA)
 Suenan como una persona||They sound like a real person||Soam como uma pessoa
+Gramática en inglés||English grammar||Gramática em inglês
+35 lecciones · del A1 al C1 · con el «por qué»||35 lessons · A1 to C1 · with the "why"||35 lições · do A1 ao C1 · com o «por quê»
+Gramática||Grammar||Gramática
+❓ Preguntas||❓ Questions||❓ Perguntas
+🔁 Por repasar||🔁 To review||🔁 Para revisar
+Test de nivel||Level test||Teste de nível
+15 preguntas||15 questions||15 perguntas
+Repasar errores||Review mistakes||Revisar erros
+Tus fallos||Your mistakes||Seus erros
+Elige tu nivel||Choose your level||Escolha seu nível
 Mis textos||My texts||Meus textos
 ✍️ Mis textos||✍️ My texts||✍️ Meus textos
 ⭐ Mis palabras||⭐ My words||⭐ Minhas palavras
@@ -2590,6 +2637,7 @@ function draw(c,W,tt){
  const k=W/540;c.setTransform(k,0,0,k,0,0);c.globalAlpha=1;c.textAlign='left';c.textBaseline='alphabetic';c.lineJoin='round';
  const T=tl(),Z=T[T.length-1];tt=clamp(tt,0,Z.a+Z.d-1e-3);
  const ix=T.findIndex(o=>tt<o.a+o.d),s=T[ix].s,lt=ltOf(T[ix],tt),N=T.length,C=P.colors,bt=tt*P.bgSpeed;
+ if(P.theme=='gram')return drawGram(c,tt);
  if(P.theme&&P.theme!='clasico'&&THEMES[P.theme])return drawThemed(c,tt);
  const cur=bgOf(ix);
  if(ix>0&&lt<.6&&bgOf(ix-1)!=cur){paintBg(c,bgOf(ix-1),bt,C);const e=lt/.6;c.globalAlpha=e*e*(3-2*e);paintBg(c,cur,bt,C);c.globalAlpha=1}else paintBg(c,cur,bt,C);
@@ -3195,13 +3243,13 @@ $('projects').onclick=async e=>{const b=e.target.closest('button');if(!b)return;
 
 /* ---------- navegación: vistas y capas (funciona con el botón atrás de Android) ---------- */
 function showView(v,dir){if(VIEW==v)return;if(VIEW=='editor')saveNow();if(VIEW=='reader'){rdStop();wpHide();appSecure(false)}stop();$(VIEW).hidden=true;const b=$(v);b.hidden=false;b.classList.remove('in-r','in-l','go','in-f');void b.offsetWidth;b.classList.add(dir<0?'in-l':dir>0?'in-r':'in-f');VIEW=v;window.scrollTo(0,0);try{navUI()}catch(e){}
- if(v=='home'||v=='create'){saveNow();renderHome();heroLoop()}else if(v=='profile')profileUI();else if(v=='brain')brainUI();else if(v=='learn')learnUI();else if(v=='reader'){}else render()}
-const VIEWS=['editor','reader'],TABS=['home','create','brain','learn','profile'];let ROOT='home';const prevView=()=>[...LAYERS].reverse().find(x=>VIEWS.includes(x))||ROOT;
+ if(v=='home'||v=='create'){saveNow();renderHome();heroLoop()}else if(v=='profile')profileUI();else if(v=='gram')gramUI();else if(v=='gtopic')gtopicUI();else if(v=='brain')brainUI();else if(v=='learn')learnUI();else if(v=='reader'){}else render()}
+const VIEWS=['editor','reader','gram','gtopic'],TABS=['home','create','brain','learn','profile'];let ROOT='home';const prevView=()=>[...LAYERS].reverse().find(x=>VIEWS.includes(x))||ROOT;
 function goTab(v){if(!TABS.includes(v))return;ROOT=v;const k=LAYERS.length;if(k){history.go(-k);setTimeout(()=>showView(ROOT,0),300)}else showView(v,0)}
 function enterEditor(){if(VIEW=='editor'){const k=LAYERS.length-1;if(k>0)history.go(-k);return}openLayer('editor')}
 function showLayer(n){
  if(n=='editor')return showView('editor',1);
- if(n=='reader')return showView(n,1);
+ if(n=='reader'||n=='gram'||n=='gtopic')return showView(n,1);
  if(n=='drawer'){$('dEd').hidden=VIEW!='editor';$('scrim').hidden=false;$('drawer').hidden=false;requestAnimationFrame(()=>{$('scrim').classList.add('open');$('drawer').classList.add('open')});return}
  if(n=='sheet'){document.body.classList.toggle('ovp',LAYERS.includes('player')||LAYERS.includes('fs')||LAYERS.includes('rvfs'));$('scrim').hidden=false;$('sheet').hidden=false;requestAnimationFrame(()=>{$('scrim').classList.add('open');$('sheet').classList.add('open')});return}
  if(n=='fs')return fsShow();
@@ -3320,7 +3368,7 @@ let VOICE=true;try{VOICE=localStorage.getItem('qvs-voice')!=='0'}catch(e){}
 const setVoice=v=>{VOICE=v;try{localStorage.setItem('qvs-voice',v?'1':'0')}catch(e){}voiceBtn()};
 function voiceBtn(){const b=$('pgSpeak');b.hidden=!canVoice();b.textContent=VOICE?'🔊':'🔇';b.setAttribute('aria-pressed',VOICE);b.setAttribute('aria-label',VOICE?'Voz activada: tocar para silenciar':'Voz apagada: tocar para activar')}
 const curLang=()=>LBO||P.lang||'es';
-function cleanTx(t,lg){t=String(t||'').replace(/[\u{1F1E6}-\u{1F1FF}]/gu,'').replace(/\p{Extended_Pictographic}|\uFE0F|\u200D|[«»“”"]/gu,' ');
+function cleanTx(t,lg){t=String(t||'').replace(/_{3,}/g,lg=='en'?' blank ':' … ').replace(/[\u{1F1E6}-\u{1F1FF}]/gu,'').replace(/\p{Extended_Pictographic}|\uFE0F|\u200D|[«»“”"]/gu,' ');
  const W=lg=='en'?[['×',' times '],['÷',' divided by '],['−',' minus '],['+',' plus '],['²',' squared'],['%',' percent']]:lg=='pt'?[['×',' vezes '],['÷',' dividido por '],['−',' menos '],['+',' mais '],['²',' ao quadrado'],['%',' por cento']]:lg=='fr'?[['×',' fois '],['÷',' divisé par '],['−',' moins '],['+',' plus '],['²',' au carré'],['%',' pour cent']]:[['×',' por '],['÷',' entre '],['−',' menos '],['+',' más '],['²',' al cuadrado'],['%',' por ciento']];
  for(const [a,b] of W)t=t.split(a).join(b);return t.replace(/\s+/g,' ').trim()}
 let spkId=0;
@@ -3345,7 +3393,7 @@ function pgIntro(){if(G.cfg)return pgIntroB();const L=LB(),c=S()[0]&&S()[0].t=='
   <div class="prow"><label class="ptog"><input type="checkbox" id="pgUseT" ${G.useTime?'checked':''}> ⏱ ${L.timed}</label>${canVoice()?`<label class="ptog"><input type="checkbox" id="pgUseV" ${VOICE?'checked':''}> 🔊 ${L.voice}</label>`:''}</div>
   <button class="pnext" data-act="start">▶ ${L.play}</button>`}
 function pgQ(){G.i++;G.ans=false;if(G.i>=G.qs.length)return pgEnd();const s=G.qs[G.i],fx=s.fx&&s.fx!='none'?s.fx:'';pgTop();
- $('pgMain').innerHTML=`<div class="pcard" data-nt><h2>${esc(s.title)}</h2>${s.img||s.em?`<div class="pimg ${fx?'fx-'+fx:''} ${s.mini?'mini':''}" id="pgImg">${pgMedia(s)}${fx=='hide'?'<b class="qm">?</b>':''}</div>`:''}</div>
+ $('pgMain').innerHTML=`<div class="pcard" data-nt><h2>${gBlank(s.title)}</h2>${s.img||s.em?`<div class="pimg ${fx?'fx-'+fx:''} ${s.mini?'mini':''}" id="pgImg">${pgMedia(s)}${fx=='hide'?'<b class="qm">?</b>':''}</div>`:''}</div>
   <div class="popts" data-nt>${s.o.map((o,j)=>`<button class="popt" style="--i:${j}" data-j="${j}"><b>${LET[j]}</b><span>${esc(o)}</span></button>`).join('')}</div><div id="pgFoot"></div>`;
  cancelAnimationFrame(G.raf);const bar=$('pgTime'),box=$('pgTimer');box.hidden=!G.useTime;box.classList.remove('hurry');bar.style.transform='scaleX(1)';G.qT0=performance.now()+300;
  const idx=G.i,go=()=>{if(G&&!G.ans&&G.i==idx)pgTimer(s)};
@@ -3353,14 +3401,14 @@ function pgQ(){G.i++;G.ans=false;if(G.i>=G.qs.length)return pgEnd();const s=G.qs
 function pgTimer(s){G.qT0=performance.now()+300;if(!G.useTime)return;const bar=$('pgTime'),box=$('pgTimer');
  const t0=performance.now()+300,D=s.secs*1000;let last=-1;const f=now=>{if(!G||G.ans)return;const el=Math.max(0,now-t0),rem=Math.ceil((D-el)/1000);bar.style.transform=`scaleX(${Math.max(0,1-el/D)})`;
   if(rem!=last&&rem>0&&el>0){last=rem;box.classList.toggle('hurry',rem<=3);sfx(rem<=3?'tick3':'tick')}if(el>=D)return pgAnswer(-1);G.raf=requestAnimationFrame(f)};G.raf=requestAnimationFrame(f)}
-function pgAnswer(j){if(!G||G.ans||G.i<0||G.i>=G.qs.length)return;G.ans=true;cancelAnimationFrame(G.raf);stopVoice();const L=LB(),s=G.qs[G.i],ok=j==s.c;if(ok)G.score++;if(G.res)G.res.push(ok?(G.useTime&&performance.now()-G.qT0<s.secs*500?2:1):0);
+function pgAnswer(j){if(!G||G.ans||G.i<0||G.i>=G.qs.length)return;G.ans=true;cancelAnimationFrame(G.raf);stopVoice();const L=LB(),s=G.qs[G.i],ok=j==s.c;if(ok)G.score++;try{gramAnswer(s,ok)}catch(e){}if(G.res)G.res.push(ok?(G.useTime&&performance.now()-G.qT0<s.secs*500?2:1):0);
  let gain=0;if(G.cfg){if(ok){G.combo++;const L2=LVL[G.cfg.lv],fr=G.useTime?Math.max(0,1-(performance.now()-G.qT0)/(s.secs*1000)):.5;gain=L2.pts+Math.round(L2.pts*fr)+(G.combo>=3?5*(G.combo-2):0);G.pts+=gain}else G.combo=0}
- document.querySelectorAll('.popt').forEach((b,k)=>{b.disabled=true;b.classList.add(k==s.c?'ok':k==j?'bad':'dim')});
+ document.querySelectorAll('.popt').forEach((b,k)=>{b.disabled=true;b.classList.add(k==s.c?'ok':k==j?'bad':'dim')});{const gb=document.querySelector('#pgMain .gblank');if(gb){gb.textContent=s.o[s.c];gb.classList.add('fill')}}
  const im=$('pgImg');im&&im.classList.add('rev');sfx(ok?'ding':'bad');
  if(ok){const r=document.querySelector('.popt.ok').getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,70)}
  pgTop();const sc=$('pgScore');sc.classList.remove('bump');void sc.offsetWidth;if(ok)sc.classList.add('bump');
  if(gain){const r=sc.getBoundingClientRect(),f=document.createElement('div');f.className='fly';f.textContent='+'+gain;f.style.left=(r.left+r.width/2-20)+'px';f.style.top=(r.bottom+4)+'px';document.body.appendChild(f);setTimeout(()=>f.remove(),1200)}
- $('pgFoot').innerHTML=`<p class="pfeed">${j<0?L.timeup:ok?L.ok:L.bad}${G.cfg&&ok&&G.combo>=3?' 🔥 x'+G.combo:''}</p>${s.fact?`<div class="pfact" data-nt><b>${esc(G.cfg?L.fact:(P.factLabel||L.fact))}</b><span>${esc(s.fact)}</span></div>`:''}
+ $('pgFoot').innerHTML=`<p class="pfeed">${j<0?L.timeup:ok?L.ok:L.bad}${G.cfg&&ok&&G.combo>=3?' 🔥 x'+G.combo:''}</p>${s.fact?`<div class="pfact" data-nt><b>${esc(G.cfg?(G.cfg.gram?L3('📘 ¿Por qué?','📘 Why?','📘 Por quê?'):L.fact):(P.factLabel||L.fact))}</b><span>${esc(s.fact)}</span>${s.rule?`<small class="prule">${esc(s.rule)}</small>`:''}</div>`:''}
   <button class="pnext" data-act="next">${G.i+1<G.qs.length?L.next+' →':L.seeRes+' 🏆'}</button>`;
  if(VOICE&&canVoice()){const cl=curLang(),ol=s.ol||cl,P2=ok?[{t:L.ok,l:cl},{t:s.o[s.c],l:ol}]:[{t:j<0?L.timeup:L.bad,l:cl},{t:L.ansIs,l:cl},{t:s.o[s.c],l:ol}];if(s.fact)P2.push({t:s.fact,l:cl});speakSeq(P2)}
  const nx=$('pgFoot').querySelector('.pnext');nx.focus({preventScroll:true});nx.scrollIntoView({block:'nearest',behavior:RMQ.matches?'auto':'smooth'})}
@@ -3380,7 +3428,7 @@ function pgIntroB(){const L=LB(),g=G.cfg,V=LVL[g.lv];G.i=-1;G.score=0;G.res=[];i
  $('pgMain').innerHTML=`<div class="pcard pintro"><span class="pem big">${g.em}</span><h2>${esc(g.title)}</h2><p>${V.em} ${tr(V.n)} · ${trf('{n} preguntas',{n:G.qs.length})}</p><p class="pmeta">${tr(g.read?'Responde según lo que leíste':'Responde rápido para ganar más puntos')}</p></div>
   <div class="prow"><label class="ptog"${g.daily||g.vs?' hidden':''}><input type="checkbox" id="pgUseT" ${G.useTime?'checked':''}> ⏱ ${L.timed}</label>${canVoice()?`<label class="ptog"><input type="checkbox" id="pgUseV" ${VOICE?'checked':''}> 🔊 ${L.voice}</label>`:''}</div>${g.vs?`<p class="pmeta" data-nt>⚔️ ${esc(g.vs.n)}: ${fmtN(g.vs.p)} pts · ${g.vs.s}/${g.vs.q.length}</p>`:''}
   <button class="pnext" data-act="start">▶ ${L.play}</button>`}
-function pgEndB(){if(G.cfg.daily)return dailyEnd();if(G.cfg.vs)return duelEnd();const n=G.qs.length,r=brainFinish(),h=brainHome(),rd=G.cfg.read;if(rd)rdFinish();G.i=n;pgTop();$('pgTimer').hidden=true;
+function pgEndB(){if(G.cfg.place)return placeEnd();if(G.cfg.gram)try{gramFinish()}catch(e){};if(G.cfg.daily)return dailyEnd();if(G.cfg.vs)return duelEnd();const n=G.qs.length,r=brainFinish(),h=brainHome(),rd=G.cfg.read;if(rd)rdFinish();G.i=n;pgTop();$('pgTimer').hidden=true;
  $('pgMain').innerHTML=`<div class="pcard pend"><span class="pem big">${G.score>=n*.8?'🏆':G.score>=n*.5?'🎉':'💪'}</span>${r.rec?`<br><span class="pbadge">${tr('⭐ ¡Nuevo récord!')}</span>`:''}
   <p class="pbig">${fmtN(G.pts)}<small> pts</small></p><h2>${trf('{a} de {b} correctas',{a:G.score,b:n})}</h2>
   <p class="pmeta"><span>${h.re} ${trf('Nivel {n}',{n:h.l})} · ${tr(h.rn)}</span>${r.up?`<span> · ${tr('¡Subiste de nivel! 🎊')}</span>`:''}</p><span class="bcbar"><i style="width:0"></i></span><p class="pmeta">${h.st?trf(h.st==1?'🔥 Racha de {n} día':'🔥 Racha de {n} días',{n:h.st}):''}</p></div>
@@ -4888,7 +4936,7 @@ async function rvFsPlay(){const pl=RVPL||await rvPrepare();if(!pl)return;if(RVF.
 $('rvFsBtn').onclick=()=>{rvStopPrev();openLayer('rvfs')};
 $('rvFsPlay').onclick=()=>RVF.playing?rvFsPause():rvFsPlay();$('rvFsCv').onclick=$('rvFsPlay').onclick;$('rvFsClose').onclick=closeTop;
 /* 🗂️ copia de seguridad de todo */
-const LSK=['qvs-prof','qvs-cnt','qvs-daily','qvs-onb','qvs-brain','qvs-read','qvs-mytx','qvs-words','qvs-rv','qvs-rf','qvs-ui','qvs-theme','qvs-voice','qvs-blv','qvs-rdt'];
+const LSK=['qvs-gram','qvs-gmis','qvs-glv','qvs-prof','qvs-cnt','qvs-daily','qvs-onb','qvs-brain','qvs-read','qvs-mytx','qvs-words','qvs-rv','qvs-rf','qvs-ui','qvs-theme','qvs-voice','qvs-blv','qvs-rdt'];
 $('bkSave').onclick=async()=>{const m=$('bkMsg');m.textContent=tr('Preparando la copia…');let projects=[];try{projects=await DB.all()||[]}catch(e){}
  const ls={};for(const k of LSK){try{const v=localStorage.getItem(k);if(v!=null)ls[k]=v}catch(e){}}
  const data={app:'quizvideostudio',v:1,date:new Date().toISOString(),projects,ls},d=new Date(),name='quizclip-copia-'+d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+'.json';
@@ -5358,6 +5406,622 @@ document.addEventListener('click',async e=>{const b=e.target.closest('[data-nvg]
 function nvTest(l){stopVoice();const T={es:'Hola, soy tu narrador. ¿Cuánto sabes? Vamos a descubrirlo.',en:'Hi, I am your narrator. How much do you know? Let’s find out.',pt:'Olá, eu sou seu narrador. Quanto você sabe? Vamos descobrir.'}[l]||'';
  if(nvUse(l)){const m=$('nvMsg');if(m)m.textContent=L3('Preparando la voz…','Preparing the voice…','Preparando a voz…');nvPcm(T,l,1).then(()=>{if(m)m.textContent='';nvSpeak(T,l,1)}).catch(()=>{if(m)m.textContent=''})}else speakSeq([{t:T,l}])}
 setTimeout(nvCheck,3500);
+
+/* lecciones de gramática en inglés (originales de QuizClip).
+ #id|nivel|emoji|título en inglés|título en español|título en portugués
+ !idioma|explicación|fórmula        ~ejemplo|ejemplo|ejemplo        -error|corrección
+ x|frase con ___|correcta|incorrecta|incorrecta|incorrecta|por qué (en inglés) */
+const GR_TX=`#a1_be|A1|👋|The verb "to be"|El verbo «to be»|O verbo «to be»
+!es|«To be» significa ser o estar. Usa am con I, is con he, she e it, y are con you, we y they.|I am · he/she/it is · you/we/they are
+!en|"To be" describes who or how someone is. Use am with I, is with he, she and it, and are with you, we and they.|I am · he/she/it is · you/we/they are
+!pt|«To be» significa ser ou estar. Use am com I, is com he, she e it, e are com you, we e they.|I am · he/she/it is · you/we/they are
+~I am a student.|She is very happy today.|They are at the park.
+-She are my sister.|She is my sister.
+x|She ___ my best friend.|is|am|are|be|"She" always takes "is".
+x|I ___ hungry right now.|am|is|are|be|"I" always takes "am".
+x|We ___ in the same class.|are|is|am|be|"We" takes "are".
+x|My dog ___ very small.|is|are|am|be|"My dog" is one thing (it), so we use "is".
+x|You ___ late again!|are|is|am|be|"You" always takes "are", for one person or many.
+x|Tom and Lisa ___ from Brazil.|are|is|am|be|Two people = "they", so we use "are".
+x|___ you ready?|Are|Is|Am|Be|In questions the verb comes first: "Are you…?"
+x|It ___ not cold today.|is|are|am|be|"It" takes "is". The negative is "is not" (isn't).
+#a1_articles|A1|🍎|A or an?|¿A o an?|A ou an?
+!es|Usa «a» antes de un sonido de consonante y «an» antes de un sonido de vocal. Importa el sonido, no la letra.|a + consonante · an + vocal (sonido)
+!en|Use "a" before a consonant sound and "an" before a vowel sound. The sound matters, not the letter.|a + consonant sound · an + vowel sound
+!pt|Use «a» antes de som de consoante e «an» antes de som de vogal. O que importa é o som, não a letra.|a + consoante · an + vogal (som)
+~I eat an apple every day.|She has a cat.|It takes an hour.
+-I have a umbrella.|I have an umbrella.
+x|I want ___ orange.|an|a|the two|any|"Orange" starts with a vowel sound.
+x|She is ___ doctor.|a|an|any|some|"Doctor" starts with a consonant sound.
+x|We waited for ___ hour.|an|a|some|many|The "h" in "hour" is silent, so it sounds like a vowel.
+x|He is ___ university student.|a|an|some|any|"University" sounds like "you-", a consonant sound.
+x|That is ___ elephant!|an|a|some|many|"Elephant" starts with a vowel sound.
+x|I need ___ new phone.|a|an|some|many|"New" starts with a consonant sound.
+x|It was ___ honest answer.|an|a|some|many|The "h" in "honest" is silent.
+x|She bought ___ umbrella.|an|a|some|many|"Umbrella" starts with a vowel sound.
+#a1_this|A1|👉|This, that, these, those|This, that, these, those|This, that, these, those
+!es|This y these son para cosas cerca; that y those para cosas lejos. This y that son singular; these y those, plural.|cerca: this (1) · these (+1) · lejos: that (1) · those (+1)
+!en|This and these are for things near you; that and those are for things far away. This and that are singular; these and those are plural.|near: this / these · far: that / those
+!pt|This e these são para coisas perto; that e those para coisas longe. This e that são singular; these e those, plural.|perto: this / these · longe: that / those
+~This book is mine.|Those birds are beautiful.|Is that your car over there?
+-These book is mine.|This book is mine.
+x|___ shoes here are new.|These|This|That|It|"Shoes" is plural and near: "these".
+x|Look at ___ star up in the sky!|that|these|those|them|One thing, far away: "that".
+x|___ is my phone in my hand.|This|Those|These|They|One thing, near you: "this".
+x|Who are ___ people over there?|those|that|this|these here|Plural and far away: "those".
+x|I love ___ song we are listening to.|this|those|these|them|One song, here and now: "this".
+x|Are ___ your keys on the table there?|those|that|this|it|Plural and not near you: "those".
+x|___ cookies are delicious! (in your hand)|These|That|This|Those over there|Plural and near: "these".
+x|Can you see ___ mountain far away?|that|these|those|this|One thing, far away: "that".
+#a1_have|A1|🎒|Have or has?|¿Have o has?|Have ou has?
+!es|Usa «has» con he, she e it. Con I, you, we y they usa «have».|I/you/we/they have · he/she/it has
+!en|Use "has" with he, she and it. Use "have" with I, you, we and they.|I/you/we/they have · he/she/it has
+!pt|Use «has» com he, she e it. Com I, you, we e they use «have».|I/you/we/they have · he/she/it has
+~I have two brothers.|She has a red bike.|They have a big house.
+-He have a car.|He has a car.
+x|My sister ___ long hair.|has|have|haves|having|"My sister" = she, so we use "has".
+x|I ___ a new video game.|have|has|haves|is have|"I" takes "have".
+x|The house ___ three bedrooms.|has|have|is|are|"The house" = it, so "has".
+x|We ___ English class on Monday.|have|has|haves|having|"We" takes "have".
+x|Does she ___ a pet?|have|has|haves|having|After "does", use the base form "have".
+x|They ___ a lot of homework.|have|has|haves|is|"They" takes "have".
+x|He ___ a cold today.|has|have|haves|having|"He" takes "has".
+x|My parents ___ a small shop.|have|has|haves|is having|Two people = they, so "have".
+#a1_present|A1|🌞|Present simple|Presente simple|Presente simples
+!es|Úsalo para hábitos y verdades. Con he, she e it, el verbo lleva -s o -es. En preguntas y negativas usa do o does.|he/she/it + verbo-s · do/does + verbo base
+!en|Use it for habits and facts. With he, she and it, add -s or -es to the verb. Use do or does in questions and negatives.|he/she/it + verb-s · do/does + base verb
+!pt|Use para hábitos e verdades. Com he, she e it, o verbo leva -s ou -es. Em perguntas e negativas use do ou does.|he/she/it + verbo-s · do/does + verbo base
+~She works in a bank.|I don't like coffee.|Does he play football?
+-He play tennis every day.|He plays tennis every day.
+x|My brother ___ to school by bus.|goes|go|going|is go|"My brother" = he, so add -es: "goes".
+x|I ___ tea in the morning.|drink|drinks|drinking|am drink|"I" uses the base form: "drink".
+x|She ___ like spicy food.|doesn't|don't|isn't|not|Negative with she: "doesn't" + base verb.
+x|___ they live near here?|Do|Does|Are|Is|"They" uses "do" in questions.
+x|The sun ___ in the east.|rises|rise|rising|is rise|A fact with "it": add -s.
+x|He ___ TV every night.|watches|watch|watchs|watching|Verbs ending in -ch add -es: "watches".
+x|Does your mother ___ English?|speak|speaks|speaking|spoke|After "does", use the base verb.
+x|We ___ work on Sundays.|don't|doesn't|aren't|not|Negative with we: "don't" + base verb.
+#a1_there|A1|🏠|There is / there are|There is / there are|There is / there are
+!es|Úsalo para decir que algo existe. There is + singular; there are + plural.|there is + 1 · there are + varios
+!en|Use it to say that something exists. There is + singular; there are + plural.|there is + one · there are + more than one
+!pt|Use para dizer que algo existe. There is + singular; there are + plural.|there is + 1 · there are + vários
+~There is a cat on the sofa.|There are five people in my family.|Is there a bank near here?
+-There is two chairs.|There are two chairs.
+x|There ___ a park near my house.|is|are|be|have|"A park" is singular.
+x|There ___ many books on the shelf.|are|is|be|has|"Many books" is plural.
+x|___ there any milk in the fridge?|Is|Are|Do|Have|"Milk" is uncountable, so we use "is".
+x|There ___ three windows in the room.|are|is|be|has|"Three windows" is plural.
+x|There ___ a problem with my phone.|is|are|be|have|"A problem" is singular.
+x|There aren't ___ students today.|any|some|a|an|Negative sentences usually use "any".
+x|___ there two bathrooms?|Are|Is|Do|Have|"Two bathrooms" is plural.
+x|There ___ an old tree in the garden.|is|are|be|has|"An old tree" is singular.
+#a1_poss|A1|👪|Possessive adjectives|Adjetivos posesivos|Adjetivos possessivos
+!es|Indican de quién es algo: my, your, his, her, its, our, their. No cambian con el plural.|I→my · you→your · he→his · she→her · it→its · we→our · they→their
+!en|They show who something belongs to: my, your, his, her, its, our, their. They don't change in the plural.|I→my · you→your · he→his · she→her · it→its · we→our · they→their
+!pt|Mostram de quem é algo: my, your, his, her, its, our, their. Não mudam no plural.|I→my · you→your · he→his · she→her · it→its · we→our · they→their
+~This is my room.|Her name is Ana.|The dog wagged its tail.
+-She loves his mother. (her own mother)|She loves her mother.
+x|Maria lives with ___ parents.|her|his|their|its|Maria is a woman, so "her".
+x|John forgot ___ keys.|his|her|its|their|John is a man, so "his".
+x|We love ___ new teacher.|our|we|us|their|"We" → "our".
+x|The cat is eating ___ food.|its|it's|his|their|For animals and things use "its" (no apostrophe).
+x|They washed ___ car.|their|there|they're|them|"They" → "their".
+x|Is this ___ bag, Tom?|your|you|yours|you're|"You" → "your" before a noun.
+x|I can't find ___ phone.|my|me|mine|I|"I" → "my" before a noun.
+x|The children are playing with ___ toys.|their|they|there|his|Many people → "their".
+#a1_time|A1|🕒|In, on, at (time)|In, on, at (tiempo)|In, on, at (tempo)
+!es|At para horas exactas, on para días y fechas, in para meses, años, estaciones y partes del día.|at 7:00 · on Monday · in May / in 2025 / in the morning
+!en|At for exact times, on for days and dates, in for months, years, seasons and parts of the day.|at 7:00 · on Monday · in May / in 2025 / in the morning
+!pt|At para horas exatas, on para dias e datas, in para meses, anos, estações e partes do dia.|at 7:00 · on Monday · in May / in 2025 / in the morning
+~The class starts at nine.|My birthday is on Friday.|We go to the beach in summer.
+-See you in Monday.|See you on Monday.
+x|The movie starts ___ 8 p.m.|at|on|in|by|Exact time → "at".
+x|I was born ___ 2008.|in|on|at|by|Years → "in".
+x|We have English ___ Tuesday.|on|in|at|by|Days → "on".
+x|She studies ___ the evening.|in|on|at|by|Parts of the day → "in the morning/afternoon/evening".
+x|My birthday is ___ June 5th.|on|in|at|by|Specific dates → "on".
+x|It snows a lot ___ winter.|in|on|at|by|Seasons → "in".
+x|I go to bed ___ midnight.|at|in|on|by|"Midnight", "noon", "night" use "at".
+x|Shops are closed ___ Christmas Day.|on|in|at|by|A specific day → "on".
+#a1_can|A1|💪|Can / can't|Can / can't|Can / can't
+!es|Can expresa habilidad o permiso. Después de can va el verbo base, sin «to» y sin -s.|can + verbo base · can't = cannot
+!en|Can expresses ability or permission. After can, use the base verb, without "to" and without -s.|can + base verb · can't = cannot
+!pt|Can expressa habilidade ou permissão. Depois de can vem o verbo base, sem «to» e sem -s.|can + verbo base · can't = cannot
+~I can swim.|She can't drive.|Can I open the window?
+-He can to play the guitar.|He can play the guitar.
+x|She can ___ three languages.|speak|speaks|to speak|speaking|After "can", use the base verb.
+x|I ___ hear you. Speak louder!|can't|don't can|not can|can to|Negative: "can't" + base verb.
+x|___ you help me, please?|Can|Do|Are|Does|Questions: "Can you…?"
+x|My grandmother can ___ a computer.|use|uses|to use|using|"Can" + base verb, no -s.
+x|Dogs can't ___.|fly|flies|to fly|flying|"Can't" + base verb.
+x|Can he ___ well?|cook|cooks|to cook|cooking|After "can", always the base verb.
+x|We can ___ the bus to the city.|take|takes|to take|took|"Can" + base verb.
+x|You ___ park here. It's not allowed.|can't|don't|aren't|not|"Can't" = it is not permitted.
+#a2_past|A2|⏮️|Past simple|Pasado simple|Passado simples
+!es|Úsalo para acciones terminadas en el pasado. Los verbos regulares llevan -ed; muchos verbos son irregulares. En preguntas y negativas usa did + verbo base.|verbo-ed / irregular · did + verbo base
+!en|Use it for finished actions in the past. Regular verbs add -ed; many verbs are irregular. Use did + base verb in questions and negatives.|verb-ed / irregular · did + base verb
+!pt|Use para ações terminadas no passado. Verbos regulares levam -ed; muitos são irregulares. Em perguntas e negativas use did + verbo base.|verbo-ed / irregular · did + verbo base
+~I visited my aunt last week.|She went to Paris in 2023.|Did you see the game?
+-Did you went to the party?|Did you go to the party?
+x|Yesterday I ___ a great movie.|saw|see|seen|seeing|"See" is irregular: see → saw.
+x|We ___ football last Sunday.|played|play|plays|playing|Regular verb + -ed: "played".
+x|She didn't ___ the email.|send|sent|sends|sending|After "didn't", use the base verb.
+x|___ you call your mom yesterday?|Did|Do|Were|Does|Past questions use "did".
+x|They ___ to Mexico in 2022.|went|go|gone|goes|"Go" is irregular: go → went.
+x|I ___ my keys this morning.|lost|lose|losed|losing|"Lose" is irregular: lose → lost.
+x|He ___ a big breakfast.|ate|eated|eat|eaten|"Eat" is irregular: eat → ate.
+x|What time did you ___ up?|wake|woke|waked|woken|After "did", use the base verb.
+#a2_cont|A2|🏃|Present continuous vs simple|Presente continuo vs simple|Presente contínuo vs simples
+!es|El presente continuo (am/is/are + -ing) es para lo que pasa ahora. El presente simple es para hábitos y rutinas.|ahora: am/is/are + -ing · siempre: presente simple
+!en|Present continuous (am/is/are + -ing) is for things happening now. Present simple is for habits and routines.|now: am/is/are + -ing · always: present simple
+!pt|O presente contínuo (am/is/are + -ing) é para o que acontece agora. O presente simples é para hábitos e rotinas.|agora: am/is/are + -ing · sempre: presente simples
+~Look! It's raining.|I usually walk to school.|She is studying right now.
+-I am go to school every day.|I go to school every day.
+x|Be quiet! The baby ___.|is sleeping|sleeps|sleep|slept|"Be quiet!" means now → present continuous.
+x|I ___ coffee every morning.|drink|am drinking|drinking|drinks|"Every morning" is a habit → present simple.
+x|Look! Those kids ___ in the rain.|are dancing|dance|dances|danced|"Look!" means right now.
+x|She usually ___ to work by car.|goes|is going|go|going|"Usually" shows a routine → present simple.
+x|What ___ you doing now?|are|do|does|is|"Now" → present continuous: "What are you doing?"
+x|Water ___ at 100 °C.|boils|is boiling|boil|boiling|A scientific fact → present simple.
+x|I can't talk. I ___ dinner.|am cooking|cook|cooks|cooked|Something happening at this moment.
+x|He ___ TV on Saturdays.|watches|is watching|watch|watching|"On Saturdays" is a routine.
+#a2_comp|A2|📏|Comparatives & superlatives|Comparativos y superlativos|Comparativos e superlativos
+!es|Para comparar dos cosas: adjetivo corto + -er + than, o more + adjetivo largo + than. Para el máximo: the + -est, o the most + adjetivo largo.|tall → taller → the tallest · beautiful → more beautiful → the most beautiful
+!en|To compare two things: short adjective + -er + than, or more + long adjective + than. For the top: the + -est, or the most + long adjective.|tall → taller → the tallest · beautiful → more beautiful → the most beautiful
+!pt|Para comparar duas coisas: adjetivo curto + -er + than, ou more + adjetivo longo + than. Para o máximo: the + -est, ou the most + adjetivo longo.|tall → taller → the tallest · beautiful → more beautiful → the most beautiful
+~My brother is taller than me.|This is the most expensive phone.|Today is better than yesterday.
+-She is more tall than me.|She is taller than me.
+x|A car is ___ than a bike.|faster|more fast|fastest|the fastest|Short adjective: fast → faster.
+x|This is the ___ day of my life!|best|better|goodest|most good|"Good" is irregular: good → better → best.
+x|Math is ___ than history for me.|more difficult|difficulter|most difficult|the more difficult|Long adjective: more + difficult.
+x|Mount Everest is the ___ mountain in the world.|highest|higher|most high|more high|Superlative of "high" → "the highest".
+x|My test was ___ than yours.|worse|badder|worst|more bad|"Bad" is irregular: bad → worse → worst.
+x|She is the ___ person in our class.|funniest|funnier|most funny|funnyest|Adjectives ending in -y: funny → funniest.
+x|This box is ___ than that one.|heavier|heavyer|more heavy|heaviest|-y becomes -ier: heavy → heavier.
+x|It's the ___ beautiful beach I've seen.|most|more|-est|much|Long adjective superlative: "the most beautiful".
+#a2_future|A2|🔮|Going to vs will|Going to vs will|Going to vs will
+!es|Going to es para planes ya decididos y para predicciones con pruebas. Will es para decisiones del momento, promesas y opiniones sobre el futuro.|plan: be going to + verbo · decisión ahora: will + verbo
+!en|Going to is for plans already decided and predictions with evidence. Will is for instant decisions, promises and opinions about the future.|plan: be going to + verb · instant decision: will + verb
+!pt|Going to é para planos já decididos e previsões com evidências. Will é para decisões na hora, promessas e opiniões sobre o futuro.|plano: be going to + verbo · decisão agora: will + verbo
+~I'm going to visit Japan next year.|Look at those clouds! It's going to rain.|I'll help you with that.
+-Look! The glass will fall!|Look! The glass is going to fall!
+x|We bought tickets. We ___ see the concert tonight.|are going to|will|going|are go to|A plan already made → "going to".
+x|The phone is ringing. I ___ answer it.|'ll|am going to|going to|answer|An instant decision → "will".
+x|Look at that car! It ___ crash!|is going to|will|going|is go|Evidence right now → "going to".
+x|I promise I ___ tell anyone.|won't|am not going|not will|don't|Promises use "will" (won't = will not).
+x|I think Brazil ___ win the World Cup.|will|is going|going to|wins|An opinion about the future → "will".
+x|She ___ study medicine. She has decided.|is going to|will|goes to|going|A decision made earlier → "going to".
+x|"I'm cold." "I ___ close the window."|'ll|am going to|close|closing|Decided at the moment of speaking → "will".
+x|They ___ get married in June. It's all planned.|are going to|will to|going|are go|A fixed plan → "going to".
+#a2_count|A2|🧺|Much, many, some, any|Much, many, some, any|Much, many, some, any
+!es|Many con contables (cosas que se cuentan), much con incontables. Some en afirmaciones; any en preguntas y negativas.|many + plural · much + incontable · some (+) · any (? / -)
+!en|Many with countable nouns, much with uncountable nouns. Some in positive sentences; any in questions and negatives.|many + plural · much + uncountable · some (+) · any (? / -)
+!pt|Many com contáveis, much com incontáveis. Some em afirmações; any em perguntas e negativas.|many + plural · much + incontável · some (+) · any (? / -)
+~How many friends do you have?|I don't have much time.|There is some bread on the table.
+-How much apples do you want?|How many apples do you want?
+x|How ___ people came to the party?|many|much|any|a lot|"People" is countable → "many".
+x|I don't have ___ money.|much|many|some|a|"Money" is uncountable → "much".
+x|Is there ___ sugar in the kitchen?|any|many|a|an|Questions usually use "any".
+x|I bought ___ eggs for the cake.|some|any|much|a|Positive sentence → "some".
+x|There isn't ___ water left.|any|some|many|a|Negative sentence → "any".
+x|How ___ homework do you have?|much|many|lots|any|"Homework" is uncountable → "much".
+x|She has ___ friends in Spain.|many|much|any|a|"Friends" is countable and plural.
+x|Would you like ___ coffee?|some|many|a few|few|Offers use "some", even in questions.
+#a2_freq|A2|🔁|Adverbs of frequency|Adverbios de frecuencia|Advérbios de frequência
+!es|Always, usually, often, sometimes, rarely y never van antes del verbo principal, pero después de «to be».|sujeto + adverbio + verbo · sujeto + be + adverbio
+!en|Always, usually, often, sometimes, rarely and never go before the main verb, but after "to be".|subject + adverb + verb · subject + be + adverb
+!pt|Always, usually, often, sometimes, rarely e never vão antes do verbo principal, mas depois de «to be».|sujeito + advérbio + verbo · sujeito + be + advérbio
+~I always eat breakfast.|She is never late.|We sometimes go to the cinema.
+-I go always to the gym.|I always go to the gym.
+x|She ___ to bed before 11.|usually goes|goes usually|usually go|is usually go|Adverb goes before the main verb.
+x|He ___ late for class.|is never|never is|never be|is not never|With "to be", the adverb goes after it.
+x|I ___ coffee. I don't like it.|never drink|drink never|always drink|often drink|"I don't like it" → "never".
+x|We ___ at home on Sundays.|are always|always are|always be|are be always|After "are" comes the adverb.
+x|Do you ___ play video games?|often|are often|oftenly|do often|Question: "Do you often…?"
+x|They ___ take the bus. Only twice a year.|rarely|always|usually|often|"Twice a year" is rare.
+x|My mom ___ cooks on Fridays.|always|is always|always is|does always|Adverb before the main verb "cooks".
+x|It ___ snows in my city. It's too hot.|never|always|usually|often|A hot city: it never snows.
+#a2_pastcont|A2|🎞️|Past continuous|Pasado continuo|Passado contínuo
+!es|Was/were + -ing describe una acción en progreso en el pasado. Con «when» + pasado simple indicas qué la interrumpió.|was/were + -ing · …when + pasado simple
+!en|Was/were + -ing describes an action in progress in the past. Use "when" + past simple for what interrupted it.|was/were + -ing · …when + past simple
+!pt|Was/were + -ing descreve uma ação em andamento no passado. Com «when» + passado simples você diz o que a interrompeu.|was/were + -ing · …when + passado simples
+~I was sleeping when you called.|They were playing at 5 p.m.|What were you doing last night?
+-I was watch TV when she arrived.|I was watching TV when she arrived.
+x|I ___ a shower when the phone rang.|was taking|were taking|am taking|take|Action in progress → "was taking".
+x|They ___ soccer at 6 o'clock yesterday.|were playing|was playing|are playing|play|"They" takes "were".
+x|What ___ you doing when the lights went out?|were|was|did|are|"You" takes "were".
+x|She was reading when she ___ a noise.|heard|was hearing|hears|hear|The short interrupting action → past simple.
+x|It ___ when we left the house.|was raining|were raining|is raining|rain|Background action in progress.
+x|We ___ dinner when they arrived.|were having|was having|are having|have|"We" + were + -ing.
+x|He ___ when he fell off his bike.|was riding|were riding|is riding|ride|Action in progress before the fall.
+x|While I ___, my friend was cooking.|was studying|studied|am studying|were studying|Two actions in progress at the same time.
+`;
+
+const GR_TX2=`#b1_perfect|B1|✅|Present perfect vs past simple|Presente perfecto vs pasado simple|Present perfect vs passado simples
+!es|El present perfect (have/has + participio) une el pasado con el presente: experiencias, resultados y acciones sin tiempo exacto. Si dices cuándo pasó (yesterday, in 2020), usa pasado simple.|have/has + participio · tiempo exacto → pasado simple
+!en|The present perfect (have/has + past participle) links the past and the present: experiences, results and actions with no exact time. If you say when it happened (yesterday, in 2020), use the past simple.|have/has + past participle · exact time → past simple
+!pt|O present perfect (have/has + particípio) liga o passado ao presente: experiências, resultados e ações sem tempo exato. Se você diz quando aconteceu (yesterday, in 2020), use o passado simples.|have/has + particípio · tempo exato → passado simples
+~I have visited London twice.|She has lost her keys, so she can't get in.|We went to the beach yesterday.
+-I have seen him yesterday.|I saw him yesterday.
+x|I ___ that movie three times.|have seen|has seen|seen|am see|Life experience with no time → present perfect.
+x|She ___ to Rome in 2019.|went|has gone|has been|goes|"In 2019" is an exact time → past simple.
+x|___ you ever eaten sushi?|Have|Did|Do|Are|"Ever" asks about experience → present perfect.
+x|They ___ here since 2015.|have lived|lived|live|are living|"Since" + starting point → present perfect.
+x|I have known her ___ ten years.|for|since|from|during|"For" + a period of time.
+x|He hasn't finished his homework ___.|yet|already|since|ago|"Yet" goes at the end of negatives and questions.
+x|We have already ___ lunch.|had|have|has|having|Present perfect: have + past participle (had).
+x|Last night I ___ a strange dream.|had|have had|have|has had|"Last night" is a finished time → past simple.
+#b1_first|B1|🌱|First conditional|Primer condicional|Primeira condicional
+!es|Para situaciones reales o posibles en el futuro: if + presente simple, will + verbo. Después de «if» nunca va will.|If + presente, will + verbo
+!en|For real or possible situations in the future: if + present simple, will + verb. Never use will right after "if".|If + present simple, will + verb
+!pt|Para situações reais ou possíveis no futuro: if + presente simples, will + verbo. Depois de «if» nunca vem will.|If + presente, will + verbo
+~If it rains, we will stay home.|If you study, you will pass.|I'll call you if I have time.
+-If it will rain, we will stay home.|If it rains, we will stay home.
+x|If you heat ice, it ___.|will melt|melted|would melt|melting|Real result → will + verb.
+x|If she ___ early, she'll catch the bus.|leaves|will leave|left|leaving|After "if", use the present simple.
+x|We'll go to the beach if the weather ___ nice.|is|will be|was|be|After "if" → present simple, never "will".
+x|If I see Tom, I ___ him your message.|'ll give|give will|gave|would given|Main clause: will + verb.
+x|You ___ get wet if you don't take an umbrella.|will|would|are|did|Possible future result → "will".
+x|If they ___ hurry, they will miss the train.|don't|won't|didn't|aren't|Negative present after "if": "don't".
+x|What will you do if you ___ the job?|get|will get|got|getting|After "if" → present simple.
+x|If it's sunny tomorrow, we ___ a picnic.|'ll have|had|would had|have had|Future result → "will have".
+#b1_second|B1|💭|Second conditional|Segundo condicional|Segunda condicional
+!es|Para situaciones imaginarias o poco probables: if + pasado simple, would + verbo. Con el verbo to be se dice «If I were…».|If + pasado, would + verbo
+!en|For imaginary or unlikely situations: if + past simple, would + verb. With "to be" we say "If I were…".|If + past simple, would + verb
+!pt|Para situações imaginárias ou pouco prováveis: if + passado simples, would + verbo. Com to be dizemos «If I were…».|If + passado, would + verbo
+~If I had a million dollars, I would travel the world.|If I were you, I would apologize.|She would help if she knew.
+-If I would have more time, I would read more.|If I had more time, I would read more.
+x|If I ___ rich, I would buy a big house.|were|am|will be|have been|Imaginary present → "If I were…".
+x|If she studied more, she ___ better grades.|would get|will get|gets|got|Main clause: would + verb.
+x|What would you do if you ___ a lion?|saw|see|will see|would see|After "if" → past simple.
+x|If I ___ you, I wouldn't do that.|were|am|be|would be|Advice: "If I were you…".
+x|We ___ more if we lived closer.|would visit|will visit|visited|visit|Imaginary result → would + verb.
+x|If he ___ how to swim, he would join us.|knew|knows|would know|has known|After "if" → past simple.
+x|I would call her if I ___ her number.|had|have|would have|will have|After "if" → past simple.
+x|If it ___ so expensive, I'd buy it.|weren't|isn't|won't be|hasn't been|Imaginary: "If it weren't…".
+#b1_passive|B1|🏗️|Passive voice|Voz pasiva|Voz passiva
+!es|Úsala cuando importa la acción o el objeto, no quién la hace. Se forma con to be + participio. Quién la hace va con «by».|be + participio (+ by…)
+!en|Use it when the action or the object matters more than who does it. Form it with to be + past participle. Add "by" for who does it.|be + past participle (+ by…)
+!pt|Use quando importa a ação ou o objeto, não quem faz. Forma-se com to be + particípio. Quem faz vem com «by».|be + particípio (+ by…)
+~English is spoken all over the world.|The bridge was built in 1990.|The cake was made by my grandma.
+-The house was build last year.|The house was built last year.
+x|This song ___ by millions of people.|is loved|loves|is loving|loved|Present passive: is + past participle.
+x|The window ___ by the storm last night.|was broken|is broken|broke|was break|Past passive: was + past participle.
+x|Spanish ___ in many countries.|is spoken|speaks|is speak|spoken|Present passive: is spoken.
+x|The letters ___ yesterday.|were sent|was sent|sent|are sent|Plural + past → "were" + participle.
+x|"Harry Potter" was written ___ J.K. Rowling.|by|from|of|with|The person who did it goes after "by".
+x|Rice ___ in Asia for thousands of years.|has been grown|has been grow|have grown|is grow|Present perfect passive: has been + participle.
+x|The new school will ___ next year.|be opened|open by|opened|being opened|Future passive: will be + participle.
+x|My phone ___ while I was at the gym.|was stolen|stole|is stolen|was steal|Past passive with an irregular verb: steal → stolen.
+#b1_relative|B1|🔗|Relative clauses|Oraciones de relativo|Orações relativas
+!es|Unen dos ideas. Who para personas, which para cosas, where para lugares, whose para posesión. That puede reemplazar a who o which.|who (personas) · which (cosas) · where (lugares) · whose (de quién)
+!en|They join two ideas. Who for people, which for things, where for places, whose for possession. That can replace who or which.|who (people) · which (things) · where (places) · whose (possession)
+!pt|Ligam duas ideias. Who para pessoas, which para coisas, where para lugares, whose para posse. That pode substituir who ou which.|who (pessoas) · which (coisas) · where (lugares) · whose (de quem)
+~The woman who lives next door is a nurse.|This is the book which I told you about.|That's the café where we met.
+-The man which called you is my uncle.|The man who called you is my uncle.
+x|The girl ___ won the prize is my cousin.|who|which|where|whose|A person → "who".
+x|I lost the watch ___ my dad gave me.|which|who|where|whose|A thing → "which" (or "that").
+x|This is the town ___ I grew up.|where|which|who|whose|A place → "where".
+x|That's the man ___ car was stolen.|whose|who|which|who's|Possession → "whose".
+x|Do you know a shop ___ sells cheap shoes?|that|who|where|whose|A thing (shop) doing an action → "that/which".
+x|She's the teacher ___ helped me the most.|who|which|whose|where|A person → "who".
+x|The hotel ___ we stayed was amazing.|where|which|who|whose|A place where something happened → "where".
+x|I have a friend ___ brother is a pilot.|whose|who|which|that's|"Whose brother" = the brother of my friend.
+#b1_gerund|B1|🎯|Gerund or infinitive?|¿Gerundio o infinitivo?|Gerúndio ou infinitivo?
+!es|Algunos verbos van con -ing (enjoy, avoid, finish, mind) y otros con to + verbo (want, decide, hope, plan). Después de una preposición siempre va -ing.|enjoy/avoid/finish + -ing · want/decide/hope + to + verbo
+!en|Some verbs take -ing (enjoy, avoid, finish, mind) and others take to + verb (want, decide, hope, plan). After a preposition, always use -ing.|enjoy/avoid/finish + -ing · want/decide/hope + to + verb
+!pt|Alguns verbos vão com -ing (enjoy, avoid, finish, mind) e outros com to + verbo (want, decide, hope, plan). Depois de preposição sempre vem -ing.|enjoy/avoid/finish + -ing · want/decide/hope + to + verbo
+~I enjoy reading.|She decided to leave early.|He is good at drawing.
+-I want going home.|I want to go home.
+x|I enjoy ___ to music.|listening|to listen|listen|listened|"Enjoy" + -ing.
+x|She wants ___ a doctor.|to become|becoming|become|became|"Want" + to + verb.
+x|They decided ___ a new car.|to buy|buying|buy|bought|"Decide" + to + verb.
+x|Do you mind ___ the door?|closing|to close|close|closed|"Mind" + -ing.
+x|He's interested in ___ Japanese.|learning|to learn|learn|learned|After a preposition (in) → -ing.
+x|I hope ___ you soon.|to see|seeing|see|saw|"Hope" + to + verb.
+x|Have you finished ___ your report?|writing|to write|write|wrote|"Finish" + -ing.
+x|Avoid ___ too much sugar.|eating|to eat|eat|ate|"Avoid" + -ing.
+#b1_usedto|B1|📼|Used to|Used to|Used to
+!es|Used to + verbo habla de hábitos o estados del pasado que ya no ocurren. En preguntas y negativas: did + use to.|used to + verbo · didn't use to · did you use to…?
+!en|Used to + verb talks about past habits or states that are no longer true. In questions and negatives: did + use to.|used to + verb · didn't use to · did you use to…?
+!pt|Used to + verbo fala de hábitos ou estados do passado que já não existem. Em perguntas e negativas: did + use to.|used to + verbo · didn't use to · did you use to…?
+~I used to play the piano.|She didn't use to like vegetables.|Did you use to live here?
+-I use to walk to school when I was a kid.|I used to walk to school when I was a kid.
+x|When I was a child, I ___ climb trees.|used to|use to|was used to|am used|Past habit → "used to".
+x|There ___ be a cinema here.|used to|use to|uses to|was use to|A past state that changed.
+x|Did you ___ have long hair?|use to|used to|using to|uses to|After "did" → "use to" (no -d).
+x|She didn't ___ like coffee, but now she loves it.|use to|used to|uses to|using|Negative with "didn't" → "use to".
+x|We ___ go camping every summer.|used to|use to|were used|uses to|Repeated past action.
+x|He ___ smoke, but he quit.|used to|was use to|use|is used to|Something true before, not now.
+x|My grandpa used to ___ stories every night.|tell|telling|told|tells|"Used to" + base verb.
+x|I used to ___ shy, but not anymore.|be|being|been|was|"Used to" + base verb: be.
+#b1_modals|B1|📜|Must, have to, should|Must, have to, should|Must, have to, should
+!es|Must y have to expresan obligación. Should da un consejo. Ojo: mustn't = está prohibido; don't have to = no es necesario.|must / have to (obligación) · should (consejo) · mustn't (prohibido) · don't have to (no hace falta)
+!en|Must and have to express obligation. Should gives advice. Careful: mustn't = it's forbidden; don't have to = it's not necessary.|must / have to (obligation) · should (advice) · mustn't (forbidden) · don't have to (not necessary)
+!pt|Must e have to expressam obrigação. Should dá um conselho. Cuidado: mustn't = é proibido; don't have to = não é necessário.|must / have to (obrigação) · should (conselho) · mustn't (proibido) · don't have to (não precisa)
+~You must wear a seatbelt.|You should drink more water.|You don't have to come if you're busy.
+-You must to finish today.|You must finish today.
+x|You look tired. You ___ go to bed early.|should|must not|don't have to|mustn't|Advice → "should".
+x|You ___ smoke here. It's forbidden.|mustn't|don't have to|should|have to|Forbidden → "mustn't".
+x|Tomorrow is a holiday, so we ___ go to school.|don't have to|mustn't|must|should|Not necessary → "don't have to".
+x|She ___ wear a uniform at work.|has to|have to|must to|should to|"She" → "has to".
+x|Students ___ cheat on exams.|must not|don't have to|should to|have not|Forbidden → "must not".
+x|You ___ try that restaurant. It's great!|should|must not|don't have|have not to|Recommendation → "should".
+x|Did you ___ work last Saturday?|have to|must|had to|should|Past obligation question: "Did you have to…?"
+x|I ___ call my mom. She is waiting.|have to|has to|must to|should to|Obligation with "I" → "have to" (or must).
+#b2_third|B2|⏪|Third conditional|Tercer condicional|Terceira condicional
+!es|Para imaginar un pasado diferente que ya no se puede cambiar: if + past perfect, would have + participio.|If + had + participio, would have + participio
+!en|To imagine a different past that can't be changed: if + past perfect, would have + past participle.|If + had + past participle, would have + past participle
+!pt|Para imaginar um passado diferente que já não pode mudar: if + past perfect, would have + particípio.|If + had + particípio, would have + particípio
+~If I had studied, I would have passed.|If she had left earlier, she wouldn't have missed the bus.|We would have come if you had invited us.
+-If I would have known, I would have helped.|If I had known, I would have helped.
+x|If you had told me, I ___ you.|would have helped|would help|will help|had helped|Main clause: would have + participle.
+x|If they ___ the map, they wouldn't have got lost.|had checked|checked|would check|have checked|"If" clause: had + participle.
+x|She would have won if she ___ faster.|had run|ran|would run|runs|"If" clause: past perfect.
+x|If I ___ about the party, I would have gone.|had known|knew|would know|have known|Past perfect after "if".
+x|We ___ the match if we had trained more.|would have won|would win|will win|had won|Imaginary past result.
+x|If he hadn't eaten so much, he ___ sick.|wouldn't have felt|wouldn't feel|didn't feel|hadn't felt|Negative result in the past.
+x|If it hadn't rained, we ___ to the beach.|would have gone|would go|went|had gone|Main clause: would have + participle.
+x|I wouldn't have been late if the bus ___ on time.|had come|came|would come|has come|"If" clause: had + participle.
+#b2_reported|B2|🗣️|Reported speech|Estilo indirecto|Discurso indireto
+!es|Para contar lo que alguien dijo, el verbo suele ir un tiempo atrás: presente → pasado, pasado → past perfect, will → would. También cambian pronombres y palabras de tiempo.|"I am tired" → She said (that) she was tired
+!en|To report what someone said, the verb usually moves one tense back: present → past, past → past perfect, will → would. Pronouns and time words change too.|"I am tired" → She said (that) she was tired
+!pt|Para contar o que alguém disse, o verbo geralmente volta um tempo: presente → passado, passado → past perfect, will → would. Pronomes e palavras de tempo também mudam.|"I am tired" → She said (that) she was tired
+~"I like pizza." → He said he liked pizza.|"I will call you." → She said she would call me.|"Where do you live?" → He asked where I lived.
+-She said me that she was busy.|She told me that she was busy.
+x|"I am hungry." → He said he ___ hungry.|was|is|has been|will be|Present → past: "is" becomes "was".
+x|"I will help you." → She said she ___ help me.|would|will|can|shall|"Will" becomes "would".
+x|"We saw the film." → They said they ___ the film.|had seen|seen|have seen|see|Past simple → past perfect.
+x|She ___ me that she was moving to Lima.|told|said|spoke|talked|"Tell" needs a person: told me.
+x|"Do you like jazz?" → He asked me if I ___ jazz.|liked|like|did like|do like|Reported questions use normal word order and go back a tense.
+x|"I can swim." → She said she ___ swim.|could|can|could to|was can|"Can" becomes "could".
+x|"Where is the station?" → She asked where the station ___.|was|is it|was it|does|Reported questions: no inversion, tense goes back.
+x|He said that he would see us the next ___.|day|tomorrow|today|yesterday|"Tomorrow" usually becomes "the next day".
+#b2_pastperf|B2|🕰️|Past perfect|Pasado perfecto|Past perfect
+!es|Had + participio indica la acción que pasó antes que otra acción del pasado.|had + participio (la acción más antigua)
+!en|Had + past participle shows the action that happened before another past action.|had + past participle (the earlier action)
+!pt|Had + particípio indica a ação que aconteceu antes de outra ação no passado.|had + particípio (a ação mais antiga)
+~When I arrived, the movie had started.|She had never flown before that trip.|They had eaten, so they weren't hungry.
+-When we got there, the train already left.|When we got there, the train had already left.
+x|When I got home, my sister ___ dinner.|had already cooked|already cooks|has cooked|cooks|Earlier past action → past perfect.
+x|I couldn't pay because I ___ my wallet.|had lost|have lost|lose|was losing|The loss happened first.
+x|By the time we arrived, the show ___.|had finished|finished yet|has finished|finishes|"By the time" + past → past perfect.
+x|She ___ never seen snow before she went to Canada.|had|has|was|did|Experience before a past moment.
+x|He was tired because he ___ all night.|had worked|has worked|works|is working|The work came before being tired.
+x|After they ___ the test, they went out.|had finished|have finished|finish|were finish|"After" + the earlier action.
+x|I recognized her because I ___ her before.|had met|have met|meet|was meeting|Earlier past event.
+x|The streets were wet. It ___ in the night.|had rained|has rained|rains|is raining|The rain came before what we saw.
+#b2_deduction|B2|🔍|Modals of deduction|Modales de deducción|Modais de dedução
+!es|Para suponer con más o menos seguridad: must (estoy seguro de que sí), might/may/could (es posible), can't (estoy seguro de que no). Para el pasado: modal + have + participio.|must / might / can't + verbo · must / might / can't have + participio
+!en|To guess with more or less certainty: must (I'm sure it's true), might/may/could (it's possible), can't (I'm sure it's not true). For the past: modal + have + past participle.|must / might / can't + verb · must / might / can't have + past participle
+!pt|Para deduzir com mais ou menos certeza: must (tenho certeza que sim), might/may/could (é possível), can't (tenho certeza que não). Para o passado: modal + have + particípio.|must / might / can't + verbo · must / might / can't have + particípio
+~She's not answering. She must be busy.|It might rain later.|He can't have seen us; he wasn't there.
+-He mustn't be at home; the lights are off.|He can't be at home; the lights are off.
+x|Her eyes are red. She ___ been crying.|must have|can't have|mustn't|should|Strong evidence about the past → "must have".
+x|He ___ be French. He doesn't speak any French.|can't|must|might|should|Sure it's not true → "can't".
+x|Take an umbrella. It ___ rain.|might|must|can't|mustn't|A possibility → "might".
+x|You ___ be exhausted after that long trip!|must|can't|mightn't|shouldn't|Sure it's true → "must".
+x|She ___ have left already; her coat is still here.|can't|must|should|would|Evidence says no → "can't have".
+x|I'm not sure where he is. He ___ be in the library.|could|must|can't|mustn't|A possibility → "could".
+x|They won the lottery? They ___ be very happy.|must|can't|mightn't|shouldn't|Logical conclusion → "must".
+x|I can't find my keys. I ___ left them in the car.|might have|must|can't|would|Possible past action → "might have".
+#b2_wish|B2|🌠|Wish / if only|Wish / if only|Wish / if only
+!es|Wish + pasado simple expresa un deseo sobre el presente; wish + past perfect, un arrepentimiento del pasado; wish + would, una queja sobre lo que otra persona hace.|wish + pasado (presente) · wish + had + participio (pasado) · wish + would (queja)
+!en|Wish + past simple is a wish about the present; wish + past perfect is a regret about the past; wish + would is a complaint about what someone else does.|wish + past (present) · wish + had + participle (past) · wish + would (complaint)
+!pt|Wish + passado simples expressa um desejo sobre o presente; wish + past perfect, um arrependimento do passado; wish + would, uma reclamação sobre o que outra pessoa faz.|wish + passado (presente) · wish + had + particípio (passado) · wish + would (reclamação)
+~I wish I had more time.|I wish I hadn't said that.|I wish you would stop shouting.
+-I wish I can speak French.|I wish I could speak French.
+x|I wish I ___ taller.|were|am|will be|have been|Wish about the present → past form "were".
+x|I wish I ___ to the party last night.|had gone|went|go|would go|Regret about the past → past perfect.
+x|She wishes she ___ drive.|could|can|will|is able|Present ability → "could".
+x|If only I ___ studied harder!|had|have|would|did|Past regret → "had studied".
+x|I wish my neighbors ___ so much noise.|wouldn't make|don't make|didn't made|won't make|Complaint about others → "wouldn't".
+x|I wish it ___ raining. I want to go out.|would stop|stops|stopped already|will stop|Wanting a change you can't control → "would".
+x|He wishes he ___ so much money on games.|hadn't spent|didn't spend|doesn't spend|wouldn't spent|Regret about the past.
+x|I wish I ___ the answer right now.|knew|know|had known|will know|Wish about the present → past simple.
+#b2_causative|B2|💇|Have something done|Have something done|Have something done
+!es|Se usa cuando otra persona hace algo por ti (normalmente un servicio): have/get + objeto + participio.|have/get + objeto + participio
+!en|Use it when someone else does something for you (usually a service): have/get + object + past participle.|have/get + object + past participle
+!pt|Usa-se quando outra pessoa faz algo para você (normalmente um serviço): have/get + objeto + particípio.|have/get + objeto + particípio
+~I had my hair cut yesterday.|We're having the house painted.|She got her phone repaired.
+-I cut my hair at the hairdresser's.|I had my hair cut at the hairdresser's.
+x|I'm going to have my car ___ tomorrow.|washed|wash|washing|to wash|Have + object + past participle.
+x|She ___ her nails done every month.|has|makes|does|is|"Have" + object + participle.
+x|We had the roof ___ after the storm.|repaired|repair|repairing|to repair|Past participle after the object.
+x|Where did you get your photos ___?|printed|print|printing|to print|"Get" + object + participle.
+x|He's having his teeth ___ next week.|checked|check|checking|to check|Have + object + participle.
+x|You should ___ your eyes tested.|have|make|do|let|"Have something done" = someone does it for you.
+x|They got their kitchen ___ last year.|redesigned|redesign|redesigning|to redesign|Past participle after the object.
+x|I need to have this dress ___.|cleaned|clean|cleaning|to clean|Have + object + participle.
+#c1_inversion|C1|🔄|Inversion|Inversión|Inversão
+!es|En inglés formal, algunas expresiones negativas o restrictivas al inicio de la frase invierten el orden: el auxiliar va antes del sujeto. «Had…» puede reemplazar a «If… had…».|Never/Rarely/Not only + auxiliar + sujeto · Had + sujeto + participio = If… had…
+!en|In formal English, some negative or limiting expressions at the start of a sentence invert the order: the auxiliary comes before the subject. "Had…" can replace "If… had…".|Never/Rarely/Not only + auxiliary + subject · Had + subject + participle = If… had…
+!pt|No inglês formal, algumas expressões negativas ou restritivas no início da frase invertem a ordem: o auxiliar vem antes do sujeito. «Had…» pode substituir «If… had…».|Never/Rarely/Not only + auxiliar + sujeito · Had + sujeito + particípio = If… had…
+~Never have I seen such a beautiful place.|Not only did she win, but she also broke the record.|Had I known, I would have helped.
+-Never I have seen this before.|Never have I seen this before.
+x|Had the regulator intervened sooner, the collapse ___ prevented.|could have been|can be|could be|would be|Inverted third conditional: "Had…" = "If… had…", so the result is could have + been.
+x|Never ___ such a delicious meal.|have I eaten|I have eaten|I ate|ate I|After "Never" at the start → auxiliary + subject.
+x|Not only ___ late, but he also forgot the tickets.|was he|he was|he is|did he was|"Not only" at the start → inversion: "was he".
+x|Rarely ___ so much rain in July.|do we see|we see|we do see|see we|"Rarely" at the start → do + subject + verb.
+x|___ I known about the problem, I would have called.|Had|If|Have|Did|"Had I known" = "If I had known".
+x|Little ___ that she was being watched.|did she know|she knew|she did know|knew she|"Little" at the start (= not at all) → did + subject.
+x|No sooner had we arrived ___ it started to rain.|than|when|then|that|"No sooner… than…" is a fixed pair.
+x|Should you ___ any questions, please contact us.|have|had|having|to have|"Should you have…" = "If you have…".
+#c1_subjunctive|C1|⚖️|The subjunctive|El subjuntivo|O subjuntivo
+!es|Después de verbos como suggest, recommend, insist, demand y expresiones como it's essential that, se usa el verbo base para todas las personas (sin -s y sin to).|suggest / insist / it's essential that + sujeto + verbo base
+!en|After verbs like suggest, recommend, insist, demand and phrases like it's essential that, use the base verb for every person (no -s and no to).|suggest / insist / it's essential that + subject + base verb
+!pt|Depois de verbos como suggest, recommend, insist, demand e expressões como it's essential that, usa-se o verbo base para todas as pessoas (sem -s e sem to).|suggest / insist / it's essential that + sujeito + verbo base
+~The doctor recommended that he rest.|It's essential that she be on time.|They insisted that we stay for dinner.
+-I suggest that he goes to the doctor.|I suggest that he go to the doctor.
+x|The teacher suggested that she ___ more.|read|reads|to read|reading|After "suggest that" → base verb.
+x|The doctor insisted that the patient ___ in bed.|stay|stays|stayed|staying|After "insist that" → base verb, even with "the patient".
+x|They demanded that the manager ___.|resign|resigns|resigned|to resign|After "demand that" → base verb.
+x|I recommend that you ___ a lawyer.|consult|consulted|to consult|consulting|After "recommend that" → base verb.
+x|She insisted that he ___ the bill.|pay|pays|paid|paying|After "insist that" → base verb.
+x|It's essential that every student ___ the form.|complete|completes|completed|to complete|Base verb even with "every student".
+x|The judge ordered that the prisoner ___ released.|be|is|was|been|Formal subjunctive: "be released".
+x|We propose that the meeting ___ postponed.|be|is|will be|being|"Propose that" + be + participle.
+#c1_rather|C1|⌛|Would rather & it's time|Would rather y it's time|Would rather e it's time
+!es|Would rather + verbo base habla de tu preferencia; would rather + otra persona + pasado, de lo que prefieres que otro haga. It's (high) time + pasado indica que algo ya debería estar pasando.|I'd rather + verbo · I'd rather you + pasado · It's time + sujeto + pasado
+!en|Would rather + base verb is your own preference; would rather + another person + past is what you prefer someone else to do. It's (high) time + past says something should already be happening.|I'd rather + verb · I'd rather you + past · It's time + subject + past
+!pt|Would rather + verbo base é sua preferência; would rather + outra pessoa + passado, o que você prefere que outra pessoa faça. It's (high) time + passado indica que algo já deveria estar acontecendo.|I'd rather + verbo · I'd rather you + passado · It's time + sujeito + passado
+~I'd rather stay home tonight.|I'd rather you didn't tell anyone.|It's high time we left.
+-It's time we go home.|It's time we went home.
+x|I'd rather ___ by train than by plane.|travel|to travel|traveling|traveled|"Would rather" + base verb for yourself.
+x|I'd rather you ___ smoke in here.|didn't|don't|won't|not|Another person → past form: "didn't".
+x|It's high time you ___ a job.|found|find|will find|have found|"It's high time" + past simple.
+x|She'd rather ___ alone.|not go|not to go|don't go|no go|Negative: "would rather not" + base verb.
+x|It's time we ___ about the future.|thought|think|will think|thinking|"It's time" + subject + past.
+x|Would you rather ___ or walk?|drive|to drive|driving|drove|"Would you rather" + base verb.
+x|I'd rather they ___ earlier.|arrived|arrive|will arrive|arriving|Another person → past simple.
+x|It's about time the government ___ action.|took|takes|take|will take|"It's about time" + past simple.
+#c1_participle|C1|✂️|Participle clauses|Oraciones de participio|Orações com particípio
+!es|Acortan frases: -ing para acciones activas o simultáneas, participio pasado para el sentido pasivo, y having + participio para algo que pasó antes.|-ing (activo) · participio (pasivo) · having + participio (antes)
+!en|They shorten sentences: -ing for active or simultaneous actions, past participle for a passive meaning, and having + past participle for something that happened earlier.|-ing (active) · past participle (passive) · having + participle (earlier)
+!pt|Encurtam frases: -ing para ações ativas ou simultâneas, particípio passado para o sentido passivo e having + particípio para algo que aconteceu antes.|-ing (ativo) · particípio (passivo) · having + particípio (antes)
+~Walking home, I saw an old friend.|Built in 1850, the house is very old.|Having finished the work, she went home.
+-Finished the report, he sent it to his boss.|Having finished the report, he sent it to his boss.
+x|___ the door, she heard a strange noise.|Opening|Opened|Having open|To opening|Two actions at the same time, active → -ing.
+x|___ in 1990, the company now has 500 employees.|Founded|Founding|Having found|Founds|Passive meaning (it was founded) → past participle.
+x|___ her homework, she went out with friends.|Having finished|Finished|Finishing already|To finish|One action completed before the other.
+x|The man ___ next to me was very friendly.|sitting|sits|having sat|to sit|Active, at that moment → -ing.
+x|___ by the noise, the baby started crying.|Frightened|Frightening|Having frightened|Frighten|Passive meaning: the baby was frightened.
+x|___ lived in Spain, he speaks Spanish fluently.|Having|Had|Have|Being|"Having lived" = because he lived there before.
+x|Products ___ in this factory are exported.|made|making|having made|make|Passive meaning: products that are made.
+x|___ the instructions, I couldn't use the machine.|Not having read|Having not reading|Not read|Not to read|Negative of a previous action: "Not having read".
+#c1_linking|C1|🧩|Although, despite, however|Although, despite, however|Although, despite, however
+!es|Although/even though + frase completa; despite/in spite of + sustantivo o -ing; however une dos oraciones y va seguido de coma.|although + sujeto + verbo · despite + sustantivo / -ing · ; however,
+!en|Although/even though + a full clause; despite/in spite of + a noun or -ing; however links two sentences and is followed by a comma.|although + subject + verb · despite + noun / -ing · ; however,
+!pt|Although/even though + frase completa; despite/in spite of + substantivo ou -ing; however liga duas orações e vem seguido de vírgula.|although + sujeito + verbo · despite + substantivo / -ing · ; however,
+~Although it was cold, we went out.|Despite the rain, the match continued.|The plan was good. However, it failed.
+-Despite it was raining, we played.|Although it was raining, we played.
+x|___ it was late, she kept working.|Although|Despite|In spite of|However|Before a full clause → "although".
+x|___ the traffic, we arrived on time.|Despite|Although|Even though|However|Before a noun → "despite".
+x|He passed the exam ___ not studying much.|despite|although|however|even though|Before -ing → "despite".
+x|The hotel was expensive. ___, it was worth it.|However|Although|Despite|In spite|Linking two sentences → "However,".
+x|___ she's rich, she lives simply.|Even though|Despite|In spite of|However|Before a full clause → "even though".
+x|In spite ___ his injury, he finished the race.|of|that|to|from|The phrase is "in spite of".
+x|They went swimming ___ the water was cold.|although|despite|in spite of|however|Before a clause → "although".
+x|___ having a map, we got lost.|Despite|Although|Even though|However|Before -ing → "despite".
+`;
+
+/* ---------- Gramática en inglés: lecciones por nivel, práctica con «¿por qué?», test de nivel, errores y videos ---------- */
+const GR=(()=>{const out=[];let cur=null;for(const l of(GR_TX+'\n'+GR_TX2).split('\n')){
+ if(l[0]=='#'){const [id,lv,em,en,es,pt]=l.slice(1).split('|');cur={id,lv,em,t:[en,es,pt],r:{},ex:[],mis:null,q:[]};out.push(cur)}
+ else if(!cur)continue;else if(l[0]=='!'){const [lg,tx,f]=l.slice(1).split('|');cur.r[lg]={tx,f}}else if(l[0]=='~')cur.ex=l.slice(1).split('|');
+ else if(l[0]=='-'){const [a,b]=l.slice(1).split('|');cur.mis=[a,b]}else if(l.startsWith('x|')){const p=l.split('|');cur.q.push({s:p[1],c:p[2],w:p.slice(3,6),why:p[6]})}}return out})();
+const GRI=Object.fromEntries(GR.map(g=>[g.id,g]));
+const GLV=[['A1','🟢',L3('Principiante','Beginner','Iniciante')],['A2','🔵',L3('Básico','Elementary','Básico')],['B1','🟡',L3('Intermedio','Intermediate','Intermediário')],['B2','🟠',L3('Intermedio alto','Upper intermediate','Intermediário avançado')],['C1','🔴',L3('Avanzado','Advanced','Avançado')]];
+const gT=g=>UIL=='en'?g.t[0]:UIL=='pt'?g.t[2]:g.t[1],gR=g=>g.r[UIL]||g.r.es,gLvB=lv=>({A1:'e',A2:'e',B1:'n',B2:'d',C1:'d'})[lv];
+let GRP=lsGet('qvs-gram',{}),GMIS=lsGet('qvs-gmis',[]),GLVSEL=lsGet('qvs-glv','A1');
+const saveGR=()=>{lsSet('qvs-gram',GRP);lsSet('qvs-gmis',GMIS.slice(-80))};
+let GCUR=null;
+const gBlank=t=>esc(t).replace(/_{3,}/,'<span class="gblank">&nbsp;</span>');
+function gQ(g,i){const it=g.q[i],o=shuf([it.c,...it.w]);return{t:'q',title:it.s.replace(/_{3,}/,'_____'),o,c:o.indexOf(it.c),em:'',fact:it.why,rule:gR(g).f,secs:({A1:20,A2:20,B1:22,B2:25,C1:25})[g.lv],img:'',mini:true,tl:'en',ol:'en',gid:g.id,gi:i,glv:g.lv}}
+/* pantalla de gramática */
+function gramUI(){const n=GR.filter(g=>GRP[g.id]!=null).length;$('gStatN').textContent=n;$('gStatT').textContent=GR.length;$('gStatBar').style.width=Math.round(n/GR.length*100)+'%';
+ $('gStatQ').textContent=GR.reduce((a,g)=>a+g.q.length,0);$('gMisN').textContent=GMIS.length;$('gMis').disabled=!GMIS.length;
+ $('gLevels').innerHTML=GLV.map(([k,e,n])=>`<button data-lv="${k}" class="${GLVSEL==k?'on':''}" data-nt><b>${e} ${k}</b><small>${n}</small></button>`).join('');
+ const L=GR.filter(g=>g.lv==GLVSEL);$('gList').innerHTML=L.map((g,i)=>{const b=GRP[g.id];return`<button class="gcard" data-g="${g.id}" style="--i:${i}" data-nt><span class="gem">${g.em}</span><span class="gtx"><b>${esc(gT(g))}</b><small>${esc(gR(g).f)}</small></span><span class="gsc${b==g.q.length?' full':''}">${b!=null?b+'/'+g.q.length:'›'}</span></button>`}).join('')}
+$('gramCard').onclick=()=>openLayer('gram');$('gBack').onclick=closeTop;
+$('gLevels').onclick=e=>{const b=e.target.closest('button');if(!b)return;GLVSEL=b.dataset.lv;lsSet('qvs-glv',GLVSEL);gramUI()};
+$('gList').onclick=e=>{const b=e.target.closest('button.gcard');if(b){GCUR=GRI[b.dataset.g];openLayer('gtopic')}};
+/* lección */
+function gtopicUI(){const g=GCUR;if(!g)return;const r=gR(g),lv=GLV.find(x=>x[0]==g.lv);
+ $('gtTitle').textContent=gT(g);$('gtTitle').dataset.nt='';
+ $('gtBody').innerHTML=`<div class="gthead"><span class="gtem">${g.em}</span><span class="pill2">${lv[1]} ${g.lv} · ${lv[2]}</span><h1>${esc(g.t[0])}</h1>${UIL!='en'?`<p class="hint">${esc(gT(g))}</p>`:''}</div>
+  <div class="grule"><small>${L3('LA REGLA','THE RULE','A REGRA')}</small><p>${esc(r.tx)}</p><code>${esc(r.f)}</code></div>
+  <h3>${L3('Ejemplos','Examples','Exemplos')}</h3><div class="gex">${g.ex.map(x=>`<button data-say="${esc(x)}"><span>🔊</span>${esc(x)}</button>`).join('')}</div>
+  ${g.mis?`<h3>${L3('Error común','Common mistake','Erro comum')}</h3><div class="gmis"><p class="bad">❌ ${esc(g.mis[0])}</p><p class="good">✅ ${esc(g.mis[1])}</p></div>`:''}
+  <h3>${L3('¿Por qué? Toca una frase','Why? Tap a sentence','Por quê? Toque uma frase')}</h3><div class="gwhy">${g.q.slice(0,4).map((q,i)=>`<details><summary>${gBlank(q.s).replace('&nbsp;',esc(q.c))}</summary><p>${esc(q.why)}</p></details>`).join('')}</div>
+  <div class="gacts"><button class="go" id="gtPlay">✏️ ${L3('Practicar','Practice','Praticar')} (${g.q.length})</button><button id="gtVid">🎬 ${L3('Crear video','Create video','Criar vídeo')}</button></div>`;
+ $('gtBody').dataset.nt='';applyIcons($('gtBody'));
+ $('gtPlay').onclick=()=>gramPlay(g);$('gtVid').onclick=()=>gramVideo([g])}
+$('gtBack').onclick=closeTop;
+$('gtBody').addEventListener('click',e=>{const b=e.target.closest('[data-say]');if(b&&canVoice()){stopVoice();speakSeq([{t:b.dataset.say,l:'en'}])}});
+/* práctica en el modo jugar */
+const GCOL={b1:'#0E8A5F',b2:'#0B5E43',ac:'#12B76A',hi:'#FFD45C'};
+function gramPlay(g){const qs=shuf(g.q.map((_,i)=>gQ(g,i)));PGC={brain:1,gram:g.id,cat:'gram_'+g.id,lv:gLvB(g.lv),qs,title:g.t[0],em:g.em,colors:GCOL};openLayer('player')}
+$('gPlace').onclick=()=>{const qs=[];for(const [lv] of GLV){const pool=GR.filter(g=>g.lv==lv).flatMap(g=>g.q.map((_,i)=>[g,i]));for(const [g,i] of shuf(pool).slice(0,3))qs.push(gQ(g,i))}
+ PGC={brain:1,gram:'place',place:1,cat:'gram_place',lv:'n',qs,title:L3('Test de nivel','Level test','Teste de nível'),em:'🎯',colors:GCOL};openLayer('player')};
+$('gMis').onclick=()=>{if(!GMIS.length)return;const qs=shuf(GMIS.slice(-30)).slice(0,10).map(m=>GRI[m.id]&&GRI[m.id].q[m.i]?gQ(GRI[m.id],m.i):null).filter(Boolean);if(!qs.length)return;
+ PGC={brain:1,gram:'mis',cat:'gram_mis',lv:'n',qs,title:L3('Repasar errores','Review mistakes','Revisar erros'),em:'🔁',colors:GCOL};openLayer('player')};
+function gramAnswer(s,ok){if(!s.gid)return;GMIS=GMIS.filter(m=>!(m.id==s.gid&&m.i==s.gi));if(!ok)GMIS.push({id:s.gid,i:s.gi});saveGR()}
+function gramFinish(){const c=G.cfg;if(c.gram&&GRI[c.gram]){GRP[c.gram]=Math.max(GRP[c.gram]||0,G.score);saveGR()}}
+function placeEnd(){const g=G,b=brainFinish(),by={};g.qs.forEach((q,i)=>{const r=(g.res||[])[i];(by[q.glv]=by[q.glv]||[0,0]);by[q.glv][1]++;if(r)by[q.glv][0]++});
+ let lv='A1';for(const [k] of GLV){const x=by[k];if(x&&x[0]>=2)lv=k;else break}GLVSEL=lv;lsSet('qvs-glv',lv);const L=GLV.find(x=>x[0]==lv);G.i=g.qs.length;pgTop();$('pgTimer').hidden=true;
+ $('pgMain').innerHTML=`<div class="pcard pend" data-nt><span class="pem big">🎯</span><h2>${L3('Tu nivel es','Your level is','Seu nível é')}</h2><p class="pbig">${lv}</p><p class="pmeta">${L[1]} ${L[2]}</p>
+  <div class="glvres">${GLV.map(([k])=>{const x=by[k]||[0,0];return`<span><b>${k}</b><i>${'●'.repeat(x[0])}${'○'.repeat(x[1]-x[0])}</i></span>`}).join('')}</div></div>
+  <div class="prow" data-nt><button class="pnext" data-act="gstart">${L3('Empezar con el nivel ','Start level ','Começar o nível ')+lv}</button><button class="pexit" data-act="exit">${tr('Salir')}</button></div>`;
+ sfx('fan');try{gramUI()}catch(e){}}
+$('pgMain').addEventListener('click',e=>{const b=e.target.closest('button[data-act=gstart]');if(b){stopVoice();closeTop()}});
+const _btv=brainToVideo;brainToVideo=function(){if(G&&G.cfg&&G.cfg.gram){const ids=[...new Set(G.qs.map(q=>q.gid))];return gramVideo(ids.map(i=>GRI[i]).filter(Boolean),G.qs)}return _btv()};
+/* convertir en video con el diseño «Gramática» */
+function gramVideo(gs,qsIn){const g0=gs[0],qs=(qsIn||g0.q.map((_,i)=>gQ(g0,i))).map(q=>({...q}));const n=qs.length,one=gs.length==1;
+ const d={...example(),name:'Grammar · '+(one?g0.t[0]:L3('Repaso','Review','Revisão')),theme:'gram',lang:'en',coverTag:one?g0.lv:'English',reveal:3.5,trans:'zoom',music:'lofi',musicVol:.22,
+  slides:[{t:'cover',title:one?g0.t[0]:'English grammar',sub:(one?'Level '+g0.lv+' · ':'')+'Can you get all '+n+'?',em:g0.em,img:'',bg:''},
+   ...qs.map(q=>{const s=mk(q.title,[...q.o],q.c,'',q.fact);s.secs=8;s.rule=GRI[q.gid]?GRI[q.gid].r.en.f:q.rule;s.mini=true;s.tl='en';s.ol='en';return s}),
+   {t:'final',title:'How many did\nyou get right?',sub:'Comment your score 👇',em:'🏆',img:'',bg:''}],
+  tiers:`0-${Math.floor(n*.4)} | Keep practicing!\n${Math.floor(n*.4)+1}-${n-1} | Great job!\n${n} | Grammar master!`};
+ if(LAYERS.includes('player'))closeTop();setTimeout(()=>makeVideo(d,true),LAYERS.length?330:0)}
+/* diseño de video «Gramática» (limpio, verde, con la regla al revelar) */
+THEMES.gram={n:'Gramática',d:'Limpio, con la regla al revelar',fixed:true};if(!THK.includes('gram'))THK.push('gram');
+const GF=(w,s)=>`${w} ${s}px Poppins, system-ui, sans-serif`;
+function gWords(c,txt,maxW,font,blankW){c.font=font;const out=[[]];let w=0;const sp=c.measureText(' ').width;
+ for(const raw of String(txt).replace(/\n/g,' ').split(' ').filter(Boolean)){const m=raw.match(/^(.*?)(_{3,})(.*)$/);let ww,tok;
+  if(m){c.font=font;const a=c.measureText(m[1]).width,b=c.measureText(m[3]).width;ww=a+blankW+b;tok={pre:m[1],post:m[3],blank:1,w:ww,a,b}}else{ww=c.measureText(raw).width;tok={t:raw,w:ww}}
+  if(w&&w+sp+ww>maxW){out.push([]);w=0}out[out.length-1].push(tok);w+=(w?sp:0)+ww}return{lines:out,sp}}
+function drawGram(c,tt){const T=tl(),Z=T[T.length-1];tt=clamp(tt,0,Z.a+Z.d-1e-3);const ix=T.findIndex(o=>tt<o.a+o.d),o=T[ix],s=o.s,lt=ltOf(o,tt),q=s.t=='q',lg=P.lang||'en';
+ const W=540,H=960,ink='#10241A',green='#16A34A',G2='#1F9D55';
+ const g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,'#F5FBF7');g.addColorStop(1,'#E2F3E8');c.fillStyle=g;c.fillRect(0,0,W,H);
+ c.save();c.globalAlpha=.55;for(const [x,y,r,k] of [[470,120,190,.3],[60,820,220,.22],[500,700,140,.4]]){const rg=c.createRadialGradient(x+Math.sin(tt*k)*20,y+Math.cos(tt*k)*20,0,x,y,r);rg.addColorStop(0,'#C9EED7');rg.addColorStop(1,'rgba(201,238,215,0)');c.fillStyle=rg;c.fillRect(0,0,W,H)}c.restore();
+ const ein=Math.min(1,lt/.45),eo=1-(1-ein)**3;c.save();c.globalAlpha=eo;c.translate(0,(1-eo)*24);
+ const pill=(txt,y,bg,fg,fs=17)=>{c.font=GF(700,fs);const tw=c.measureText(txt).width+44;rr(c,(W-tw)/2,y-20,tw,40,20);c.fillStyle=bg;c.fill();c.fillStyle=fg;c.textAlign='center';c.textBaseline='middle';c.fillText(txt,W/2,y+1)};
+ const cta=()=>{const t2=P.handle?(lg=='es'?'Sígueme: ':lg=='pt'?'Siga: ':'Follow ')+P.handle:(lg=='es'?'Sígueme para más inglés':lg=='pt'?'Siga para mais inglês':'Follow for daily English'),p=1+.025*Math.sin(tt*4);
+  c.save();c.translate(W/2,H-64);c.scale(p,p);c.font=GF(700,22);const tw=c.measureText(t2).width+60;const gg=c.createLinearGradient(-tw/2,0,tw/2,0);gg.addColorStop(0,'#FFD966');gg.addColorStop(1,'#F4B42F');
+  c.shadowColor='rgba(244,180,47,.45)';c.shadowBlur=24;rr(c,-tw/2,-28,tw,56,28);c.fillStyle=gg;c.fill();c.shadowBlur=0;c.fillStyle='#2A1F05';c.textAlign='center';c.textBaseline='middle';c.fillText(t2,0,1);c.restore()};
+ if(s.t=='cover'){pill(String(P.coverTag||'English').toUpperCase(),120,G2,'#fff');
+  c.font='110px Fredoka, system-ui, sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText(s.em||'📘',W/2,280);
+  const L=wrap((c.font=GF(700,50),c),s.title,460).slice(0,3);c.fillStyle=ink;L.forEach((l,j)=>{c.font=GF(700,50);c.fillText(l,W/2,420+j*60)});
+  if(s.sub){c.font=GF(500,24);c.fillStyle='#3E5C4A';c.fillText(s.sub,W/2,440+L.length*60)}
+  if(!THUMB){const m=LB().start+' '+Math.max(1,P.coverSecs-Math.floor(lt)),p=1+.1*Math.max(0,1-(lt%1)*4);c.save();c.translate(W/2,720);c.scale(p,p);c.font=GF(700,44);c.fillStyle=green;c.textAlign='center';c.fillText(m,0,0);c.restore()}
+  c.restore();cta();return}
+ if(s.t=='final'){c.font='110px Fredoka, system-ui, sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText(s.em||'🏆',W/2,230);
+  const L=String(s.title).split('\n');c.fillStyle=ink;L.forEach((l,j)=>{c.font=GF(700,48);c.fillText(l,W/2,370+j*58)});if(s.sub){c.font=GF(500,24);c.fillStyle='#3E5C4A';c.fillText(s.sub,W/2,400+L.length*58)}
+  const tiers=String(P.tiers).split('\n').map(x=>x.split('|').map(y=>y.trim())).filter(x=>x[0]).slice(0,4);tiers.forEach(([a,b],j)=>{const y=570+j*72;rr(c,70,y,400,58,16);c.fillStyle='#fff';c.fill();c.strokeStyle='#CFE8D8';c.lineWidth=2;c.stroke();
+   c.font=GF(700,20);c.fillStyle=green;c.textAlign='left';c.fillText(a,92,y+30);c.font=GF(600,20);c.fillStyle=ink;c.textAlign='right';c.fillText(b||'',448,y+30)});c.restore();cta();return}
+ // pregunta
+ const qn=T.slice(0,ix+1).filter(x=>x.s.t=='q').length,qt=S().filter(x=>x.t=='q').length,cnt=lt<s.secs,rt=lt-s.secs,rv=cnt?0:Math.min(1,rt/.4),ok=s.c,ANS={en:'ANSWER',es:'RESPUESTA',pt:'RESPOSTA'}[lg]||'ANSWER';
+ if(cnt){pill(LB().q(qn,qt).toUpperCase(),92,'#fff',G2,16);const p=1-lt/s.secs;rr(c,150,126,240,6,3);c.fillStyle='#D3EBDD';c.fill();rr(c,150,126,240*p,6,3);c.fillStyle=lt>s.secs-3?'#F04461':green;c.fill()}
+ else{const e=Math.min(1,rt/.35),eb=1+2.70158*(e-1)**3+1.70158*(e-1)**2;c.save();c.translate(W/2,92);c.scale(eb,eb);c.translate(-W/2,-92);pill(ANS+': '+LET[ok],92,G2,'#fff',18);c.restore()}
+ // frase con espacio en blanco
+ const ans=String(s.o[ok]||'');let fs=40,lay;do{c.font=GF(700,fs);const bw=Math.max(80,c.measureText(ans).width+16);lay=gWords(c,s.title,468,GF(700,fs),bw);lay.bw=bw;fs-=2}while(lay.lines.length>4&&fs>24);fs+=2;
+ const lh=fs*1.25;let y=150+fs;c.textBaseline='alphabetic';
+ for(const line of lay.lines){const lw=line.reduce((a,t)=>a+t.w,0)+lay.sp*(line.length-1);let x=(W-lw)/2;c.textAlign='left';
+  for(const t of line){c.font=GF(700,fs);if(t.blank){c.fillStyle=ink;c.fillText(t.pre,x,y);const bx=x+t.a;
+    if(rv<1){c.globalAlpha=(1-rv)*eo;rr(c,bx,y-fs*.82,lay.bw,fs*1.05,10);c.fillStyle='#D7EFE0';c.fill();c.strokeStyle='#9AD3B0';c.setLineDash([7,6]);c.lineWidth=2;c.stroke();c.setLineDash([]);c.globalAlpha=eo}
+    if(rv>0){c.save();c.globalAlpha=rv*eo;c.fillStyle=green;c.fillText(ans,bx+8,y);c.restore()}
+    c.fillStyle=ink;c.fillText(t.post,bx+lay.bw,y)}else{c.fillStyle=ink;c.fillText(t.t,x,y)}x+=t.w+lay.sp}y+=lh}
+ let oy=y+10;
+ if(!/_{3,}/.test(s.title)&&(s.img||s.em)){pic(c,s,110,oy,320,170,22,'#CFE8D8',3,cnt?lt/s.secs:1);oy+=190}
+ // opciones
+ const hasRule=!!s.fact,ruleH=hasRule?170:0,avail=H-120-oy-(rv>0?ruleH+16:0),n=s.o.length,oh=Math.max(52,Math.min(76,(avail-(n-1)*12)/n)),gap=12;
+ s.o.forEach((op,j)=>{const by=oy+j*(oh+gap),isOk=j==ok,dim=rv>0&&!isOk;c.save();c.globalAlpha=eo*(dim?1-.45*rv:1);
+  c.shadowColor='rgba(16,36,26,.08)';c.shadowBlur=14;c.shadowOffsetY=4;rr(c,40,by,460,oh,16);c.fillStyle=isOk&&rv>0?'#E7F7EE':'#FFFFFF';c.fill();c.shadowColor='transparent';
+  if(isOk&&rv>0){c.lineWidth=3;c.strokeStyle='#2BB673';c.stroke()}
+  const bs=36,bx=58,byy=by+(oh-bs)/2;rr(c,bx,byy,bs,bs,10);c.fillStyle=isOk&&rv>0?G2:'#EEF5F0';c.fill();
+  if(isOk&&rv>0){c.strokeStyle='#fff';c.lineWidth=4;c.lineCap='round';c.lineJoin='round';c.beginPath();c.moveTo(bx+10,byy+19);c.lineTo(bx+16,byy+25);c.lineTo(bx+27,byy+12);c.stroke()}
+  else{c.font=GF(700,17);c.fillStyle='#7C9A88';c.textAlign='center';c.textBaseline='middle';c.fillText(LET[j],bx+bs/2,byy+bs/2+1)}
+  c.font=GF(600,Math.min(26,oh*.38));c.fillStyle=dim?'#7E8F85':ink;c.textAlign='left';c.textBaseline='middle';let tx=String(op),tw=c.measureText(tx).width;while(tw>380&&tx.length>3){tx=tx.slice(0,-2);tw=c.measureText(tx+'…').width}if(tx!=String(op))tx+='…';
+  c.fillText(tx,112,by+oh/2+1);if(dim){c.strokeStyle='#8FA197';c.lineWidth=2.5;c.beginPath();c.moveTo(110,by+oh/2+1);c.lineTo(110+Math.min(380,c.measureText(tx).width)*rv,by+oh/2+1);c.stroke()}c.restore()});
+ // tarjeta de la regla
+ if(hasRule&&rt>.35){const e=Math.min(1,(rt-.35)/.45),ee=1-(1-e)**3,ry=oy+n*(oh+gap)+4+(1-ee)*40;c.save();c.globalAlpha=ee*eo;rr(c,40,ry,460,ruleH,22);c.fillStyle='#13241B';c.fill();
+  c.font=GF(700,15);c.fillStyle='#4ADE80';c.textAlign='left';c.textBaseline='alphabetic';const lab=(P.factLabel&&!/DATO|FUN FACT|CURIOSIDADE/i.test(P.factLabel))?P.factLabel:({en:'THE RULE',es:'LA REGLA',pt:'A REGRA'}[lg]||'THE RULE');c.letterSpacing='3px';c.fillText(lab,64,ry+36);c.letterSpacing='0px';
+  let f2=24,Ls;do{c.font=GF(700,f2);Ls=wrap(c,s.fact,412);f2-=1}while(Ls.length>(s.rule?2:4)&&f2>16);c.fillStyle='#fff';Ls.slice(0,s.rule?2:4).forEach((l,j)=>c.fillText(l,64,ry+70+j*(f2+8)));
+  if(s.rule){let f3=18,R;do{c.font=GF(500,f3);R=wrap(c,s.rule,412);f3-=1}while(R.length>2&&f3>13);c.fillStyle='#BFE3CC';R.slice(0,2).forEach((l,j)=>c.fillText(l,64,ry+ruleH-44+j*(f3+6)+(R.length==1?10:0)))}c.restore()}
+ c.restore();if(!cnt)cta()}
+MEDALS.push(['gr5','✏️',L3('Gramático','Grammar fan','Gramático'),L3('Completa 5 lecciones','Finish 5 lessons','Complete 5 lições'),s=>Object.keys(GRP).filter(k=>GRI[k]).length>=5],['gr35','🎓',L3('Maestro del inglés','English master','Mestre do inglês'),L3('Completa las 35 lecciones','Finish all 35 lessons','Complete as 35 lições'),s=>GR.every(g=>GRP[g.id]!=null)]);
+HELP.splice(8,0,['check',L3('Gramática en inglés','English grammar','Gramática em inglês'),L3('En Aprender toca «Gramática en inglés». Elige tu nivel (A1 a C1) o haz el test de nivel. Cada lección explica la regla, trae ejemplos con voz y el error más común. Al practicar, después de cada respuesta ves el «¿por qué?». Lo que fallas se guarda en «Repasar errores». Con «Crear video» conviertes la lección en un video con el diseño Gramática.','In Learn tap “English grammar”. Choose your level (A1 to C1) or take the level test. Each lesson explains the rule, with spoken examples and the most common mistake. When you practice, you see the “why?” after every answer. Your mistakes are saved in “Review mistakes”. With “Create video” the lesson becomes a video with the Grammar design.','Em Aprender toque em «Gramática em inglês». Escolha seu nível (A1 a C1) ou faça o teste de nível. Cada lição explica a regra, com exemplos com voz e o erro mais comum. Ao praticar, depois de cada resposta você vê o «por quê?». O que você erra fica em «Revisar erros». Com «Criar vídeo» a lição vira um vídeo com o design Gramática.')]);
 
 /* ---------- entrada y arranque ---------- */
 function hideSplash(){const s=$('splash');if(!s||s.classList.contains('bye'))return;s.classList.add('bye');setTimeout(()=>s.remove(),700);const h=$('home');h.classList.remove('go');void h.offsetWidth;h.classList.add('go')}
