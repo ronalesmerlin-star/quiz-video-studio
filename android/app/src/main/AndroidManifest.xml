@@ -35,10 +35,19 @@
         </provider>
     </application>
 
+    <!-- Para usar el reconocimiento de voz del teléfono (shadowing) en Android 11 o superior -->
+    <queries>
+        <intent>
+            <action android:name="android.speech.RecognitionService" />
+        </intent>
+    </queries>
+
     <!-- Permissions -->
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <!-- Micrófono: para grabar tu propia voz en los videos -->
+    <!-- Micrófono: para grabar tu propia voz en los videos y practicar shadowing -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <!-- Recordatorio diario del Reto del día -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 </manifest>

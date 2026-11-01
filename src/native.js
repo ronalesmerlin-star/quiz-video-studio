@@ -3,6 +3,7 @@ import { Capacitor, registerPlugin } from '@capacitor/core';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { Share } from '@capacitor/share';
 import { TextToSpeech } from '@capacitor-community/text-to-speech';
+import { LocalNotifications } from '@capacitor/local-notifications';
 
 const CHUNK = 3 * 1024 * 1024; // múltiplo de 3 para que cada trozo en base64 sea válido
 function toB64(u8) { let s = ''; for (let i = 0; i < u8.length; i += 0x8000) s += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000)); return btoa(s); }
@@ -92,4 +93,19 @@ async function synth(text, lang, rate) {
 const Proteccion = registerPlugin('Proteccion');
 async function secure(on) { try { await Proteccion.set({ on: !!on }); } catch (e) { } }
 
-window.NativeApp = { isNative: Capacitor.isNativePlatform(), platform: Capacitor.getPlatform(), saveFile, share, speak, stopSpeak, hasLang, installVoices, synth, secure };
+// Reconocimiento de voz del teléfono: escucha tu pronunciación en inglés (shadowing)
+const Escucha = registerPlugin('Escucha');
+async function listenAvail() { try { return !!(await Escucha.available()).ok; } catch (e) { return false; } }
+async function listen(lang) { const r = await Escucha.listen({ lang: lang || 'en-US' }); return r.results || []; }
+async function listenStop() { try { await Escucha.stop(); } catch (e) { } }
+
+// Recordatorio diario (Reto del día): o = {h, m, title, body} para activarlo, null para quitarlo
+async function remind(o) {
+  try { await LocalNotifications.cancel({ notifications: [{ id: 7001 }] }); } catch (e) { }
+  if (!o) return true;
+  try { const p = await LocalNotifications.requestPermissions(); if (p.display !== 'granted') return false; } catch (e) { return false; }
+  await LocalNotifications.schedule({ notifications: [{ id: 7001, title: o.title, body: o.body, schedule: { on: { hour: o.h, minute: o.m }, repeats: true, allowWhileIdle: false } }] });
+  return true;
+}
+
+window.NativeApp = { isNative: Capacitor.isNativePlatform(), platform: Capacitor.getPlatform(), saveFile, share, listenAvail, listen, listenStop, remind, speak, stopSpeak, hasLang, installVoices, synth, secure };

@@ -10,6 +10,8 @@ public class MainActivity extends BridgeActivity {
         registerPlugin(VozArchivoPlugin.class);
         // Protege los textos de la app contra capturas y grabación de pantalla
         registerPlugin(ProteccionPlugin.class);
+        // Escucha tu pronunciación en el modo shadowing
+        registerPlugin(EscuchaPlugin.class);
         super.onCreate(savedInstanceState);
     }
 }
