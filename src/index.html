@@ -709,6 +709,32 @@ body.ovp .scrim{z-index:110}body.ovp .sheet{z-index:120}
 .newbox ul{text-align:left;display:grid;gap:10px;margin:0;padding-left:18px}.newbox li{line-height:1.45}.newbox .go{width:100%}
 #fmtBtn{white-space:nowrap}
 
+/* editor de video */
+.edcard{display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:16px;border-radius:18px;background:linear-gradient(135deg,#5B3DF5,#E8459B);color:#fff;border:0;box-shadow:var(--sh)}
+.edcard .me{font-size:34px}.edcard b{display:block;font-size:18px}.edcard>span>span{display:block;font-size:13px;opacity:.9;margin-top:2px}.edcard .btnp{margin-left:auto;background:#fff;color:#2a1a7a;white-space:nowrap;flex:none}
+.edlist{margin-top:12px}.edlist:empty{display:none}.edth{font-size:44px;aspect-ratio:16/10!important}
+.edname{flex:1;min-width:0;font:700 16px var(--f,inherit);background:transparent;border:0;color:inherit;padding:6px 4px;border-radius:8px}.edname:focus{background:var(--pn);outline:2px solid var(--ac,#5B3DF5)}
+.edwrap{max-width:900px}
+.edstage{display:grid;place-items:center;background:#000;border-radius:16px;padding:8px;overflow:hidden}
+#edCv{max-height:52vh;max-width:100%;height:auto;width:auto;border-radius:8px;display:block}
+.edctl{display:flex;align-items:center;gap:8px;margin:10px 0}.edplay{font-size:20px}.edtm{font-variant-numeric:tabular-nums;font-weight:700}
+.edadd{display:flex;flex-wrap:wrap;gap:8px}.edbtn{white-space:nowrap;flex:none;cursor:pointer}.edbtn.rec{background:#E11D48;color:#fff;border-color:#E11D48;animation:pulse 1s infinite}
+.edtl{position:relative;overflow-x:auto;margin:10px 0;padding:4px 0 8px;background:var(--pn);border:1px solid var(--ln);border-radius:14px;cursor:pointer}
+.erow{position:relative;height:40px;margin:4px 8px}.eruler{height:18px;font-size:10px;opacity:.6}.eruler i{position:absolute;top:0;font-style:normal;border-left:1px solid currentColor;padding-left:3px}
+.eblk{position:absolute;top:0;height:100%;padding:0 8px;border-radius:9px;font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left;color:#fff;border:2px solid transparent}
+.evvideo{background:#4F46E5}.evimage{background:#0EA5E9}.evquiz{background:#9333EA}.evtext{background:#F59E0B;color:#111}.evaud{background:#10B981}
+.eblk.on{border-color:var(--ink,#fff);box-shadow:0 0 0 2px var(--bg,#000) inset}
+.eempty{position:absolute;inset:0;display:grid;place-items:center;font-size:13px;opacity:.7}
+.eph{position:absolute;top:0;bottom:0;width:2px;background:#E11D48;margin-left:8px;pointer-events:none}
+.edinsp{background:var(--pn);border:1px solid var(--ln);border-radius:14px;padding:12px 14px;display:grid;gap:10px}
+.edinsp h3{margin:0;font-size:15px}.edinsp label{display:grid;gap:4px;font-size:13px}.edinsp label.sw{display:flex;gap:10px;margin:0}.edinsp input[type=range]{width:100%}.edinsp textarea{width:100%;font:inherit;padding:8px;border-radius:10px}
+.edinsp .row{display:flex;flex-wrap:wrap;gap:8px}.edinsp .seg{grid-template-columns:repeat(auto-fit,minmax(80px,1fr))}
+.edexp{display:flex;gap:10px;margin-top:12px;align-items:center}.edexp .btnp{flex:1}.edexp select{flex:none;width:auto}#edPg{width:100%;margin-top:8px}
+.eqlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.eqp{display:grid;gap:4px;padding:8px;border-radius:14px;text-align:left}.eqp img,.eqp>span{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:10px;display:grid;place-items:center;font-size:34px;background:var(--bl)}.eqp small{opacity:.7}
+.evmus{background:#0D9488}
+label.edbtn{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border:1px solid var(--ln);border-radius:12px;background:var(--pn);font-weight:600;font-size:14px}
+
 </style>
 </head>
 <body>
@@ -756,6 +782,9 @@ body.ovp .scrim{z-index:110}body.ovp .sheet{z-index:120}
    <button class="mode" data-mode="blank" style="--i:3"><span class="me">✍️</span><b>Desde cero</b><span>Tu propia idea</span></button>
   </div>
   <div class="idea"><span class="bulb" aria-hidden="true">💡</span><div><small>Idea del día</small><b id="ideaTx"></b></div><button id="ideaGo">Crear con esta idea</button></div>
+  <h2 class="sec">Editor de video</h2>
+  <button class="edcard" id="edNew"><span class="me">🎬</span><span><b>Editar un video</b><span>Une tus videos, fotos o una intro hecha con IA con tus quizzes. Agrega textos, música y tu voz.</span></span><span class="btnp">+ Nuevo</span></button>
+  <div id="edList" class="projs edlist"></div>
   <h2 class="sec">Mis proyectos <small id="pCount"></small></h2>
   <div id="projects" class="projs"></div>
  </div>
@@ -864,6 +893,26 @@ body.ovp .scrim{z-index:110}body.ovp .sheet{z-index:120}
 <section id="gtopic" class="view" hidden>
  <header class="top"><div class="in"><button class="ib" id="gtBack" aria-label="Volver">←</button><span class="bt rtitle" id="gtTitle"></span><span class="gap"></span></div></header>
  <div class="wrap" id="gtBody"></div>
+</section>
+
+<section id="vedit" class="view" hidden>
+ <header class="top"><div class="in"><button class="ib" id="edBack" aria-label="Volver">←</button><input id="edName" class="edname" maxlength="60" aria-label="Nombre"><span class="gap"></span><button class="sm" id="edFmt">📱 9:16</button></div></header>
+ <div class="wrap edwrap">
+  <div class="edstage"><canvas id="edCv" width="540" height="960"></canvas></div>
+  <div class="edctl"><button class="ib edplay" id="edPlay" aria-label="Reproducir">▶</button><span id="edTm" class="edtm">0:00 / 0:00</span><span class="gap"></span><button class="sm" id="edZout" aria-label="Alejar">−</button><button class="sm" id="edZin" aria-label="Acercar">+</button></div>
+  <div class="edadd">
+   <label class="sm edbtn">🎬 Video/Foto<input type="file" id="edAddFile" accept="video/*,image/*,audio/*" multiple hidden></label>
+   <button class="sm edbtn" id="edAddQuiz">🧠 Mi quiz</button>
+   <button class="sm edbtn" id="edAddText">🔤 Texto</button>
+   <button class="sm edbtn" id="edAddMusic">🎵 Música</button>
+   <button class="sm edbtn" id="edAddRec">🎤 Voz</button>
+  </div>
+  <div class="edtl" id="edTl"></div>
+  <div class="edinsp" id="edInsp"></div>
+  <div class="edexp"><select id="edRes" aria-label="Calidad"><option value="720">720p</option><option value="1080" selected>1080p</option></select><button class="btnp" id="edExp">⬇️ Exportar MP4</button></div>
+  <progress id="edPg" max="1" value="0" hidden></progress><p class="hint" id="edMsg" aria-live="polite"></p>
+  <p class="hint">Consejo: en «🎬 Video/Foto» también puedes subir un audio (una voz grabada aparte o una canción tuya).</p>
+ </div>
 </section>
 
 <section id="shadow" class="view" hidden>
@@ -1163,6 +1212,7 @@ body.ovp .scrim{z-index:110}body.ovp .sheet{z-index:120}
    <label class="sw"><input type="checkbox" id="logoOn"> Mostrar mi logo en los videos</label>
    <label>Posición</label><div class="seg four" id="logoPos"><button data-p="tl">↖️</button><button data-p="tr">↗️</button><button data-p="bl">↙️</button><button data-p="br">↘️</button></div>
    <div class="row cen"><button class="sm warn" id="logoDel" hidden>Quitar logo</button></div></div>
+  <div id="tab-eq" hidden><div id="eqList" class="eqlist"></div></div>
   <div id="tab-hist" hidden><div id="histBox" class="histbox"></div></div>
   <div id="tab-sup" hidden><div class="supbox"><span class="supem">💛</span><h3>¡Felicidades por tu primer video!</h3><p>Si te gusta QuizClip, no olvides apoyar al creador para que pueda seguir creando cosas como esta. Cualquier ayuda cuenta.</p>
    <button class="go" id="supGo">💛 Apoyar al creador</button><button id="supNo">Ahora no</button></div></div>
@@ -1384,6 +1434,18 @@ Mis videos exportados||My exported videos||Meus vídeos exportados
 Recordatorio diario||Daily reminder||Lembrete diário
 Apoya a QuizClip||Support QuizClip||Apoie o QuizClip
 Novedades||What's new||Novidades
+Editor de video||Video editor||Editor de vídeo
+Editar un video||Edit a video||Editar um vídeo
+Une tus videos, fotos o una intro hecha con IA con tus quizzes. Agrega textos, música y tu voz.||Join your videos, photos or an AI-made intro with your quizzes. Add text, music and your voice.||Junte seus vídeos, fotos ou uma intro feita com IA aos seus quizzes. Adicione textos, música e sua voz.
++ Nuevo||+ New||+ Novo
+🎬 Video/Foto||🎬 Video/Photo||🎬 Vídeo/Foto
+🧠 Mi quiz||🧠 My quiz||🧠 Meu quiz
+🔤 Texto||🔤 Text||🔤 Texto
+🎵 Música||🎵 Music||🎵 Música
+🎤 Voz||🎤 Voice||🎤 Voz
+⬇️ Exportar MP4||⬇️ Export MP4||⬇️ Exportar MP4
+Consejo: en «🎬 Video/Foto» también puedes subir un audio (una voz grabada aparte o una canción tuya).||Tip: in “🎬 Video/Photo” you can also upload audio (a voice recorded separately or your own song).||Dica: em «🎬 Vídeo/Foto» você também pode enviar um áudio (uma voz gravada à parte ou uma música sua).
+Agregar un quiz||Add a quiz||Adicionar um quiz
 Mis textos||My texts||Meus textos
 ✍️ Mis textos||✍️ My texts||✍️ Meus textos
 ⭐ Mis palabras||⭐ My words||⭐ Minhas palavras
@@ -3351,12 +3413,12 @@ $('projects').onclick=async e=>{const b=e.target.closest('button');if(!b)return;
 /* ---------- navegación: vistas y capas (funciona con el botón atrás de Android) ---------- */
 function showView(v,dir){if(VIEW==v)return;if(VIEW=='shadow')try{shStop()}catch(e){}if(VIEW=='editor')saveNow();if(VIEW=='reader'){rdStop();wpHide();appSecure(false)}stop();$(VIEW).hidden=true;const b=$(v);b.hidden=false;b.classList.remove('in-r','in-l','go','in-f');void b.offsetWidth;b.classList.add(dir<0?'in-l':dir>0?'in-r':'in-f');VIEW=v;window.scrollTo(0,0);try{navUI()}catch(e){}
  if(v=='home'||v=='create'){saveNow();renderHome();heroLoop()}else if(v=='profile')profileUI();else if(v=='gram')gramUI();else if(v=='shadow')shadowUI();else if(v=='gtopic')gtopicUI();else if(v=='brain')brainUI();else if(v=='learn')learnUI();else if(v=='reader'){}else render()}
-const VIEWS=['editor','reader','gram','gtopic','shadow'],TABS=['home','create','brain','learn','profile'];let ROOT='home';const prevView=()=>[...LAYERS].reverse().find(x=>VIEWS.includes(x))||ROOT;
+const VIEWS=['editor','reader','gram','gtopic','shadow','vedit'],TABS=['home','create','brain','learn','profile'];let ROOT='home';const prevView=()=>[...LAYERS].reverse().find(x=>VIEWS.includes(x))||ROOT;
 function goTab(v){if(!TABS.includes(v))return;ROOT=v;const k=LAYERS.length;if(k){history.go(-k);setTimeout(()=>showView(ROOT,0),300)}else showView(v,0)}
 function enterEditor(){if(VIEW=='editor'){const k=LAYERS.length-1;if(k>0)history.go(-k);return}openLayer('editor')}
 function showLayer(n){
  if(n=='editor')return showView('editor',1);
- if(n=='reader'||n=='gram'||n=='gtopic'||n=='shadow')return showView(n,1);
+ if(n=='reader'||n=='gram'||n=='gtopic'||n=='shadow'||n=='vedit')return showView(n,1);
  if(n=='drawer'){$('dEd').hidden=VIEW!='editor';$('scrim').hidden=false;$('drawer').hidden=false;requestAnimationFrame(()=>{$('scrim').classList.add('open');$('drawer').classList.add('open')});return}
  if(n=='sheet'){document.body.classList.toggle('ovp',LAYERS.includes('player')||LAYERS.includes('fs')||LAYERS.includes('rvfs'));$('scrim').hidden=false;$('sheet').hidden=false;requestAnimationFrame(()=>{$('scrim').classList.add('open');$('sheet').classList.add('open')});return}
  if(n=='fs')return fsShow();
@@ -6378,6 +6440,170 @@ function nuevoUI(){const L=[[L3('🖥️ Horizontal y 🔳 cuadrado de verdad.',
  [L3('📸 Tu foto de perfil','📸 Your profile photo','📸 Sua foto de perfil'),L3('y 🏷️ tu logo en todos tus videos.','and 🏷️ your logo in all your videos.','e 🏷️ seu logo em todos os seus vídeos.')],
  [L3('⭐ Mi estilo:','⭐ My style:','⭐ Meu estilo:'),L3('guarda tu diseño favorito para todos tus videos nuevos.','save your favorite design for all your new videos.','salve seu design favorito para todos os seus vídeos novos.')]];
  const u=document.querySelector('#tab-nuevo ul');if(u){u.innerHTML=L.map(([a,b])=>`<li><b>${a}</b> ${b}</li>`).join('');u.dataset.nt=''}}
+
+/* ---------- Editor de video: une tus videos, fotos y quizzes con textos, música y voz, y exporta un MP4 ---------- */
+const EDB=(()=>{let p=null;const open=()=>p||(p=new Promise((res,rej)=>{try{const r=indexedDB.open('quizclip-editor',1);r.onupgradeneeded=()=>{const d=r.result;d.createObjectStore('media',{keyPath:'id'});d.createObjectStore('proj',{keyPath:'id'})};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}catch(e){rej(e)}}));
+ const tx=async(st,mode,fn)=>{const db=await open();return new Promise((res,rej)=>{const t=db.transaction(st,mode),q=fn(t.objectStore(st));t.oncomplete=()=>res(q&&q.result);t.onerror=()=>rej(t.error)})};
+ return{all:st=>tx(st,'readonly',s=>s.getAll()),get:(st,id)=>tx(st,'readonly',s=>s.get(id)),put:(st,o)=>tx(st,'readwrite',s=>s.put(o)),del:(st,id)=>tx(st,'readwrite',s=>s.delete(id))}})();
+let E=null,ESEL=null,ET=0,EPLAY=false,EPPS=40,ESAVE=0;const EM={},EQ={};let EMIX=null,EMIXK='',ESRC=null,EAC=null,ET0=0,ERAF=0,ECUR=null;
+const eId=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const EFIT={cover:L3('Llenar','Fill','Preencher'),contain:L3('Ajustar','Fit','Ajustar')};
+const ESTY=[[L3('Blanco con borde','White outline','Branco com borda'),'#fff','#000','o'],[L3('Caja negra','Black box','Caixa preta'),'#fff','rgba(0,0,0,.72)','b'],[L3('Amarillo pop','Pop yellow','Amarelo pop'),'#111','#FDE047','b'],[L3('Neón','Neon','Neon'),'#F0ABFC','#E879F9','g'],[L3('Título grande','Big title','Título grande'),'#fff','#5B3DF5','b']];
+/* medios */
+async function eMedia(mid){if(EM[mid])return EM[mid];const r=await EDB.get('media',mid);if(!r)return null;const url=URL.createObjectURL(r.blob),m={...r,url};
+ if(r.type=='video'){const v=document.createElement('video');v.muted=true;v.playsInline=true;v.preload='auto';v.src=url;v.crossOrigin='anonymous';await new Promise(k=>{v.onloadeddata=k;v.onerror=k;setTimeout(k,8000)});m.el=v}
+ else if(r.type=='image'){const im=new Image();im.src=url;await new Promise(k=>{im.onload=k;im.onerror=k});m.el=im}
+ EM[mid]=m;return m}
+async function eAudioBuf(mid,sr){const m=await eMedia(mid);if(!m)return null;m.ab=m.ab||{};if(m.ab[sr]!==undefined)return m.ab[sr];
+ try{const ac=new (window.AudioContext||window.webkitAudioContext)({sampleRate:sr});const b=await ac.decodeAudioData(await m.blob.arrayBuffer());const n=b.length,o=new Float32Array(n);for(let ch=0;ch<b.numberOfChannels;ch++){const d=b.getChannelData(ch);for(let i=0;i<n;i++)o[i]+=d[i]/b.numberOfChannels}try{ac.close()}catch(e){}m.ab[sr]=o}catch(e){m.ab[sr]=null}return m.ab[sr]}
+async function eAddFile(file){const type=file.type.startsWith('video')?'video':file.type.startsWith('image')?'image':file.type.startsWith('audio')?'audio':'';if(!type)throw Error('tipo');
+ const id=eId();let dur=0,w=0,h=0;const url=URL.createObjectURL(file);
+ if(type=='video'||type=='audio'){const v=document.createElement(type);v.preload='metadata';v.src=url;await new Promise(k=>{v.onloadedmetadata=k;v.onerror=k;setTimeout(k,8000)});dur=isFinite(v.duration)?v.duration:0;w=v.videoWidth||0;h=v.videoHeight||0}
+ else{const im=new Image();im.src=url;await new Promise(k=>{im.onload=k;im.onerror=k});w=im.naturalWidth;h=im.naturalHeight}URL.revokeObjectURL(url);
+ await EDB.put('media',{id,type,blob:file,name:file.name||type,dur,w,h});return{id,type,dur,w,h}}
+async function eQuiz(pid){if(EQ[pid])return EQ[pid];const r=await DB.get(pid);if(!r)return null;const keep=P;P=Object.assign(example(),r.data);let d=0;try{d=tot()}catch(e){}const data=P;P=keep;EQ[pid]={data,dur:d,name:r.name};return EQ[pid]}
+const ecDur=c=>c.kind=='image'?c.dur:c.kind=='quiz'?(EQ[c.pid]?EQ[c.pid].dur:5):Math.max(.2,c.out-c.in);
+function eLay(){let a=0;return E.clips.map(c=>{const d=ecDur(c),o={c,a,d};a+=d;return o})}
+const eTot=()=>Math.max(1,E.clips.reduce((s,c)=>s+ecDur(c),0));
+/* proyectos */
+function eNew(){return{id:eId(),name:L3('Mi video','My video','Meu vídeo'),fmt:'v',clips:[],texts:[],auds:[],updated:Date.now()}}
+async function eSave(){if(!E)return;E.updated=Date.now();try{await EDB.put('proj',JSON.parse(JSON.stringify(E)))}catch(e){}}
+const eSaveSoon=()=>{clearTimeout(ESAVE);ESAVE=setTimeout(eSave,500)};
+function eChanged(){EMIXK='';eSaveSoon();edUI()}
+async function eOpen(p){E=p;ESEL=null;ET=0;for(const c of E.clips){if(c.kind=='quiz')await eQuiz(c.pid);else await eMedia(c.mid)}openLayer('vedit');edUI();eDraw()}
+async function eListUI(){let L=[];try{L=await EDB.all('proj')}catch(e){}L.sort((a,b)=>b.updated-a.updated);const b=$('edList');if(!b)return;
+ b.innerHTML=L.length?L.map(p=>`<div class="proj" data-nt><button class="pth edth" data-eo="${p.id}">🎞️</button><div class="pin"><button class="pnm" data-eo="${p.id}">${esc(p.name)}</button><span class="hint">${p.clips.length} ${L3('clips','clips','clipes')} · ${ago(p.updated)}</span><div class="pact"><button class="sm warn" data-ed="${p.id}">🗑</button></div></div></div>`).join(''):''}
+$('edNew').onclick=()=>eOpen(eNew());
+$('edList').onclick=async e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.eo){const p=await EDB.get('proj',b.dataset.eo);if(p)eOpen(p)}
+ if(b.dataset.ed&&await ask(L3('¿Eliminar esta edición?','Delete this edit?','Excluir esta edição?'),L3('Eliminar','Delete','Excluir'))){await EDB.del('proj',b.dataset.ed);eListUI()}};
+/* dibujo */
+function eFitDraw(c,src,sw,sh,W,H,fit,zoom){if(!sw||!sh)return;if(fit=='contain'){const k=Math.max(W/sw,H/sh);c.save();c.filter=`blur(${Math.round(Math.min(W,H)/28)}px) brightness(.55)`;c.drawImage(src,(W-sw*k)/2-20,(H-sh*k)/2-20,sw*k+40,sh*k+40);c.restore();c.filter='none';const k2=Math.min(W/sw,H/sh)*(zoom||1);c.drawImage(src,(W-sw*k2)/2,(H-sh*k2)/2,sw*k2,sh*k2)}
+ else{const k=Math.max(W/sw,H/sh)*(zoom||1);c.drawImage(src,(W-sw*k)/2,(H-sh*k)/2,sw*k,sh*k)}}
+function eTextDraw(c,W,H,t){for(const x of E.texts){if(t<x.at||t>x.at+x.dur)continue;const lt=t-x.at,e=Math.min(1,lt/.3,(x.at+x.dur-t)/.3),S2=ESTY[x.sty||0],k=Math.min(W,H)/540,px=Math.round((x.sty==4?52:38)*(x.size||1)*k);
+ c.save();c.globalAlpha=Math.max(0,e);c.font=`800 ${px}px Poppins, system-ui, sans-serif`;c.textAlign='center';c.textBaseline='middle';const L=wrap(c,x.t,W*.86).slice(0,4),lh=px*1.22,y0=(x.pos=='top'?H*.14:x.pos=='bot'?H*.84:H*.5)-(L.length-1)*lh/2+(1-e)*20*k;
+ L.forEach((l,j)=>{const y=y0+j*lh,w=c.measureText(l).width;if(S2[3]=='b'){rr(c,W/2-w/2-px*.4,y-lh/2,w+px*.8,lh,px*.3);c.fillStyle=S2[2];c.fill()}
+  if(S2[3]=='o'){c.lineWidth=px*.16;c.strokeStyle=S2[2];c.lineJoin='round';c.strokeText(l,W/2,y)}if(S2[3]=='g'){c.shadowColor=S2[2];c.shadowBlur=px*.6}c.fillStyle=S2[1];c.fillText(l,W/2,y);c.shadowBlur=0});c.restore()}}
+async function eFrame(c,W,H,t,exact){c.setTransform(1,0,0,1,0,0);c.fillStyle='#000';c.fillRect(0,0,W,H);const lay=eLay(),o=lay.find(x=>t<x.a+x.d)||lay[lay.length-1];
+ if(o){const cl=o.c,lt=t-o.a;
+  if(cl.kind=='video'){const m=EM[cl.mid];if(m&&m.el){const v=m.el,tg=Math.min(cl.out-.03,cl.in+lt);if(exact){if(Math.abs(v.currentTime-tg)>.001){await new Promise(k=>{let done=false;const f=()=>{if(!done){done=true;k()}};v.addEventListener('seeked',f,{once:true});v.currentTime=tg;setTimeout(f,2500)})}}
+    else if(!EPLAY&&Math.abs(v.currentTime-tg)>.05)v.currentTime=tg;eFitDraw(c,v,v.videoWidth,v.videoHeight,W,H,cl.fit||'cover')}}
+  else if(cl.kind=='image'){const m=EM[cl.mid];if(m&&m.el)eFitDraw(c,m.el,m.el.naturalWidth,m.el.naturalHeight,W,H,cl.fit||'cover',cl.kb!==false?1+.08*(lt/cl.dur):1)}
+  else if(cl.kind=='quiz'){const q=EQ[cl.pid];if(q){const keep=P;P={...q.data,fmt:E.fmt};try{drawAny(c,W,H,Math.min(lt,q.dur-.01))}catch(e){}P=keep;c.setTransform(1,0,0,1,0,0)}}
+  if(cl.fade){const f=Math.min(1,lt/.45,(o.d-lt)/.45);if(f<1){c.fillStyle=`rgba(0,0,0,${1-f})`;c.fillRect(0,0,W,H)}}}
+ eTextDraw(c,W,H,t)}
+function eCv(){const cv=$('edCv'),[w,h]=FMTD[E.fmt||'v'];if(cv.width!=w||cv.height!=h){cv.width=w;cv.height=h}cv.style.aspectRatio=E.fmt=='h'?'16/9':E.fmt=='q'?'1/1':'9/16';return cv}
+function eDraw(){if(!E)return;const cv=eCv();eFrame(cv.getContext('2d'),cv.width,cv.height,ET,false);$('edTm').textContent=fm(ET)+' / '+fm(eTot());const ph=$('edPh');if(ph)ph.style.left=(ET*EPPS)+'px'}
+/* audio: mezcla de todo */
+async function eMix(sr,onP){const n=Math.ceil(eTot()*sr),a=new Float32Array(n),lay=eLay(),duck=new Float32Array(n).fill(1);
+ for(const x of E.auds)if(x.kind!='music'&&x.duck!==false){const s0=Math.round(x.at*sr),len=Math.round((x.len||0)*sr);for(let i=Math.max(0,s0-sr*.2);i<Math.min(n,s0+len+sr*.2);i++)duck[i]=.3}
+ for(const o of lay){const cl=o.c,s0=Math.round(o.a*sr);
+  if(cl.kind=='video'&&(cl.vol??1)>0){const b=await eAudioBuf(cl.mid,sr);if(b){const i0=Math.round(cl.in*sr),len=Math.round(o.d*sr),v=cl.vol??1;for(let i=0;i<len&&s0+i<n&&i0+i<b.length;i++)a[s0+i]+=b[i0+i]*v}}
+  if(cl.kind=='quiz'&&(cl.vol??1)>0){const q=EQ[cl.pid];if(q){const keep=P;P={...q.data};try{if(typeof vHas=='function'&&vHas())await prepVoice(()=>{});const b=mkAudio(sr),v=cl.vol??1;for(let i=0;i<b.length&&s0+i<n;i++)a[s0+i]+=b[i]*v}catch(e){}P=keep}}
+  onP&&onP()}
+ for(const x of E.auds){const s0=Math.round(x.at*sr),v=x.vol??1;
+  if(x.kind=='music'){const dur=Math.max(1,eTot()-x.at),m=mkMusic(x.style||'pop',dur,sr),f=sr*1.5;for(let i=0;i<m.length&&s0+i<n;i++)a[s0+i]+=m[i]*v*.6*Math.min(1,i/f,(m.length-i)/f)*duck[s0+i]}
+  else{const b=await eAudioBuf(x.mid,sr);if(b){x.len=b.length/sr;for(let i=0;i<b.length&&s0+i<n;i++)if(s0+i>=0)a[s0+i]+=b[i]*v}}}
+ for(let i=0;i<n;i++)a[i]=Math.tanh(a[i]);return a}
+/* reproducción */
+function eStop(){EPLAY=false;cancelAnimationFrame(ERAF);try{ESRC&&ESRC.stop()}catch(e){}ESRC=null;for(const k in EM)if(EM[k].el&&EM[k].el.pause)EM[k].el.pause();ECUR=null;$('edPlay').textContent='▶'}
+async function ePlay(){if(EPLAY)return eStop();if(!E.clips.length)return toast(L3('Agrega un video, foto o quiz primero.','Add a video, photo or quiz first.','Adicione um vídeo, foto ou quiz primeiro.'));if(ET>=eTot()-.05)ET=0;
+ const k=JSON.stringify([E.clips,E.auds]);if(EMIXK!=k){$('edMsg').textContent=L3('Preparando el audio…','Preparing audio…','Preparando o áudio…');EMIX=await eMix(48000);EMIXK=k;$('edMsg').textContent=''}
+ EAC=EAC||new AudioContext({sampleRate:48000});EAC.resume();const b=EAC.createBuffer(1,EMIX.length,48000);b.copyToChannel(EMIX,0);ESRC=EAC.createBufferSource();ESRC.buffer=b;ESRC.connect(EAC.destination);ESRC.start(0,ET);
+ EPLAY=true;ET0=performance.now()-ET*1000;$('edPlay').textContent='⏸';
+ const loop=()=>{if(!EPLAY)return;ET=(performance.now()-ET0)/1000;if(ET>=eTot()){ET=eTot()-.01;eStop();eDraw();return}
+  const lay=eLay(),o=lay.find(x=>ET<x.a+x.d);if(o&&o.c.kind=='video'){const v=EM[o.c.mid]&&EM[o.c.mid].el;if(v&&ECUR!==o){for(const kk in EM)if(EM[kk].el&&EM[kk].el.pause&&EM[kk].el!==v)EM[kk].el.pause();v.currentTime=o.c.in+(ET-o.a);v.playbackRate=1;v.play().catch(()=>{});ECUR=o}}else ECUR=o;
+  eDraw();ERAF=requestAnimationFrame(loop)};loop()}
+$('edPlay').onclick=ePlay;
+/* interfaz */
+function edUI(){if(!E)return;$('edName').value=E.name;$('edFmt').textContent=FMTN[E.fmt||'v'];eCv();const tot=eTot(),lay=eLay(),W=Math.max(320,tot*EPPS+40);
+ const blk=(x,w,cls,lab,sel)=>`<button class="eblk ${cls}${sel?' on':''}" style="left:${x}px;width:${Math.max(26,w)}px" ${lab}</button>`;
+ let ruler='';for(let s=0;s<=tot;s+=tot>60?10:5)ruler+=`<i style="left:${s*EPPS}px">${fm(s)}</i>`;
+ $('edTl').innerHTML=`<div class="erow eruler" style="width:${W}px">${ruler}</div>
+  <div class="erow" style="width:${W}px">${lay.map(o=>blk(o.a*EPPS,o.d*EPPS-3,'ev'+o.c.kind,`data-k="c" data-i="${o.c.id}">${o.c.kind=='video'?'🎬':o.c.kind=='image'?'🖼️':'🧠'} ${esc(o.c.name||'')}`,ESEL==o.c.id)).join('')||`<span class="eempty">${L3('Toca «+ Video/Foto» o «+ Mi quiz»','Tap “+ Video/Photo” or “+ My quiz”','Toque «+ Vídeo/Foto» ou «+ Meu quiz»')}</span>`}</div>
+  <div class="erow" style="width:${W}px">${E.texts.map(x=>blk(x.at*EPPS,x.dur*EPPS,'evtext',`data-k="t" data-i="${x.id}">🔤 ${esc(x.t)}`,ESEL==x.id)).join('')}</div>
+  <div class="erow" style="width:${W}px">${E.auds.filter(x=>x.kind!='music').map(x=>blk(x.at*EPPS,(x.kind=='music'?tot-x.at:(x.len||3))*EPPS,'evaud',`data-k="a" data-i="${x.id}">${x.kind=='music'?'🎵':x.kind=='rec'?'🎤':'🔊'} ${esc(x.name||'')}`,ESEL==x.id)).join('')}</div>
+  ${E.auds.some(x=>x.kind=='music')?`<div class="erow" style="width:${W}px">${E.auds.filter(x=>x.kind=='music').map(x=>blk(x.at*EPPS,(tot-x.at)*EPPS,'evmus',`data-k="a" data-i="${x.id}">🎵 ${esc(x.name||'')}`,ESEL==x.id)).join('')}</div>`:''}
+  <div class="eph" id="edPh" style="left:${ET*EPPS}px"></div>`;
+ $('edTl').dataset.nt='';edInsp()}
+function edFind(id){return E.clips.find(x=>x.id==id)||E.texts.find(x=>x.id==id)||E.auds.find(x=>x.id==id)}
+function edInsp(){const b=$('edInsp'),x=ESEL&&edFind(ESEL);if(!x){b.innerHTML=`<p class="hint">${L3('Toca un bloque de la línea de tiempo para editarlo. Toca la regla para moverte.','Tap a block in the timeline to edit it. Tap the ruler to move around.','Toque um bloco da linha do tempo para editá-lo. Toque na régua para se mover.')}</p>`;b.dataset.nt='';return}
+ const R=(id,lab,min,max,st,val,fmtv)=>`<label>${lab}: <b id="${id}V">${fmtv?fmtv(val):val}</b><input type="range" id="${id}" min="${min}" max="${max}" step="${st}" value="${val}"></label>`;let h='';
+ if(E.clips.includes(x)){const m=x.kind=='video'||x.kind=='image'?EM[x.mid]:null;h+=`<h3>${x.kind=='video'?'🎬 '+L3('Video','Video','Vídeo'):x.kind=='image'?'🖼️ '+L3('Foto','Photo','Foto'):'🧠 Quiz'} · ${esc(x.name||'')}</h3>`;
+  if(x.kind=='video'){const D=m?m.dur:x.out;h+=R('eIn',L3('Empieza en','Starts at','Começa em'),0,Math.max(.1,D-.2),.1,x.in,v=>(+v).toFixed(1)+'s')+R('eOut',L3('Termina en','Ends at','Termina em'),.2,D,.1,x.out,v=>(+v).toFixed(1)+'s')}
+  if(x.kind=='image')h+=R('eDur',L3('Duración','Duration','Duração'),1,20,.5,x.dur,v=>v+'s')+`<label class="sw"><input type="checkbox" id="eKb" ${x.kb!==false?'checked':''}> ${L3('Zoom suave','Gentle zoom','Zoom suave')}</label>`;
+  if(x.kind!='image')h+=R('eVol',L3('Volumen','Volume','Volume'),0,2,.05,x.vol??1,v=>Math.round(v*100)+'%');
+  if(x.kind!='quiz')h+=`<div class="seg" id="eFit">${['cover','contain'].map(f=>`<button data-f="${f}" class="${(x.fit||'cover')==f?'on':''}">${EFIT[f]}</button>`).join('')}</div>`;
+  h+=`<label class="sw"><input type="checkbox" id="eFade" ${x.fade?'checked':''}> ${L3('Fundido al entrar y salir','Fade in and out','Fade ao entrar e sair')}</label>
+   <div class="row"><button class="sm" data-ea="left">◀ ${L3('Antes','Earlier','Antes')}</button><button class="sm" data-ea="right">${L3('Después','Later','Depois')} ▶</button>${x.kind=='video'?`<button class="sm" data-ea="split">✂️ ${L3('Cortar aquí','Split here','Cortar aqui')}</button>`:''}<button class="sm" data-ea="dup">⧉</button><button class="sm warn" data-ea="del">🗑</button></div>`}
+ else if(E.texts.includes(x)){h+=`<h3>🔤 ${L3('Texto','Text','Texto')}</h3><textarea id="eTx" rows="2">${esc(x.t)}</textarea>`+R('eAt',L3('Aparece en','Appears at','Aparece em'),0,Math.max(1,eTot()-.5),.1,x.at,v=>(+v).toFixed(1)+'s')+R('eTd',L3('Duración','Duration','Duração'),.5,15,.1,x.dur,v=>(+v).toFixed(1)+'s')+R('eTs',L3('Tamaño','Size','Tamanho'),.6,1.8,.05,x.size||1,v=>Math.round(v*100)+'%')+
+  `<div class="seg" id="ePos">${[['top',L3('Arriba','Top','Em cima')],['mid',L3('Centro','Center','Centro')],['bot',L3('Abajo','Bottom','Embaixo')]].map(([k,n])=>`<button data-p="${k}" class="${(x.pos||'mid')==k?'on':''}">${n}</button>`).join('')}</div>
+  <div class="chipset" id="eSty">${ESTY.map((s,i)=>`<button data-s="${i}" class="${(x.sty||0)==i?'on':''}">${s[0]}</button>`).join('')}</div><div class="row"><button class="sm warn" data-ea="del">🗑 ${L3('Quitar texto','Remove text','Remover texto')}</button></div>`}
+ else{h+=`<h3>${x.kind=='music'?'🎵 '+L3('Música','Music','Música'):x.kind=='rec'?'🎤 '+L3('Tu voz','Your voice','Sua voz'):'🔊 Audio'}</h3>`;
+  if(x.kind=='music')h+=`<div class="chipset" id="eMus">${Object.keys(MUS).filter(k=>k!='none'&&k!='custom').map(k=>`<button data-m="${k}" class="${x.style==k?'on':''}">${MUS[k][0]} ${tr(MUS[k][1])}</button>`).join('')}</div>`;
+  h+=R('eAt',L3('Empieza en','Starts at','Começa em'),0,Math.max(1,eTot()-.5),.1,x.at,v=>(+v).toFixed(1)+'s')+R('eVol',L3('Volumen','Volume','Volume'),0,2,.05,x.vol??1,v=>Math.round(v*100)+'%');
+  if(x.kind!='music')h+=`<label class="sw"><input type="checkbox" id="eDuck" ${x.duck!==false?'checked':''}> ${L3('Bajar la música mientras suena','Lower the music while it plays','Abaixar a música enquanto toca')}</label>`;
+  h+=`<div class="row"><button class="sm warn" data-ea="del">🗑 ${L3('Quitar','Remove','Remover')}</button></div>`}
+ b.innerHTML=h;b.dataset.nt='';
+ const bind=(id,fn,ev='input')=>{const el=$(id);if(el)el[ev=='input'?'oninput':'onchange']=e=>{fn(e.target);const vv=$(id+'V');if(vv&&e.target.type=='range')vv.textContent=e.target.closest('label').querySelector('b').textContent=vv.textContent};};
+ const num=(id,k,f)=>{const el=$(id);if(!el)return;el.oninput=e=>{x[k]=+e.target.value;if(k=='in'&&x.out<x.in+.2)x.out=Math.min((EM[x.mid]||{}).dur||x.in+1,x.in+.2);if(k=='out'&&x.out<x.in+.2)x.in=Math.max(0,x.out-.2);
+  $(id+'V').textContent=f?f(x[k]):x[k];if(k=='in'||k=='out'){ET=eLay().find(o=>o.c===x).a+(k=='out'?ecDur(x)-.05:0)}eDraw()};el.onchange=()=>eChanged()};
+ num('eIn','in',v=>(+v).toFixed(1)+'s');num('eOut','out',v=>(+v).toFixed(1)+'s');num('eDur','dur',v=>v+'s');num('eVol','vol',v=>Math.round(v*100)+'%');num('eAt','at',v=>(+v).toFixed(1)+'s');num('eTd','dur',v=>(+v).toFixed(1)+'s');num('eTs','size',v=>Math.round(v*100)+'%');
+ const ck=(id,k)=>{const el=$(id);if(el)el.onchange=e=>{x[k]=e.target.checked;eChanged();eDraw()}};ck('eKb','kb');ck('eFade','fade');ck('eDuck','duck');
+ const tx=$('eTx');if(tx){tx.oninput=e=>{x.t=e.target.value;eDraw()};tx.onchange=()=>eChanged()}
+ const sg=(id,attr,k)=>{const el=$(id);if(el)el.onclick=e=>{const bb=e.target.closest('button');if(!bb)return;x[k]=attr=='s'?+bb.dataset[attr]:bb.dataset[attr];if(k=='style')x.name=tr(MUS[x.style][1]);eChanged();eDraw()}};sg('eFit','f','fit');sg('ePos','p','pos');sg('eSty','s','sty');sg('eMus','m','style')}
+$('edInsp').onclick=async e=>{const b=e.target.closest('[data-ea]');if(!b)return;const x=edFind(ESEL);if(!x)return;const a=b.dataset.ea;
+ const arr=E.clips.includes(x)?E.clips:E.texts.includes(x)?E.texts:E.auds,i=arr.indexOf(x);
+ if(a=='del'){arr.splice(i,1);ESEL=null}if(a=='left'&&i>0){arr.splice(i,1);arr.splice(i-1,0,x)}if(a=='right'&&i<arr.length-1){arr.splice(i,1);arr.splice(i+1,0,x)}
+ if(a=='dup'){const y={...JSON.parse(JSON.stringify(x)),id:eId()};arr.splice(i+1,0,y);ESEL=y.id}
+ if(a=='split'){const o=eLay().find(z=>z.c===x),cut=x.in+(ET-o.a);if(cut>x.in+.2&&cut<x.out-.2){const y={...JSON.parse(JSON.stringify(x)),id:eId(),in:cut};x.out=cut;arr.splice(i+1,0,y)}else toast(L3('Mueve la línea de tiempo dentro del clip para cortarlo.','Move the playhead inside the clip to split it.','Mova a linha do tempo dentro do clipe para cortar.'))}
+ eChanged();eDraw()};
+$('edTl').onclick=e=>{const b=e.target.closest('.eblk');if(b){ESEL=b.dataset.i;const x=edFind(ESEL);if(E.texts.includes(x)||E.auds.includes(x))ET=x.at;else{const o=eLay().find(z=>z.c===x);if(o)ET=o.a}eStop();edUI();eDraw();return}
+ const r=$('edTl').getBoundingClientRect(),xx=e.clientX-r.left+$('edTl').scrollLeft;ET=clamp(xx/EPPS,0,eTot()-.01);eStop();eDraw()};
+$('edZin').onclick=()=>{EPPS=Math.min(160,EPPS*1.5);edUI()};$('edZout').onclick=()=>{EPPS=Math.max(6,EPPS/1.5);edUI()};
+$('edName').onchange=e=>{E.name=e.target.value.trim()||E.name;eSaveSoon()};
+$('edFmt').onclick=()=>{E.fmt={v:'h',h:'q',q:'v'}[E.fmt||'v'];eChanged();eDraw()};
+$('edBack').onclick=()=>{eStop();eSave();closeTop()};
+/* agregar cosas */
+$('edAddFile').onchange=async e=>{const fs=[...e.target.files];e.target.value='';for(const f of fs){try{$('edMsg').textContent=L3('Cargando ','Loading ','Carregando ')+f.name+'…';const m=await eAddFile(f);await eMedia(m.id);
+  if(m.type=='audio'){const x={id:eId(),kind:'file',mid:m.id,at:ET,vol:1,name:f.name,len:m.dur};E.auds.push(x);ESEL=x.id}
+  else{const c=m.type=='video'?{id:eId(),kind:'video',mid:m.id,in:0,out:Math.max(.5,m.dur||1),vol:1,fit:'cover',name:f.name}:{id:eId(),kind:'image',mid:m.id,dur:4,fit:'cover',kb:true,name:f.name};E.clips.push(c);ESEL=c.id;if(E.clips.length==1&&m.w&&m.h)E.fmt=m.w>m.h*1.2?'h':m.h>m.w*1.2?'v':'q'}}
+ catch(x){toast(L3('No se pudo abrir ','Could not open ','Não foi possível abrir ')+f.name)}}$('edMsg').textContent='';eChanged();eDraw()};
+$('edAddQuiz').onclick=async()=>{let L=[];try{L=await DB.all()||[]}catch(e){}L.sort((a,b)=>b.updated-a.updated);
+ $('eqList').innerHTML=L.length?L.map(p=>`<button class="eqp" data-q="${p.id}" data-nt>${p.thumb?`<img src="${p.thumb}" alt="">`:'<span>❓</span>'}<b>${esc(p.name)}</b><small>${p.nq} ${tr('preguntas')}</small></button>`).join(''):`<p class="hint">${L3('Todavía no tienes quizzes. Crea uno en la pestaña Crear.','You don’t have quizzes yet. Create one in the Create tab.','Você ainda não tem quizzes. Crie um na aba Criar.')}</p>`;openSheet('eq')};
+$('eqList').onclick=async e=>{const b=e.target.closest('[data-q]');if(!b)return;const q=await eQuiz(b.dataset.q);if(!q)return;const c={id:eId(),kind:'quiz',pid:b.dataset.q,vol:1,name:q.name};E.clips.push(c);ESEL=c.id;closeTop();eChanged();eDraw()};
+SHT.eq='Agregar un quiz';
+$('edAddText').onclick=()=>{const x={id:eId(),t:L3('Tu texto aquí','Your text here','Seu texto aqui'),at:ET,dur:3,pos:'mid',sty:0,size:1};E.texts.push(x);ESEL=x.id;eChanged();eDraw()};
+$('edAddMusic').onclick=()=>{const x={id:eId(),kind:'music',style:'lofi',at:0,vol:.5,name:tr(MUS.lofi[1])};E.auds.push(x);ESEL=x.id;eChanged()};
+let EREC=null;$('edAddRec').onclick=async()=>{if(EREC){EREC.stop();return}if(!navigator.mediaDevices||!window.MediaRecorder)return toast(tr('Este dispositivo no permite grabar audio aquí.'));let st;
+ try{st=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}})}catch(e){return toast(L3('No se pudo usar el micrófono.','Could not use the microphone.','Não foi possível usar o microfone.'))}
+ const mt=['audio/webm;codecs=opus','audio/webm','audio/mp4','audio/ogg'].find(x=>MediaRecorder.isTypeSupported(x))||'',ch=[],at=ET;EREC=new MediaRecorder(st,mt?{mimeType:mt}:{});EREC.ondataavailable=e=>e.data.size&&ch.push(e.data);
+ EREC.onstop=async()=>{st.getTracks().forEach(t=>t.stop());EREC=null;$('edAddRec').textContent='🎤 '+L3('Voz','Voice','Voz');$('edAddRec').classList.remove('rec');const blob=new Blob(ch,{type:mt||'audio/webm'});
+  const f=new File([blob],'voz.'+(mt.includes('mp4')?'m4a':'webm'),{type:blob.type});const m=await eAddFile(f);await eMedia(m.id);const b=await eAudioBuf(m.id,48000);const x={id:eId(),kind:'rec',mid:m.id,at,vol:1.2,name:L3('Mi voz','My voice','Minha voz'),len:b?b.length/48000:m.dur};E.auds.push(x);ESEL=x.id;eChanged();toast(L3('Voz agregada 🎤','Voice added 🎤','Voz adicionada 🎤'))};
+ EREC.start();$('edAddRec').textContent='⏹ '+L3('Parar','Stop','Parar');$('edAddRec').classList.add('rec');toast(L3('Grabando… toca «Parar» al terminar','Recording… tap “Stop” when done','Gravando… toque «Parar» ao terminar'));if(!EPLAY&&E.clips.length)ePlay()};
+/* exportar */
+async function eExport(){if(!E.clips.length)return toast(L3('Agrega algo al video primero.','Add something to the video first.','Adicione algo ao vídeo primeiro.'));
+ if(!window.VideoEncoder||!window.Mp4Muxer){$('edMsg').textContent=tr('Este navegador no puede exportar video. Usa Chrome o Edge en computadora.');return}
+ eStop();const btn=$('edExp');btn.disabled=true;const pg=$('edPg');pg.hidden=false;pg.value=0;const msg=x=>$('edMsg').textContent=x;
+ try{const R0=+($('edRes').value||1080),FM=E.fmt||'v',W=FM=='h'?Math.round(R0*16/9):R0,H=FM=='v'?Math.round(R0*16/9):R0,fps=30,tot=eTot(),N=Math.round(tot*fps),sr=48000;
+  for(const c of E.clips){if(c.kind=='quiz'){await eQuiz(c.pid);const q=EQ[c.pid],keep=P;P=q.data;try{await preload()}catch(e){}P=keep}else await eMedia(c.mid)}
+  msg(L3('Preparando el audio…','Preparing audio…','Preparando o áudio…'));const pcm=await eMix(sr);
+  const cv=document.createElement('canvas');cv.width=W;cv.height=H;const c=cv.getContext('2d');let ac2=null,am='aac';
+  if(window.AudioEncoder){const cf=codec=>({codec,sampleRate:sr,numberOfChannels:2,bitrate:160000});if((await AudioEncoder.isConfigSupported(cf('mp4a.40.2'))).supported)ac2='mp4a.40.2';else if((await AudioEncoder.isConfigSupported(cf('opus'))).supported){ac2='opus';am='opus'}}
+  const vc={width:W,height:H,bitrate:(W*H>1.5e6?10e6:6e6),framerate:fps};let codec=null;for(const cd of['avc1.640033','avc1.640032','avc1.4d0032','avc1.42003e'])if((await VideoEncoder.isConfigSupported({...vc,codec:cd})).supported){codec=cd;break}
+  if(!codec)throw Error(L3('Tu dispositivo no tiene codificador H.264.','Your device has no H.264 encoder.','Seu dispositivo não tem codificador H.264.'));
+  const mux=new Mp4Muxer.Muxer({target:new Mp4Muxer.ArrayBufferTarget(),fastStart:'in-memory',video:{codec:'avc',width:W,height:H,frameRate:fps},...(ac2?{audio:{codec:am,numberOfChannels:2,sampleRate:sr}}:{})});
+  let err=null;const ve=new VideoEncoder({output:(ch,m)=>mux.addVideoChunk(ch,m),error:e=>err=e});ve.configure({...vc,codec});
+  for(let i=0;i<N;i++){if(err)throw err;await eFrame(c,W,H,i/fps,true);const f=new VideoFrame(cv,{timestamp:Math.round(i*1e6/fps),duration:Math.round(1e6/fps)});ve.encode(f,{keyFrame:i%(fps*2)==0});f.close();
+   if(i%5==0){pg.value=i/N*.9;msg(L3('Creando video… ','Creating video… ','Criando vídeo… ')+Math.round(i/N*100)+'%');await wait(0)}while(ve.encodeQueueSize>8)await wait(5)}
+  await ve.flush();
+  if(ac2){const ae=new AudioEncoder({output:(ch,m)=>mux.addAudioChunk(ch,m),error:e=>err=e});ae.configure({codec:ac2,sampleRate:sr,numberOfChannels:2,bitrate:160000});const st=4800;
+   for(let p=0;p<pcm.length;p+=st){const n=Math.min(st,pcm.length-p),d=new Float32Array(n*2);d.set(pcm.subarray(p,p+n),0);d.set(pcm.subarray(p,p+n),n);const ad=new AudioData({format:'f32-planar',sampleRate:sr,numberOfFrames:n,numberOfChannels:2,timestamp:Math.round(p/sr*1e6),data:d});ae.encode(ad);ad.close();if((p/st)%40==0)await wait(0)}await ae.flush()}
+  if(err)throw err;mux.finalize();pg.value=1;const blob=new Blob([mux.target.buffer],{type:'video/mp4'});msg(L3('Video listo','Video ready','Vídeo pronto')+`: ${fm(tot)} · ${(blob.size/1048576).toFixed(1)} MB`);
+  await save(blob,slug(E.name||'video')+'.mp4',x=>msg(x));try{bump('exp')}catch(e){}}
+ catch(e){msg(tr('No se pudo exportar: ')+(e&&e.message||e))}btn.disabled=false;pg.hidden=true}
+$('edExp').onclick=eExport;
+{const sv=showView;showView=function(v,d){if(VIEW=='vedit'&&v!='vedit'){eStop();eSave()}sv(v,d);if(v=='create')eListUI()}}
+setTimeout(eListUI,800);
 
 /* ---------- entrada y arranque ---------- */
 function hideSplash(){const s=$('splash');if(!s||s.classList.contains('bye'))return;s.classList.add('bye');setTimeout(()=>s.remove(),700);const h=$('home');h.classList.remove('go');void h.offsetWidth;h.classList.add('go')}
